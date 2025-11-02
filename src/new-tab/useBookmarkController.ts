@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useLayoutEffect } from 'react'
 import {
   getStoredBookmarks,
   addBookmark,
@@ -22,15 +22,19 @@ type ChangeResult = Awaited<
 export default function useBookmarkController() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
 
-  useMemo(() => {
+  useLayoutEffect(() => {
     getStoredBookmarks().then((stored) => {
       const { data } = stored
-      if (data) setBookmarks(data)
+      if (data) {
+        if (data.length > 0) {
+          setBookmarks(data)
+        }
+      }
     })
   }, [])
 
   useMemo(() => {
-    console.log('stored this number of bookmarks: ', bookmarks?.length)
+    console.log('bookmarks changed: ', bookmarks?.length)
   }, [bookmarks])
 
   function handleBookmarksChange(result: ChangeResult) {

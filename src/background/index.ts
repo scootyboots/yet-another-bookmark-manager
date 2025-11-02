@@ -1,14 +1,28 @@
 import bookmarks from '../../public/bookmarks-backup.json'
 
-export type Bookmarks = typeof bookmarks
-export type Bookmark = Bookmarks[number]
+export type BookmarksBackup = typeof bookmarks
+export type Bookmark = BookmarksBackup[number] & { id: number }
+export type Bookmarks = Array<Bookmark>
 
 chrome.action.onClicked.addListener(() => {
   chrome.tabs.create({ url: 'main.html' })
 })
 
+function addIdsToBookmarks(bookmarks: BookmarksBackup) {
+  let initialId = 1000
+  const bookmarksWithId = bookmarks.map((bk) => {
+    initialId += 1
+    return { ...bk, id: initialId }
+  })
+  return { bookmarksWithId, lastId: initialId }
+}
+
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.set({ bookmarks })
+  const { bookmarksWithId, lastId } = addIdsToBookmarks(bookmarks)
+  chrome.storage.local.set({
+    bookmarks: bookmarksWithId,
+    lastId,
+  })
 })
 
 function makeAddRemoveMessage(
@@ -24,7 +38,8 @@ function makeAddRemoveMessage(
 }
 
 export async function resetBookmarks() {
-  await chrome.storage.local.set({ bookmarks })
+  const { bookmarksWithId, lastId } = addIdsToBookmarks(bookmarks)
+  await chrome.storage.local.set({ bookmarks: bookmarksWithId, lastId })
   return { data: 'reset bookmarks', error: null }
 }
 
@@ -41,61 +56,60 @@ export async function getStoredBookmarks() {
   return { data: null, error: 'did not find any stored bookmarks' }
 }
 
+export async function storeLastId(id: number) {
+  await chrome.storage.local.set({ lastId: id })
+}
+
+export async function getStoredLastId() {
+  const stored = await chrome.storage.local.get<{ lastId: number }>('lastId')
+  if (stored?.lastId) return { data: stored?.lastId, error: null }
+  return { data: null, error: 'did not find stored lastId' }
+}
+
 export async function addBookmark(newBookmark: Bookmark) {
-  const { data } = await getStoredBookmarks()
-  if (data) {
-    await storeBookmarks([...data, newBookmark])
-    return { data: makeAddRemoveMessage('add', newBookmark), error: null }
+  const { data: bookmarks } = await getStoredBookmarks()
+  const { data: lastId } = await getStoredLastId()
+  if (bookmarks && lastId) {
+    const updatedLastId = lastId + 1
+    const newBookmarkWithId = { ...newBookmark, id: updatedLastId }
+    await storeBookmarks([...bookmarks, newBookmarkWithId])
+    await storeLastId(updatedLastId)
+    return { data: makeAddRemoveMessage('add', newBookmarkWithId), error: null }
   }
   return { data: null, error: 'failed to pull in existing bookmarks' }
 }
 
 export async function removeBookmark(existingBookmark: Bookmark) {
-  const { group, href } = existingBookmark
-  const { data } = await getStoredBookmarks()
-
-  if (data) {
-    const hasExisting = Boolean(
-      data.find((bk) => bk.group === group && bk.href === href)
-    )
-    if (hasExisting) {
-      const sameGroup = data.filter((bk) => bk.group === group)
-      const otherGroups = data.filter((bk) => bk.group !== group)
-      const removedLinkFromGroup = sameGroup.filter((bk) => bk.href === href)
-      await storeBookmarks([...otherGroups, ...removedLinkFromGroup])
-      return {
-        data: makeAddRemoveMessage('remove', existingBookmark),
-        error: null,
-      }
+  const { id } = existingBookmark
+  const { data: bookmarks } = await getStoredBookmarks()
+  if (!bookmarks)
+    return {
+      data: null,
+      error:
+        'failed to pull in stored bookmarks when trying to remove this bookmark:',
+      existingBookmark,
     }
-  }
 
-  return {
-    data: null,
-    error: 'bookmark not found in existing stored bookmarks',
-  }
+  const removedExisting = bookmarks.filter((bk) => bk.id !== id)
+  await storeBookmarks(removedExisting)
+  return { data: makeAddRemoveMessage('remove', existingBookmark) }
 }
 
 export async function updateBookmark(bookmarkToUpdate: Bookmark) {
-  const { group, col } = bookmarkToUpdate
-  const { data, error } = await getStoredBookmarks()
-  if (data) {
-    let foundMatch = false
-    const updated = data.map((bk) => {
-      if (bk.group === group && bk.col === col) {
-        foundMatch = true
-        return bookmarkToUpdate
-      }
-      return bk
-    })
-    if (foundMatch) {
-      await storeBookmarks(updated)
-      return {
-        data: makeAddRemoveMessage('update', bookmarkToUpdate),
-        error: null,
-      }
+  const { data: bookmarks } = await getStoredBookmarks()
+  if (!bookmarks) {
+    return {
+      data: null,
+      error: 'failed to pull in stored bookmarks, updateBookmark',
     }
-    return { data: null, error: 'failed to find matching bookmark to update' }
   }
-  return { data: null, error }
+  const updatedBookmarks = bookmarks.map((bk) => {
+    if (bk.id === bookmarkToUpdate.id) {
+      return bookmarkToUpdate
+    }
+    return bk
+  })
+
+  await storeBookmarks(updatedBookmarks)
+  return { data: 'updated bookmark id: ' + bookmarkToUpdate.id, error: null }
 }

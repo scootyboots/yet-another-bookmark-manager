@@ -13,41 +13,33 @@ type Bookmarks = typeof bookmarksJson
 export default function NewTab() {
   const [showSearch, setShowSearch] = useState(true)
 
-  const {
-    bookmarks: bookmarksFromHook,
-    addBookmark,
-    removeBookmark,
-    updateBookmark,
-    reset,
-  } = useBookmarkController()
+  const { bookmarks, addBookmark, removeBookmark, updateBookmark, reset } =
+    useBookmarkController()
 
-  const { linksByGroup, columnsWithBookmarks } = useMemo(() => {
-    const groups = bookmarksFromHook.map((book) => book.group)
-    const uniqueGroups = [...new Set(groups)]
-    const linksByGroup = uniqueGroups.map((group) =>
-      bookmarksFromHook.filter((book) => book.group === group)
+  const { bookmarkColumns } = useMemo(() => {
+    const columns = [...new Set(bookmarks.map((bk) => bk.col))]
+    const bookmarkColumns = columns.map((col) =>
+      bookmarks
+        .filter((bk) => bk.col === col)
+        .sort((a, b) => a.group.length - b.group.length)
     )
-    const columns = [...new Set(bookmarksFromHook.map((book) => book.col))]
-    const columnsWithBookmarks = columns.map((col) =>
-      bookmarksFromHook.filter((book) => book.col === col)
-    )
-    return { linksByGroup, columnsWithBookmarks }
-  }, [bookmarksFromHook])
+    console.log(bookmarkColumns)
+    return { bookmarkColumns, columns }
+  }, [bookmarks])
   return (
     <div className="NewTab">
       <button onClick={() => reset()}>reset</button>
       <Search
-        bookmarks={bookmarksFromHook}
+        bookmarks={bookmarks}
         showSearch={showSearch}
         setShowSearch={setShowSearch}
       />
       <div className="bookmark-groups">
-        {columnsWithBookmarks.map((col, index) => (
+        {bookmarkColumns.map((col, index) => (
           <div key={'col-' + index}>
             <div>
               {col.map((entry, i) => {
                 const isFirst = i === 0
-                // const isFirst = true
                 const groupName = entry.group
                 const previousGroupName = col.at(i - 1)?.group
                 const sameAsLast = previousGroupName === groupName
@@ -63,6 +55,13 @@ export default function NewTab() {
                       <button onClick={() => addBookmark(entry)}>add</button>
                       <button onClick={() => removeBookmark(entry)}>
                         remove
+                      </button>
+                      <button
+                        onClick={() =>
+                          updateBookmark({ ...entry, text: 'UPDATED' })
+                        }
+                      >
+                        update
                       </button>
                     </>
                   </div>

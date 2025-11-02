@@ -215,22 +215,25 @@ function findFuzzyMatches(input: string, bookmarks: SearchProps['bookmarks']) {
   let matches = []
   let hrefMatches = []
 
-  // TODO: check for thrown errors here
-  const matchRegex = new RegExp(input, 'ig')
+  try {
+    const matchRegex = new RegExp(input, 'ig')
 
-  for (let index = 0; index < bookmarks.length; index++) {
-    const bookmark = bookmarks[index]
-    const toTest = bookmark.text.replace(/\s+/g, '')
-    const hasTextMatch = matchRegex.test(toTest)
-    if (hasTextMatch) {
-      matches.push(bookmark)
-      continue
-    }
+    for (let index = 0; index < bookmarks.length; index++) {
+      const bookmark = bookmarks[index]
+      const toTest = bookmark.text.replace(/\s+/g, '')
+      const hasTextMatch = matchRegex.test(toTest)
+      if (hasTextMatch) {
+        matches.push(bookmark)
+        continue
+      }
 
-    const hasHrefMatch = matchRegex.test(bookmark.href)
-    if (hasHrefMatch) {
-      hrefMatches.push(bookmark)
+      const hasHrefMatch = matchRegex.test(bookmark.href)
+      if (hasHrefMatch) {
+        hrefMatches.push(bookmark)
+      }
     }
+    return [...matches, ...hrefMatches]
+  } catch {
+    return []
   }
-  return [...matches, ...hrefMatches]
 }

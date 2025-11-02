@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "version": "1.0.0",
-  "name": "Chrome Extension Zero",
-  "description": "An example Chrome extension built with React and Rsbuild.",
+  "name": "Yet Another Bookmark Manager",
+  "description": "Minimalist bookmark manager focused on search",
   "background": {
     "service_worker": "static/js/background.js"
   },
