@@ -1,0 +1,158 @@
+.NewTab {
+  margin-block: 1rem;
+  margin-inline: 1rem;
+}
+
+.Search {
+  position: fixed;
+  top: 2rem;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  border-radius: 0.75rem;
+  padding-inline: 1rem;
+  padding-block: 1rem;
+  display: flex;
+  justify-content: center;
+  /* width: 100vw; */
+}
+
+.Search-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  /* background-color: rgba(0, 0, 0, 0.85); */
+  background-color: var(--background-weak);
+  box-shadow: var(--box-shadow-primary-inset);
+  z-index: 100;
+}
+
+.Search input {
+  /* width: 100%; */
+  /* border: '1px solid black'; */
+  border-width: 0px;
+  padding: 6px;
+  /* border-radius: 0.25rem; */
+  border-bottom-width: 2px;
+  border-bottom-color: var(--primary);
+  /* border-bottom-width: 2px;
+  border-bottom-color: 'red';
+  border-bottom-style: 'solid'; */
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  font-size: 18px;
+  font-family: monospace;
+  margin-inline: 8rem;
+  margin-block-end: 0.75rem;
+}
+
+.Search input:focus {
+  outline: none;
+}
+
+.Search-content {
+  display: flex;
+  flex-direction: column;
+  width: 55vw;
+  max-width: 615px;
+  background-color: var(--background-weak);
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--primary-weak);
+  padding-inline: 2rem;
+  padding-block: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--box-shadow-primary);
+  /* margin: 4rem; */
+}
+
+.Search-result {
+  font-weight: 700;
+  font-size: 16px;
+  display: flex;
+  gap: 0.5rem;
+  max-width: 95vw;
+  border: 2px solid;
+  border-radius: 0.25rem;
+  padding-inline: 0.5rem;
+  padding-block: 0.5rem;
+}
+
+.Search-result-text {
+  text-wrap: nowrap;
+}
+
+.Search-result-divider {
+  color: var(--primary);
+}
+
+.Search-result-link {
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  overflow: hidden;
+}
+
+.matches-number-display {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-block-start: 0.5rem;
+}
+
+.bookmark-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+h2 {
+  text-decoration: underline;
+  color: var(--primary);
+}
+
+.BookmarkEntry {
+  margin-block-end: 0.5rem;
+}
+
+.bookmark-link {
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+@keyframes shakeX {
+  from,
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* 10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translate3d(-6px, 0, 0);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translate3d(6px, 0, 0);
+  } */
+
+  45% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  90% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+.shakeX {
+  animation-name: shakeX;
+  animation-duration: 0.08s;
+}

@@ -1,0 +1,21 @@
+{
+  "name": "chrome-extension-zero",
+  "private": true,
+  "scripts": {
+    "dev": "rsbuild dev",
+    "build": "rsbuild build"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "1.5.4",
+    "@rsbuild/plugin-react": "1.4.0",
+    "@types/chrome": "^0.1.6",
+    "@types/node": "^22.5.4",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "typescript": "^5.9.2"
+  }
+}

@@ -1,0 +1,2678 @@
+[
+  {
+    "group": "design at indeed",
+    "href": "https://code.corp.indeed.com/jobseeker-ux/jspl",
+    "text": "jsbl job seeker pattern librray",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://jsma-ios.pages.corp.indeed.com/indeedkit/documentation/indeeddesignsystem/",
+    "text": "ios design system docs",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://code.corp.indeed.com/jsma-ios/iphoneapp",
+    "text": "ios phone app repo",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://code.corp.indeed.com/jsma-android/android-idl",
+    "text": "android IDL",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://indeed.atlassian.net/wiki/spaces/Search/pages/200447683/Contributing+to+Job+Search",
+    "text": "contributing to job search",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://indeed.atlassian.net/wiki/spaces/a11y/pages/284234227/Infinite+Scroll+Feed+-+WIP",
+    "text": "infinite scrolling feed",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://indeed.atlassian.net/wiki/spaces/a11y/pages/284230185/Screen+Reader+Support",
+    "text": "screen reader support",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://docs.google.com/document/d/16V19xEzNAIpg7OzhDS1O6U6eXym1QGtaFj7aKpiX9t0/edit",
+    "text": "error message templates",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://docs.google.com/document/d/16V19xEzNAIpg7OzhDS1O6U6eXym1QGtaFj7aKpiX9t0/edit",
+    "text": "New bookmark",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://docs.google.com/document/d/1S8Vw_2peP6l_TQp2vetg5jXdFsGJXgMIGDr92qyzMco/edit",
+    "text": "IFL 7 migration guide",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://a11y-patterns.sandbox.indeed.net/",
+    "text": "a11y patterns indeed",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://wiki.indeed.com/display/a11y/Development+workflow",
+    "text": "a11y development",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://docs.google.com/presentation/d/1Gz2H_xfImZ-Mgg_vcge8r2vYODxs9hPbEPnhAz3Vahk/edit#slide=id.g1d3c2b28c82_1_8",
+    "text": "IDS more than components",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://experience.indeed.design/components/ids/accessible-trap",
+    "text": "accessible trap",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://experience.indeed.design/",
+    "text": "experience hub design",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://experience.indeed.design/fundamentals/ids/tokens-list",
+    "text": "design token list",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://dochub.sandbox.indeed.net/components/reorder-list?tab=design",
+    "text": "FPL figma pattern library",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://docs.google.com/document/d/15GdCfJ6Bi5aXzoRqnByMwQkTBoJYp68RnuJRNo0LJds/edit#heading=h.p0qp0i9hpdeh",
+    "text": "Design Engineering Team: IBU",
+    "col": 1
+  },
+  {
+    "group": "design at indeed",
+    "href": "https://docs.google.com/document/d/15GdCfJ6Bi5aXzoRqnByMwQkTBoJYp68RnuJRNo0LJds/edit#heading=h.p0qp0i9hpdeh",
+    "text": "Update your browser to use Google Drive, Docs, Sheets, Sites, Slides, and Forms",
+    "col": 1
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://indeed.atlassian.net/wiki/spaces/ITKB/pages/94671274/GCP+for+Workspace",
+    "text": "google cloud API key request",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://docs.google.com/spreadsheets/d/1sZQDBLr1LBQp4oePpWtYHz3G-ujnUMotPjXg-7SEC_A/edit?gid=0#gid=0",
+    "text": "custom button share swaggops",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://developer.chrome.com/docs/extensions/reference/",
+    "text": "API Reference - Chrome Developers",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://developer.chrome.com/docs/extensions/mv3/manifest/",
+    "text": "Manifest file format - Chrome Developers",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://developer.chrome.com/docs/workbox/service-worker-overview/",
+    "text": "Service worker overview - Chrome Developers",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://developer.chrome.com/docs/extensions/mv3/intro/mv3-migration/",
+    "text": "Migrating to Manifest V3 - Chrome Developers",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://developer.chrome.com/docs/extensions/mv3/mv3-migration-checklist/",
+    "text": "Manifest V3 migration checklist - Chrome Developers",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessage",
+    "text": "runtime.onMessage - Mozilla | MDN",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://blog.shahednasser.com/chrome-extension-tutorial-migrating-to-manifest-v3-from-v2/",
+    "text": "Migrating to Manifest V3 from V2 - tutorial",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://zenn.dev/katoaki/articles/4e7548b533d7b3",
+    "text": "Chrome拡張機能ManifestV3へ対応する方法（V2から）",
+    "col": 2
+  },
+  {
+    "group": "Chrome Extensions",
+    "href": "https://browsermcp.io/",
+    "text": "browser MCP chrome extension for getting ai to automate tasks in-browser",
+    "col": 2
+  },
+  {
+    "group": "LLM stuff agents etc.",
+    "href": "https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents",
+    "text": "context engineering for ai agents",
+    "col": 2
+  },
+  {
+    "group": "LLM stuff agents etc.",
+    "href": "https://www.anthropic.com/engineering/building-effective-agents",
+    "text": "building effective ai agents",
+    "col": 2
+  },
+  {
+    "group": "LLM stuff agents etc.",
+    "href": "https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview",
+    "text": "prompt engineering overview claude docs",
+    "col": 2
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://aggui.sandbox.indeed.net/tool/feed/217179/definition-editor",
+    "text": "description procedural rule",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://aggui.sandbox.indeed.net/tool/feed/102198/definition-editor",
+    "text": "html parser example",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://mechabugs.indeed.com/browse/AFM-5416896",
+    "text": "example external sftp connection feed",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://aggui.sandbox.indeed.net/tool/feed/170367/definition-editor",
+    "text": "other procedural xml feed",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://docs.google.com/forms/d/e/1FAIpQLSdrvQxG7F-mfWlic1DC9AWlZ_7ewb9zFtvRHF1yWwVGB5OjwA/viewform",
+    "text": "new procedural form",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://aggcentral.sandbox.indeed.net/display/?type=feed&id=5073#Definition",
+    "text": "procedural xml feed",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AGGC/pages/234233108/APIs",
+    "text": "Procedural API",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://docs.google.com/document/d/14xYuJmKWqKUUhdXpoJ7H5izrdH9rvsa4oHNmF1Xd5so/edit",
+    "text": "Procedural training doc",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Guidelines+for+creating+procedural+definitions",
+    "text": "Guidelines for requesting new procedural",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AGGC/Queued+Job+Target+Attribute+Names",
+    "text": "Queued Job Target Attribute Names",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AggOpsInternal/pages/235832303/Recipes",
+    "text": "more procedural recipes",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AGGC/Recipes",
+    "text": "More procedural recipes",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AGGC/Procedural+Definition+Examples",
+    "text": "Procedural Recipes",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://docs.python.org/2/library/re.html",
+    "text": "Regular expression operations — Python 2.7.18 documentation",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://aggcentral.sandbox.indeed.net/display/?type=feed&id=33785#Definition",
+    "text": "webkit form example",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AGGC/Queued+Job+Target+Attribute+Names",
+    "text": "Queued Job Target Attribute Names",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Elementary+Procedural",
+    "text": "Elementary Procedural",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AGGC/APIs",
+    "text": "AggC APIs",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AGGC/Procedural+functions+and+helpers",
+    "text": "Debugging Procedural",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://wiki.indeed.com/display/AGGC/Procedural+Feed+Exercises",
+    "text": "Procedural Exercises",
+    "col": 1
+  },
+  {
+    "group": "Procedural ",
+    "href": "https://aggcentral.sandbox.indeed.net/display/?type=feed&id=193408&runTests=AggOps#Definition",
+    "text": "TGNewUI brassring example",
+    "col": 1
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://docs.google.com/document/d/16VJkBovFkFzoNKtYE7kTDsAdke67lb_fV3Jxo02dBao/edit?tab=t.0#heading=h.co6b3uing8am",
+    "text": "aws ftp workflows",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://d11st7if0h10db.cloudfront.net/index.html#",
+    "text": "new sftp bucket viewer browser",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://indeed.atlassian.net/wiki/spaces/SEC/pages/279499727/iSSM",
+    "text": "iSSM wiki",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://use2-atlscript1.corpit.indeed.net/cgi-bin/ftpusers_passwds.cgi",
+    "text": "ftp accounts and credentials",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AggOpsInternal/pages/235831845/SFTP+Account+Management",
+    "text": "sFTP account management",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/AWS+FTP+Troubleshooting+Guidelines",
+    "text": "AWS FTP troubleshoot guidelines",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://ausc-atlscript1.corpit.indeed.net/cgi-bin/ftpusers_passwds.cgi",
+    "text": "FTP accountsd/pswds",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://dufe3mhfnuwfs.cloudfront.net/index.html",
+    "text": "FTP Bucket Viewer",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://wiki.indeed.com/display/AGGC/Agg+AWS+FTP+File+Access",
+    "text": "AWS FTP file access",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://ausc-atlscript1.corpit.indeed.net/cgi-bin/ftpusers_passwds.cgi",
+    "text": "FTP account/pws",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/FTP+Email+template+references",
+    "text": "email template",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Requesting+SFTP+accounts+for+ftp.indeed.com",
+    "text": "connecting ftp account via sftp CML",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Creating+FTP+account",
+    "text": "How to create FTP account",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Update+FTP+passwords",
+    "text": "Update FTP password",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=FTP+Server+access+for+AggOps",
+    "text": "FTP Server access for AggOps",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://auscorp-atl1.indeed.net/cgi-bin/ftpusers_passwds.cgi",
+    "text": "ftp accounts list/pw",
+    "col": 2
+  },
+  {
+    "group": "FTP stuff",
+    "href": "https://auscorp-atl1.indeed.net/cgi-bin/ftpusers.cgi",
+    "text": "ftp users",
+    "col": 2
+  },
+  {
+    "group": "Labeler",
+    "href": "https://labeler.sandbox.indeed.net/",
+    "text": "Labeler",
+    "col": 2
+  },
+  {
+    "group": "Labeler",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=ScaledOps&title=Scaled+Ops+Labeler+Home",
+    "text": "Labeler wiki",
+    "col": 2
+  },
+  {
+    "group": "Labeler",
+    "href": "https://docs.google.com/presentation/d/1A33iivlV1JbgGKljpqPDWzl1cCQpyDppnZIJsjziKsU/edit#slide=id.g3485cca33b_0_72",
+    "text": "Intro to Labeler",
+    "col": 2
+  },
+  {
+    "group": "Labeler",
+    "href": "https://wiki.indeed.com/display/squalops/How+to+Populate+a+Labeler+queue+from+IQL",
+    "text": "How to populate labeler from IQL",
+    "col": 2
+  },
+  {
+    "group": "Labeler",
+    "href": "https://wiki.indeed.com/display/~tquiroga/Parsing+JSON+with+Ishbook",
+    "text": "parsing JSON with ishbook",
+    "col": 2
+  },
+  {
+    "group": "Labeler",
+    "href": "https://aggops.pages.corp.indeed.com/labeler-data-to-csv/",
+    "text": "Labeler JSON formatter - pages",
+    "col": 2
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://indeed.atlassian.net/wiki/spaces/SRE/pages/196542500/Aggregation+IP+Addresses",
+    "text": "Aggregation IP Addresses",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://wiki.indeed.com/display/PERPLAT/Troubleshoot+MySQL+Connection",
+    "text": "Troubleshoot SQL Connection",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=406001888",
+    "text": "How to connect to agg database",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://docs.google.com/document/d/1etJNz8gr9Chpq8m7rNLXZl7x3ApCIQJDqfsyLqBM9JQ/edit",
+    "text": "Agg Database training",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://wiki.indeed.com/display/AGGC/How+to+fix+expiration+issues+on+large+volume+feeds",
+    "text": "fix expiration large volume feeds",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Basic+Kibana+Introduction",
+    "text": "Kibana Introduction",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Logging+-+AggOps+Tech",
+    "text": "Logging - Kibana",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Database+Information",
+    "text": "Database Information wiki",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://pma.ausoff.indeed.net/db/prod/index.php",
+    "text": "phpMyAdmin",
+    "col": 1
+  },
+  {
+    "group": "Agg Database",
+    "href": "https://grants.indeed.tech/grants/",
+    "text": "grants - access/info on SQL databases",
+    "col": 1
+  },
+  {
+    "group": "Django",
+    "href": "https://docs.google.com/document/d/1Sk9fHufjxvK2x3-11-_PFLZQMXU9nyAR5VGbfbyQH6A/edit?tab=t.0",
+    "text": "L2 peer verification doc",
+    "col": 1
+  },
+  {
+    "group": "Django",
+    "href": "https://indeed.zoom.us/rec/share/aN7kYWvrjSGmhv15IjqdEVj__7t0hI7K2EihIUYW5msEPZrqosFIeNtUxzq5fKCY.sTDYQPtd7GoEZvKX?startTime=1646874080000",
+    "text": "Tools dash overview",
+    "col": 1
+  },
+  {
+    "group": "Django",
+    "href": "https://docs.djangoproject.com/en/4.0/topics/db/queries/",
+    "text": "Making queries | Django documentation | Django",
+    "col": 1
+  },
+  {
+    "group": "Django",
+    "href": "https://docs.djangoproject.com/en/4.0/ref/models/fields/",
+    "text": "Model field reference | Django documentation | Django",
+    "col": 1
+  },
+  {
+    "group": "Django",
+    "href": "https://indeed.udemy.com/course/python-django-the-practical-guide/",
+    "text": "python django - the practical guide",
+    "col": 1
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggops-tools-dashboard.sandbox.indeed.net/private/admin/verification_sampling/",
+    "text": "peer verification admin panel",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://docs.google.com/document/d/14eH2t15wL6akH6PL0zgKb--oUBRF-qxHAB_gFmNb918/edit?tab=t.0",
+    "text": "ALM workflow doc",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AggOpsInternal/pages/496227342/HOW-TO+Create+an+AGGBULK+request+ticket",
+    "text": "aggbulk request ticket",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://www.qa.indeed.net/jobs?q=id%253A9730225605&l=&from=searchOnDesktopSerp&vjk=c4c7a07583653520",
+    "text": "qa indeed job id search example",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed-assistant.sandbox.indeed.net/chat/",
+    "text": "indeed assistant chat",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://code.corp.indeed.com/techops-tooling-apps/one-tool",
+    "text": "onetool repo",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://onetool.sandbox.qa.indeed.net/",
+    "text": "onetool dashboard",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://mechabugs.qa.indeed.net/secure/Dashboard.jspa",
+    "text": "mechabugs qa",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggui.sandbox.qa.indeed.net/tool/feed/249491",
+    "text": "aggui qa",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AGGC/pages/234253188/Feed+Service",
+    "text": "feed service graphql api",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeedinc.lightning.force.com/lightning/n/Claimed_Sources_Search",
+    "text": "claimed source search tool",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://app.datadoghq.com/logs/live-search?query=env%3Aprod%20service%3Alocationcrawlerdaemon&agg_m=count&agg_m_source=base&agg_t=count&cols=host%2Cservice&fromUser=true&messageDisplay=inline&refresh_mode=sliding&storage=driveline&stream_sort=desc&viz=stream&from_ts=1737147142704&to_ts=1737150742704&live=true",
+    "text": "datadog location crawler",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://beaker.sandbox.indeed.net/swagger-ui/index.html",
+    "text": "beaker api",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AGGC/pages/234237278/AggHost+Setup",
+    "text": "AggHost setup",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://lindy.sandbox.indeed.net/swagger-ui/index.html#/",
+    "text": "agg lindy api",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://docs.google.com/document/d/1Gu_k22poUrujDn1fJYmw6Sk0kOS1q7HKlCf4TodjxW4/edit?tab=t.0",
+    "text": "company location feeds",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://lindy.sandbox.indeed.net/swagger-ui/index.html",
+    "text": "lindy agg api documentation",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://mario-aws.sandbox.indeed.net/",
+    "text": "Mario - job comparison tool",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://docs.google.com/presentation/d/1kd6z8uzvUUd9TWs_k5zWptRe28ugsI9DWyzSKNxwnzA/edit?slide=id.g1f23d9b1a1b_0_131#slide=id.g25d8970aa05_0_4",
+    "text": "internal job instructions",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://waldo.sandbox.indeed.net/search?query=%28advertiserid%3A64526725%29+and+country%3AJP&num=100&lang=en",
+    "text": "indeed internal job posts",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AggOpsInternal/pages/235831400/Agg3+-+Group+Definition+and+common+ATS+mapping+guidelines",
+    "text": "group reference",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AggOpsInternal/pages/235833182/AggOps+SuperTech",
+    "text": "AggOps TACO",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://code.corp.indeed.com/aggops/aggops-training-exercises",
+    "text": "AggOps Training Exercises",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/display/SRE/Aggregation+IP+Addresses#AggregationIPAddresses-IndeedBot/WhitelistIP",
+    "text": "crawler subnets/IPs",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://kibana.indeed.tech/",
+    "text": "new kibana",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggops-tools-dashboard.sandbox.indeed.net/peer_verification/queue/",
+    "text": "AggOps Tools verification queue",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggcentral-cmh.cmhprod1.k8s.indeed.tech/e_search/search",
+    "text": "WIC AggCentral",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/AggOps+Tech",
+    "text": "AggOps Tech",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://www.debuggex.com/",
+    "text": "Debuggex: Online visual regex tester. JavaScript, Python, and PCRE.",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/display/CODE/aggops--bulk-feed-tester",
+    "text": "group feed tester",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://code.corp.indeed.com/aggops/aggops-training-app",
+    "text": "AggOps Training App gitlab",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggops.pages.corp.indeed.com/aggops-training-sites-pages/",
+    "text": "AggOps Training sites pages",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Internal+Developed+Tools",
+    "text": "Internal developed tools",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://techdocs.indeedeng.io/direct-employer-integration-with-indeed/#formatting_guidelines",
+    "text": "Formatting guildelines",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://techdocs.indeedeng.io/direct-employer-integration-with-indeed/#formatting_guidelines",
+    "text": "Direct Employer Integration with Indeed - Indeed Solutions",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggcentral-node.sandbox.indeed.net/tool/friv?feedId=646838",
+    "text": "feed run history",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Leadgen+Feeds",
+    "text": "Leadgen feeds",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Agg3+-+Group+Definition+and+common+ATS+mapping+guidelines",
+    "text": "Group def reference",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=AggOpsTech+Troubleshooting#AggOpsTechTroubleshooting-Kibana",
+    "text": "AggOps Tech troubleshooting",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "http://services-be.ausprod.indeed.net/aggservice/FeedGroupDefinition/",
+    "text": "Group definition settings",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggops-tools-dashboard.sandbox.indeed.net/",
+    "text": "AggOps Tools",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Internal+Developed+Tools",
+    "text": "AggOps internal developed tools",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "http://aggops.ausoff.indeed.net/groupmgmt/",
+    "text": "Feed Group Management",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/display/AGGC/Aggregation+APIs",
+    "text": "Agg APIs",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://bugs.indeed.com/secure/RapidBoard.jspa?rapidView=3409&view=planning.nodetail&quickFilter=23595",
+    "text": "AggTools backlog",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=145230539",
+    "text": "location request ticket",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://squall.indeed.com/iqlweb/",
+    "text": "IQL",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://bugs.indeed.com/secure/RapidBoard.jspa?rapidView=1553&view=detail&selectedIssue=AGGDEV-1536",
+    "text": "agg kanban",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "http://aggops.ausoff.indeed.net/",
+    "text": "aggops verification etc",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://bugs.indeed.com/secure/RapidBoard.jspa?rapidView=1553&view=detail&selectedIssue=AGGDEV-1562",
+    "text": "Agg Dev triage",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggftp.ausprod.indeed.net/ftp238aggopstest/",
+    "text": "agg test ftp",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "http://cye.ausoff.indeed.net/jira_history/",
+    "text": "Jira history",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=145230539",
+    "text": "location request",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://docs.google.com/forms/d/1tI5fKzO1MQfY_u6SDCzLUn8sLzc852N6wDHVs-nc_dg/viewform?edit_requested=true",
+    "text": "Request SQUAL review JP",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "http://cye.ausoff.indeed.net/verification_sampling/reports/scoffrin?start=2018-03-08&end=2018-03-29",
+    "text": "verification report",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.onelogin.com/client/apps",
+    "text": "OneLogin",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://drive.google.com/drive/folders/0AB4P6ukAD4eLUk9PVA",
+    "text": "AggOps team drive",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://salcentral.ausprod.indeed.net/salarycentral/static/index.html#/debug?_k=lsr7nd",
+    "text": "salary checker",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://aggcentral.indeed.com/e_search/search",
+    "text": "AggCentral",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://squall.indeed.com/",
+    "text": "squall indeed - useful links",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://salcentral.ausprod.indeed.net/salarycentral/static/index.html#/?_k=07ec98",
+    "text": "SalaryCentral",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://levelup.sandbox.indeed.net/",
+    "text": "indeed levelup",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.15five.com/report/current",
+    "text": "15five",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://lola.sandbox.indeed.net/",
+    "text": "Lola",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://kibana.ausprod.indeed.net/#/discover?_g=()&_a=(columns:!(_source),index:%5Blogstash-adscience-%5DYYYY.MM.DD,interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!('@timestamp',desc))",
+    "text": "kibana",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://embus.sandbox.indeed.net/private/poodlepants/#!/index",
+    "text": "EmbusSearchDaemon",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://adcentral.indeed.com/",
+    "text": "AdCentral",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://bugs.indeed.com/",
+    "text": "indeed Jira",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://mechabugs.indeed.com/",
+    "text": "mechabugs",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.slack.com/",
+    "text": "indeed Slack",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://embus.sandbox.indeed.net/private/poodlepants/#!/index/search",
+    "text": "EMBus",
+    "col": 3
+  },
+  {
+    "group": "agg portals",
+    "href": "https://indeed.officespacesoftware.com/vd/vd.jsp?floorLabel=Tokyo(Eng)-Fl1",
+    "text": "office floormap",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://code.corp.indeed.com/scoffrin/pagination-training-module",
+    "text": "pagination training module",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://docs.google.com/presentation/d/1gnbNPk8Y3YVRO_ESdThz82stFdAY6PGZIKsUuUALopo/edit#slide=id.g9cef782b8a_0_6",
+    "text": "introduction to the terminal",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://docs.google.com/document/d/1Guy9t5voiEQ4lKoI_FbDM930Haofiyt0fpHoyOzOIKU/edit#heading=h.6c2byc4b33w0",
+    "text": "Yoshi Prio Training Schedule",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://aggops-tools-dashboard.sandbox.indeed.net/peer_verification/report/individual_verifications/yoshihito/?start=2021-10-27&end=2021-11-17",
+    "text": "Yoshi's return rate",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://docs.google.com/spreadsheets/d/1BqmiVblplr6Y3FaDFQDugqJ_XzqFfiN_ua8QI7xm5Sc/edit?usp=sharing",
+    "text": "Vendor Tech Review - Masa",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://docs.google.com/document/d/1y5X4f0Ube76usTHdf7PqIqMjVvIT3AVcIWf31pmcgnk/edit",
+    "text": "Yoshi training schedule",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://docs.google.com/spreadsheets/d/1sN4ugFdNR_C8MQHIhklwHLLjCncy3NAaxf_R3mTffKs/edit#gid=2026896293",
+    "text": "Training Checklist Template",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://docs.google.com/spreadsheets/d/1i2NeGSjh84A3CjrKcex4JPmEeYushpkrgtM3vPy2zrg/edit#gid=2026896293",
+    "text": "Training Checklist - Masahito",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://docs.google.com/spreadsheets/d/1Mkf2_P7LJnFemK6cLCYRNu4AL2mp33DWjpb991eEfOc/edit#gid=2026896293",
+    "text": "Training Checklist - Yohei",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=100841454",
+    "text": "AggOps JP Feed Maintainer Training",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Sponsor+Feeds+Settings",
+    "text": "Working on sponsored feeds",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Agg3+User+Manual",
+    "text": "are reached by submitting a form",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/HTML+and+CSS+101",
+    "text": "HTML and CSS 101",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=110242184#NewMaintainerTrainingTimeline(JP)-TrainingTimeline(underconstruction)",
+    "text": "New Maintainer training timeline",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://mechabugs.indeed.com/secure/Dashboard.jspa",
+    "text": "mechabugs training page",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/CS/XML+Feeds",
+    "text": "XML feeds",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Global+Waldo+Rules",
+    "text": "Global Waldo rules",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=95241727",
+    "text": "Training Sites (JP)",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Training+Videos",
+    "text": "AggOps Training Videos",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/IU/WA-100%253A+Fundamentals+of+the+Web",
+    "text": "Fundamentals of the Web WA-100",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Getting+Started+with+AggOps",
+    "text": "Getting Started with AggOps",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=95241727",
+    "text": "Training Sites (JP)",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "http://training.cye.ausoff.indeed.net/",
+    "text": "simple training site",
+    "col": 3
+  },
+  {
+    "group": "training",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/RegEx+101",
+    "text": "Regex 101",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://indeed.atlassian.net/wiki/spaces/DevPlat/pages/535004564/How+to+migrate+from+npm+to+pnpm",
+    "text": "npm to pnpm migration",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://indeed.sourcegraph.com/code.corp.indeed.com/indeed-design-system/ifl/-/blob/packages/components/src/hooks/useIsomorphicLayoutEffect.ts",
+    "text": "IFL hooks",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://indeed.atlassian.net/wiki/spaces/eng/blog/2024/08/20/277746364/Taking+a+Layered+Approach+to+Testing",
+    "text": "Layered Approach to Testing",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/one-host/xml-testing-tool-frontend",
+    "text": "xml testing tool frontend",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/one-host/xml-testing-tool-frontend",
+    "text": "xml testing tool",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://employers.qa.indeed.net/playground/upload?scope=xml-testing-tool-frontend&module=.%252FApp",
+    "text": "OneHost - xml testing tool frontend",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://indeed.sourcegraph.com/insights/dashboards/ZGFzaGJvYXJkOnsiSWRUeXBlIjoiY3VzdG9tIiwiQXJnIjoyNH0=",
+    "text": "IPL insights sourcegraph",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/indeed-design-system/ifl/-/tree/develop",
+    "text": "IFL repo",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://dev.to/scooperdev/use-npm-pack-to-test-your-packages-locally-486e",
+    "text": "npm pack test packages locally",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/aggops/aggonlytemp-filter",
+    "text": "aggonly temp filter",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://www.w3.org/WAI/perspective-videos/keyboard/",
+    "text": "keyboard compatibility",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://github.com/uidotdev/usehooks/blob/main/index.js",
+    "text": "useHooks",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://usehooks-ts.com/introduction",
+    "text": "useHooks-ts",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/indeed-design-system/ipl",
+    "text": "IPL gitlab",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example",
+    "text": "react typescript cheetsheet",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://github.com/testing-library/jest-dom",
+    "text": "jest-dom",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/design-engineering/ihl/-/tree/main?ref_type=heads",
+    "text": "IHL repo",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://docs.google.com/spreadsheets/d/1ZNOTVaA0SS2vapbUdNgbactnmqNg_f-s2KLbnJvZmyY/edit?pli=1#gid=0",
+    "text": "IPL component tracking",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://design-engineering.pages.corp.indeed.com/ihl/?path=/docs/usemergerefs--docs",
+    "text": "IHL Storybook pages",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://indeed-design-system.pages.corp.indeed.com/ipl/?path=/docs/production-ready-ipl-accordion--docs",
+    "text": "IPL Storybook pages",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://indeed-design-system.pages.corp.indeed.com/ifl/?path=/story/welcome--additional-resources",
+    "text": "IFL Storybook pages",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://testing-library.com/docs/",
+    "text": "testing library",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://dochub.sandbox.indeed.net/components/utility?tab=development#globalstyles-global-styles",
+    "text": "ifl global styles",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://dochub.sandbox.indeed.net/components/patterns-overview/",
+    "text": "contributing ipl",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://experience.indeed.design/fundamentals/ids/tokens-list",
+    "text": "ifl - design tokens",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://wiki.indeed.com/display/NodeJS/Migrating+to+Node.js+16",
+    "text": "migrating to node 16",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/example/skeleton-nodejs-webapp",
+    "text": "skeleton-nodejs-webapp",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://chrome.google.com/webstore/detail/swaggops-v2/laoniagdealppolcbbdnidddcciognib",
+    "text": "SwaggOps v2 Chrome Store",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://chromewebstore.google.com/detail/swaggops-external/gmcafgdleieakhiicdflecimjeboijpm?authuser=0&hl=en",
+    "text": "SwaggOps External chrome store",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://dochub.sandbox.indeed.net/development/aurora-theme-reference/",
+    "text": "aurora these reference",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/indeed-design-system/ifl/tree/primary/packages/tailwind",
+    "text": "IFL tailwind",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://indeed-design-system.pages.corp.indeed.com/ifl/playroom/",
+    "text": "IFL playroom/playground/standbox",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://indeed-design-system.pages.corp.indeed.com/ipl/playroom/#",
+    "text": "IPL layroom",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/indeed-design-system/ifl/-/blob/develop/packages/primitives/properties/aurora/colors.json",
+    "text": "IFL colors",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://dochub.sandbox.indeed.net/components/utility",
+    "text": "IFL - Box, Flex, ... utilities",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/labs/conductor",
+    "text": "Conductor - react/django indeed",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/labs/convo",
+    "text": "Convo - react/django indeed",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://code.corp.indeed.com/labs/interview",
+    "text": "Interview - react/django indeed",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://wiki.indeed.com/display/SEC/JavaScript+Secure+Coding+Guidelines",
+    "text": "javascript secure code guidelines",
+    "col": 3
+  },
+  {
+    "group": "javascript / react",
+    "href": "https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API",
+    "text": "File System Access API - Web APIs | MDN",
+    "col": 3
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://indeed.zoom.us/rec/play/cmhEMimYeSr4X2AWtFvH_2ydtrwLZ5qUx0BdIdlqKAk3WKMLA3dzrICIRNGs_QQnqj_5ediKll5FLe6H.TfrTKrEKABYrTbOy?eagerLoadZvaPages=sidemenu.billing.plan_management&accessLevel=meeting&canPlayFromShare=true&from=share_recording_detail&continueMode=true&componentName=rec-play&originRequestUrl=https%3A%2F%2Findeed.zoom.us%2Frec%2Fshare%2FarZ8ru1hbznVu8AOIjXZLVlkALyQmT_LAbuuLwBKdIhALBciFCh7WRCo-bwCcJOY.by59xwIAgpCEpfCE",
+    "text": "watsamp demo zoom recording",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AGGC/pages/847091335/WatsAmp",
+    "text": "WatsAmp wiki space",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://code.corp.indeed.com/agg/ai-agents/-/blob/main/feeds/job/health/MECHABUGS_FIELD_IDS_AND_TRANSITIONS.md?ref_type=heads",
+    "text": "mechabugs field ids and transitions",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://indeed.atlassian.net/wiki/spaces/AggOpsInternal/pages/931662164/JQL+Scriptrunner+Functions+for+AggOps",
+    "text": "JQL Scriptrunner Functions for AggOps",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/XMLs#XMLs-HowtoaccessanXMLonanExternalFTP",
+    "text": "xml auth ssh key",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://mechabugs.indeed.com/browse/AGGO-2032",
+    "text": "find feed tool AGGO-2032",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/User+Guide+for+AGGUI",
+    "text": "aggui user guide",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/XMCharmer+and+XMLChecker+GUI",
+    "text": "XMCharmer XML Checker GUI",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=389027578",
+    "text": "CS led QUAL",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=SRE&title=Aggregation+IP+Addresses",
+    "text": "crawler IP addresses",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=APPLY&title=Google+Analytic+configuration+with+UDDT",
+    "text": "GA Key UDDT",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Job+Formatting+Systems",
+    "text": "description formatting systems",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Requesting+Non-Tech+From+CS",
+    "text": "who to request CS non-tech",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=AggMonitor+Heuristics",
+    "text": "AggMon Heuristics",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=AggMonitor+Heuristics",
+    "text": "AggMon",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&postingDay=2020%2F1%2F16&title=January+14th+Standup+recap&preview=/249163419/253817271/Deduplication%20Survivor%20Logic%20Chart.jpeg",
+    "text": "Deduplication Logic Flowchart",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=255891581",
+    "text": "Photo URLs for Aggops",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=215346362",
+    "text": "Descrimination Quality Guidlines for JP AggOps",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/XMLs",
+    "text": "XMLs",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AGGC&title=Job+Archival",
+    "text": "Job Archival",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Japan-focus+Working+Dashboard",
+    "text": "Japan Focus Working Dashboards",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/login.action?os_destination=%252Fpages%252Fviewpage.action%253FpageId%253D185636213&permissionViolation=true",
+    "text": "internship aggregation",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=110257345",
+    "text": "feed verification reporting tool",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Agg3+Best+Practices#Agg3BestPractices-Sections",
+    "text": "form submission",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AGGC/AggCentral+Search+Help",
+    "text": "Agg Search help",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AGGC/Kermit+Logging+Documentation",
+    "text": "Kermit Logging Documentation",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Logging+-+AggOps+Tech",
+    "text": "Logging - Agg Ops Tech",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AGGC&title=How+to+create+a+page+in+Carlo",
+    "text": "How to create a page in Carlo",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Indeed+Apply+for+AggOps",
+    "text": "Indeed Apply for AggOps",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://docs.google.com/a/indeed.com/forms/d/1IY3gDWmm96nJvo3mUAF_HbaWEBHerhMbEX_63MukROE/viewform?edit_requested=true",
+    "text": "Pre-Deploy Check List",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/AggOps+Feed+Maintenance",
+    "text": "Feed Maintanance",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/AggOps+101+-+Vocabulary",
+    "text": "AggOps Vocabulary",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/AggOps+Feed+Maintenance",
+    "text": "AggOps",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/AggOps+Email+Lists",
+    "text": "AggOps Email Lists",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Japan+-+Market+Specific+Practices+for+Agg",
+    "text": "Market Specific Practices - Japan",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AGGC/Constantine#Constantine-HowtoinstallConstantine",
+    "text": "Constantine How to",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/AggOps+Team+Directory",
+    "text": "AggOps Team Directory",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "https://wiki.indeed.com/display/VRS/Indeed+PLUS+Policy+Hub%28JLM%29+-+Japan",
+    "text": "indeed+ policty guidelines",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "https://wiki.indeed.com/display/INDEED/2023/08/31/Github+Copilot+no+longer+authorized+for+use",
+    "text": "copilot alternative cody sourcegraph",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "https://lucid.app/lucidchart/8930e567-f2c9-4113-87f9-1bb7899327ed/edit?shared=true&page=hPHdIzJ2cUi.#",
+    "text": "Job processing pipeline",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "https://www.udemy.com/",
+    "text": "Online Courses - Anytime, Anywhere | Udemy",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "https://developers.google.com/web/updates/2018/07/css-scroll-snap",
+    "text": "scroll snapping",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "http://gitexplorer.com/",
+    "text": "GitExplorer",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "https://wiki.indeed.com/label/eng/css-not-so-basics",
+    "text": "CSS not so basics",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "https://medium.com/@julienetienne/pixels-are-dead-faa87cd8c8b9",
+    "text": "Pixels Are Dead: Why You Should Stop Using Pixels In CSS",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=179287403",
+    "text": "not so basic CSS blog series",
+    "col": 2
+  },
+  {
+    "group": "projects",
+    "href": "https://docs.google.com/presentation/d/18nSqxqlga83WyYUzD7g4MHUTR1pryE6c121G-V64ktc/edit#slide=id.g28f4ca87bbe_0_0",
+    "text": "AggUI+ feature requests for aggui",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://bugs.indeed.com/browse/IPL-2115",
+    "text": "AVR epic for IPL",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://storybook.js.org/tutorials/visual-testing-handbook/",
+    "text": "visual testing handbook",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://www.chromatic.com/docs/test",
+    "text": "chromatic visual testing",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://bugs.indeed.com/browse/IPL-2456",
+    "text": "storybook migration production ready",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://bugs.indeed.com/browse/IPL-2487",
+    "text": "storybook migration experimental",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://r12a.github.io/app-conversion/",
+    "text": "Unicode code converter",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://vim.rtorr.com/",
+    "text": "Home",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "http://flask.pocoo.org/docs/1.0/quickstart/#accessing-request-data",
+    "text": "For python script web app Flask 1.0.2 documentation",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://www.google.com/url?q=https://levelup.sandbox.indeed.net/sheet/2280/ratings/&sa=D&source=hangouts&ust=1540520789767000&usg=AFQjCNGBaTO81hpRvWNhu0F2QJtfY5S7mA",
+    "text": "level up case",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://docs.google.com/document/d/1oswDT07YwZ3NZQVFUslkxsyJCbKAIx4tXEZ8_yYohXw/edit",
+    "text": "1on1 with Charlie",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://chrome.google.com/webstore/detail/shortkeys-custom-keyboard/logpjaacgmcbpdkdchjiaagddngobkck?hl=en",
+    "text": "ShortKeys",
+    "col": 1
+  },
+  {
+    "group": "projects",
+    "href": "https://superuser.com/questions/545826/is-it-possible-to-set-keyboard-shortcuts-on-a-webpage",
+    "text": "Is it possible to set keyboard shortcuts on a webpage?",
+    "col": 1
+  },
+  {
+    "group": "unsorted",
+    "href": "https://deps.dev/",
+    "text": "analyze understand dependencies",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://snyk.io/advisor/",
+    "text": "snyk.io evaluate package dependency health",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://12factor.net/",
+    "text": "12 factor app - the twelve factors",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://indeed.atlassian.net/wiki/spaces/DataOrg/pages/216212043/idash+URL+format",
+    "text": "idash iql URL parameters",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://hindsight.sandbox.indeed.net/#scoffrin",
+    "text": "hindsight",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/1FtPBJL_UWHFrajEGEilfEU1SAgcowlZaInQBycqZUik/edit?ts=67606fbe",
+    "text": "peer verification appeal form",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/e/1FAIpQLScssQXpAhIL0aiFacaHQPtK6kPn2cQOqtCQUGHhAD6X0aM9qw/viewform",
+    "text": "aggops vendor feedback form",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://jp.indeed.com/cmp/Indeed/jobs",
+    "text": "indeed jp jobs",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://waldo.sandbox.indeed.net/search?query=feedid%253A289024+country%253AJP&num=100&lang=ja",
+    "text": "indeed jp open potitions",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1pWHtlLykfcon1LeaCrlSP17eVuK1HqscsUCKtbw5j00/edit#heading=h.c6xyekmi7z37",
+    "text": "japan time tracking guide",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://www.indeedhuddle.com/huddle/japan-retirement-plan-ri-ben-notui-zhi-jin-zhi-du",
+    "text": "retirement DC plan",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/SMBPlatform/One+Host+Documentation",
+    "text": "One Host Docs",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/SMBPlatform/One+Host+Documentation",
+    "text": "One Host Docs",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1xN4mCH2BXgwEuIrNsAQLh0T83wHVngpe5Git7gW9gSM/edit#heading=h.gbj3m6qf4mze",
+    "text": "workday checkin/out shotcuts",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1SD5ySUfuHezfpQgKwa-TIW_CIs4X2wRqULJn0ZTai_k/edit#slide=id.g2defd047972_0_0",
+    "text": "IRR satisfaction guide",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://code.corp.indeed.com/example/skeleton-nodejs-webapp",
+    "text": "skeleton nodejs webapp indeed",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://www.indeedhuddle.com/huddle/japan-retirement-plan-ri-ben-notui-zhi-jin-zhi-du",
+    "text": "dc plan",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1CdTNBa9Os5kMoZskwUC63sljJIbHF6beix0-JZ72tgU/edit#slide=id.g7cd26ff6b6_0_46",
+    "text": "how to tax return",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/MKT/Useful+IQL+Queries",
+    "text": "useful iql queries",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://app.glean.com/",
+    "text": "glean - indeed internal ai search tool",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.indeed.com/dev/reference/job-sync-api#sourcedjobpostingbodyinput",
+    "text": "job sync api refference",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://www.indeed.com/worldwide",
+    "text": "indeed supported countries",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://id.indeed.tech/app/UserHome?session_hint=AUTHENTICATED",
+    "text": "indeed tech all portals",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://tableau.indeed.tech/#/views/AggOpsTechTechQueuesStoryPoints-PersonalDashboard/PersonalSPDash?:iid=1",
+    "text": "story points graph",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "context:global%20repo:%5Ecode%5C.corp%5C.indeed%5C.com/indeed-design-system/ifl$%20file:%5Epackages/components/src/components/GlobalStyles/GlobalStyles%5C.tsx%20patternType:standard",
+    "text": "example sourcegraph query",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://infosafari.sandbox.indeed.net/",
+    "text": "infosafari - llm assisted search",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1UbDi5nDq7OJcWw3t4PLvuyd3IIjPA9PrTdHGuSz6ulU/edit#slide=id.g24a3b45bae4_48_7987",
+    "text": "indeed google slide deck template",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1WIt5QK2i7QPzlpaZqLltByLwuFQfaBJdiYjb9IMFVRE/edit#heading=h.6uo04u9x38k7",
+    "text": "new data targets JP",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://jmdv.sandbox.indeed.net/job/7677307606/description",
+    "text": "job metadata viewer",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://backstage.indeed.tech/secret-units",
+    "text": "Backstage - secrets manager",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://www.indeedhuddle.com/Interact/Pages/Content/Document.aspx?id=27118&SearchId=7400529&utm_source=interact&utm_medium=quick_search&utm_term=internal+mobiliyt",
+    "text": "internal mobility",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1kd6z8uzvUUd9TWs_k5zWptRe28ugsI9DWyzSKNxwnzA/present?slide=id.g1f23d9b1a1b_0_112",
+    "text": "how to search for internal roles indeed",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1URJxVHrtNn0VKa-SXPDURkMLPgp7wK_oEfSlYu6_B88/edit",
+    "text": "telentconnect api",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://degreed.com/profile/dgusero6dmjq1/overview",
+    "text": "Degreed Indeed",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/ibuPlatforms/APAC+Engineering+Mentorship+Program",
+    "text": "APAC Engineering Mentor Program",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://chrome.google.com/webstore/devconsole/5a0d9676-70c2-4548-9510-7a15e10edebd",
+    "text": "Chrome Webstore - Developer Dashboard",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1ycLjcmSicpXq2frgEl-lHmPFjFs5skqrohC3Mu55H8A/edit#gid=498531730",
+    "text": "Legal Aggregation Blocklist",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/~cagerton/Publish+Extension+to+Google+Chrome+Store",
+    "text": "Publish Extension to Chrome Store",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/ITSYS/Chrome+Web+Store+Publishing%253A+Group+Publishing+and+Cross-Domain+Issues",
+    "text": "chrome webstore publishing",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/~cagerton/Setup+Google+Chrome+Developer+Account",
+    "text": "set up chrome developer account",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=177373998",
+    "text": "set up chrome extension",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1p3S2W1MvfEwjLBbgDBhHlYRd7GB9VIjRmfEM86DdldI/edit#gid=675467164",
+    "text": "aggopper url list",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.atlassian.com/atlassian-confluence/REST/6.6.0/#content-getContent",
+    "text": "Confluence - REST APIs documentation",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://developer.atlassian.com/cloud/confluence/basic-auth-for-rest-apis/",
+    "text": "Confluence - Basic auth for REST APIs",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://a11y.sandbox.indeed.net/guidelines",
+    "text": "indeed accessibility guidelines",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/DataOrg/idash+URL+format",
+    "text": "idash url format",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://idash.sandbox.indeed.net/sandbox",
+    "text": "idash - IQL web",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://jobviewer.sandbox.indeed.net/job?id=5538121824",
+    "text": "job viewer",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://curlconverter.com/javascript/",
+    "text": "curl converter",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1M9Ffne-jRDb70k-1Wj_v7Tup_rILu6NBHQcoOlUxEuY/edit?usp=sharing",
+    "text": "Yoshi vendor tech review",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://chrome.google.com/webstore/detail/indeed-new-tab/mnloemhopcolcnmgooddoompcmknceni",
+    "text": "indeed new tab",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/VAULT/User+Guides",
+    "text": "value - secret manager",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=2022Q4+Tech+Goals",
+    "text": "Q4 goals and OKRs",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://httpbin.org/",
+    "text": "httpbin.org",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/1zE_7V6mG-ollV_jZWMgF-h5a1sYR_Bn8feuR8r7ZR0Q/viewform?ts=62d9959c&edit_requested=true",
+    "text": "JS Ops recognition program",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=446702358",
+    "text": "CS agency template",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/AGGC/Sprint+Demos",
+    "text": "aggdev sprint demos",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://www.indeedhuddle.com/Interact/Pages/Content/Document.aspx?id=14035&SearchId=0&utm_source=interact&utm_medium=category_search&utm_term=*",
+    "text": "concur huddle page",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/e/1FAIpQLSfs00CW8AQXubMChterrDuSv9KEd3fYVO75GB_j7GqNQolFcA/viewform",
+    "text": "request employment certificate",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://aggcentral.sandbox.indeed.net/display/?type=feed&id=16155&runTests=AggOps#Definition",
+    "text": "example feed for mockup",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1q8gNrydKuWXsFrpaQs3WF1pfA5ov_MjG0ys-3eo9MQI/edit#gid=488498492",
+    "text": "aggUI feedback sheet",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/RAGE/Gatekeeper+3",
+    "text": "Gatekeeper - user auth",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://drive.google.com/drive/folders/1WKW5qHkNAsnMrTtonwfqAaW1EMnhlC2q",
+    "text": "Analyst interview docs",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/RAGE/Migration+to+Gatekeeper3",
+    "text": "gatekeeper",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/RAGE/Migration+to+Gatekeeper3",
+    "text": "wiki.indeed.com",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://dochub.sandbox.indeed.net/",
+    "text": "indeed Design System",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://aggui.sandbox.indeed.net/tool/job-formatter-editor",
+    "text": "AggUI - description formatting tool",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "http://vimdoc.sourceforge.net/htmldoc/digraph.html#digraph-table",
+    "text": "Vim documentation: digraph",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://indeed.zoom.us/rec/play/6wPSIIc97_osRJQ6FK3WKb9Co8_tq9Y0s7EjoP9hlJvqX7n38tKNbGYxLdKqDF68-0Xn_8nXudUSoJyx.PmKBFBwSvTd169C3?startTime=1646261419000",
+    "text": "form submission session",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://indeed.sourcegraph.com/search",
+    "text": "Sourcegraph - search indeed repos",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1XYVY0HlDW8Fs6kcbugJ_LWoX6Y9Jy9-Ln1ZzyTLN-gY/edit#gid=0",
+    "text": "japanese brokerage comparison",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://goku.sandbox.indeed.net/#/prod",
+    "text": "goku",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://bugs.indeed.com/browse/AGGDEV-2371",
+    "text": "browserException:HAR dev ticket",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://indeed.udemy.com/organization/home/",
+    "text": "Udemy business",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/AggOps+Good-To-Knows",
+    "text": "AggOps Good-to-knows",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/1ufAHTSr_I7Aln1BUo7ZbCqAczwpwHBsnBbaDCKRxxYM/viewform?edit_requested=true",
+    "text": "commute allowance application form",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1wtoiCC-DL8-Q-1Qf9vo-_fohqwXHactqt9mGaBkiu2A/edit",
+    "text": "WIC Aggc feedback",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://jsbe-ondemand-reannotation.sandbox.indeed.net/",
+    "text": "Job re-annotation",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?pageId=196839689",
+    "text": "production search parameters",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/New+XML+Feeds",
+    "text": "New XML validation CS facing",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://goku.sandbox.indeed.net/#/prod/jpHybridCrawlAllowlist",
+    "text": "Hybrid Crawl JP AllowList",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/CONTR/Git+-+Initial+System+Setup",
+    "text": "Git initial setup",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://prototypes.indeed.com/apps/aurora-bootstrap4-theme/examples.html",
+    "text": "Aurora bootstrap4 examples",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/e/1FAIpQLScuooBkVvW-6BPLq6WGIuplJ_hL3eYrAx4615GBhUjyMbTlEw/viewform",
+    "text": "AggOps Vendor Feedback",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1xmUNGtPHwdG9BBUlhQIfuh4IoGDugFQdF0nNDq3Gqtg/edit#gid=963852430",
+    "text": "Q2 2021 superverification",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://developer.indeed.com/docs/indeed-apply/direct-employer/#xml_job_feed",
+    "text": "XML formatting guidelines",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://ishbook.sandbox.indeed.net/",
+    "text": "ishbook indeed",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://mutb.shareworks.com/solium/servlet/ui/dashboard",
+    "text": "shareworks portal",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://aggcentral.sandbox.indeed.net/hiding/unhide_job",
+    "text": "unhide job",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://lindy.sandbox.indeed.net/private/poodlepants/#!/index/embed:dashboard.html",
+    "text": "Lindy API",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1sWC8fE79axwfAegC75XfcWW7ohtwbyY5APmaaI9caKA/edit",
+    "text": "Trial Run feedback",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/17mBMPz2cswTKex-YVxmg9X33Z4q-q1gHKZ63sIjnESQ/edit#gid=0",
+    "text": "Feeds requiring rename from CS",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Hybrid+Crawl+Opt+Out+List",
+    "text": "Hybrid Crawl Opt Out List",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "http://opensource.indeedeng.io/quick-start-guide/choose-project.html",
+    "text": "Indeed OSS Guide",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1u7njpsFIrKtj4CYoq4KxSA2Ya75vqFHXiRtxOt5axh4/edit",
+    "text": "XML augmentation",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/12gwYzr0YQ3B_FE-DqEWP_CY7nwcWYldOkvUDulxKuqs/edit#gid=1758062799",
+    "text": "AGGO-1436",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://abby.sandbox.indeed.net/",
+    "text": "Abby - rich formatting debug tool",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://jsbe-ondemand-reannotation.sandbox.indeed.net/",
+    "text": "job toucher tool",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://go.indeed.com/",
+    "text": "indeed URL shortener",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Requesting+Non-Tech+From+CS",
+    "text": "CS point of contact",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://geopeeker.com/",
+    "text": "global online checker",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1AkZigrCB-KnhKI7EMqqBJmPj8Ap6DVPZCiyyp8Eh-aQ/edit#slide=id.p",
+    "text": "indeed pension",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://techdocs.indeedeng.io/xml-job-feed/#formatting-guidelines",
+    "text": "XML guidelines XML Job Feed - Indeed Solutions",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/11ydDFFySl5rjU9I9miH7L8tQZu6cTvy6f1ImlGp4Fsk/edit#gid=0",
+    "text": "create and edit spreadsheets online, for free.",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1Efgy0-nOg5ptuiJKGc-eA8XHzsLalqghlII0b3OHwEo/edit#slide=id.p",
+    "text": "IQL for aggops",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1uE3uPXVc8YVjjwBsFo_1RVsXbIuA5eHDhfTJY7rPNcA/edit#gid=908031405",
+    "text": "XML guidelines for CS",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/19ou52O_a3btA6nePbkPBkWx4Z89ShLDj-e6WhVbfAsg/edit",
+    "text": "Kibana intorduction",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/e/1FAIpQLSeIJLHmgEToILpF2nWwsXwGPQ66odrQzrI1HK4JA9-RqPnvhw/viewform",
+    "text": "verification form",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=UDDT+%28User+Defined+Data+Target%29+Setting+for+Japan",
+    "text": "UDDT list wiki",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/e/1FAIpQLScWwmI8LLc4n2oUF4TOmTh6tfPL0QQ6QBCsTkT6NQ-zMtBPBg/viewform",
+    "text": "AggOps Hits and near Misses",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://indeed.force.com/employerSupport1/s/article/115005916163?language=en_US",
+    "text": "location blasting for employers",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/SAL/Salary+Aether",
+    "text": "Salary Aether",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://aether.sandbox.indeed.net/#/debugext",
+    "text": "Salary Debug Tool",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1LKqDfyYLqO9Jl7LfwhqKdDAv9xJPugmxrOIlkyE6aW4/edit?usp=gmail&ts=5df98efd",
+    "text": "Office Hours rotation schedule",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://immigo.newlandchase.com/cm/immigo/login/02b9346a/?username=scoffrin",
+    "text": "immigo.newlandchase.com - imiagration",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1PohU3QHuICMTLLm88IZgLIGfQ2uVfqBueDkPsxnEVew/edit#gid=0",
+    "text": "Japan Quality Improvement Projects Sheet",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/pages/viewpage.action?spaceKey=AggFeedQA&title=Chrome+Extensions+-+Feed+Maintenance",
+    "text": "Chrome Extensions - Feed Maintenance",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1DJDgKAxrIl07q6S1QcOOUbmzRCW30LCjyB_9RFN0dAg/edit#heading=h.c5jllmclfhk4",
+    "text": "Yohei priority shadowing schedule",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/forms/d/e/1FAIpQLSfgoil2952dkv-GJBfSGoofU4-x3o1Y6nQY4yyNXcV2eorG0g/viewform",
+    "text": "Specific feedback form",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/175O2tVLltyOMe59oBiOSfOwiCdlsvUbdP5kkzsBVxTE/edit#",
+    "text": "Masahito Onboarding Schedule",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1q_uq7c3Q_P0ErIm97cbZJLlUp7djGaOZEC554oUzW7o/edit#gid=0",
+    "text": "what CS should know",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://paste.sandbox.indeed.net/",
+    "text": "ingur indeed image hosting",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/148BI1i9_cQStJsGtAikiKNeltI_lnDi_azPrg-UD6Vo/edit",
+    "text": "Notes",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://chrome.google.com/webstore/detail/indeed-new-tab/mnloemhopcolcnmgooddoompcmknceni",
+    "text": "indeed new tab extension",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1xen0XfucMyFJarpHDcBhuaGdKlXxUNdCPQxRxIZrurY/edit#slide=id.g4fd8894d15_20_46",
+    "text": "slides template",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1vUTDjQ2P1v5Loe-uGOA8cXw_z03G6-NgfVxoyPVwROE/edit?ts=5c6b698c#slide=id.g330821288a_0_36",
+    "text": "feed map demo slides",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://dponceindeed.github.io/",
+    "text": "job hunter game",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1EdJfwkCVaGef2yKVX-e_QSCuACk3NtOi_hxOMQOV-Wc/edit",
+    "text": "JP FM priority rotation",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://code.corp.indeed.com/scoffrin/",
+    "text": "GitLab",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1CaaNcvEbve0ZHg7ssb3z-v3_B_dpKBntN6TT6yfjfvs/edit#slide=id.g3e23f81752_0_141",
+    "text": "location @ indeed deck",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Search+Parameters",
+    "text": "search parameters index",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://www.myworkday.com/indeed/d/home.htmld",
+    "text": "workday - PTO request portal",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://lola.sandbox.indeed.net/",
+    "text": "Lola log repository",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://paste.corp.indeed.com/",
+    "text": "indgur - indeed image hosting",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://feedback.sandbox.indeed.net/dashboard/",
+    "text": "Indeed feedback login",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://www.indeed.jobs/",
+    "text": "Find Jobs at Indeed",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://jp.indeed.com/%E6%B1%82%E4%BA%BA%E5%BA%83%E5%91%8A/%E6%9B%B8%E3%81%8D%E6%96%B9",
+    "text": "Indeed Japan job description standards",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/Search+Parameters",
+    "text": "Indeed SERP Search Parameters",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "http://www.hemingwayapp.com/",
+    "text": "Hemingway Editor",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://unicodelookup.com/",
+    "text": "Unicode Lookup",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/presentation/d/1Zx0ZzTXw-rvY_oENEZOJeNyvesNU2iI-cA4uem71nfI/edit#slide=id.g27c803c2ec_0_81",
+    "text": "how to file a bug ticket for dev",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://na1.system.nexonia.com/assistant/expense/showExpense.do",
+    "text": "nexonia expense report portal",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1soPnANbaie7ICcC8H-QpGmVDkhBHAGEQrRhuqYL5bsI/edit?ts=59e116ff",
+    "text": "Mr Roboto discussion",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://ck.corp.indeed.com/dashboard/",
+    "text": "Feedback Dashboard",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://levelup.sandbox.indeed.net/user/login/?next=/",
+    "text": "Level Up portal",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://eip.htm.co.jp/Login.aspx?lang=en-US",
+    "text": "paystubs / taxes",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://code.tutsplus.com/tutorials/http-the-protocol-every-web-developer-must-know-part-1--net-31177",
+    "text": "HTTP: The Protocol Every Web Developer Must Know - Part 1",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://video.indeed.com/",
+    "text": "indeed hangout manager",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/1rfqtPt5vMDSrUGbIqqTpt1ACMEBNwSAsfCc-AcK-6eM/edit",
+    "text": "monthly meeting agenda",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://e-travelmanagement3.amadeus.com/portalApp/application?SITE=W0OPW0OP&LANGUAGE=GB&EVENT=LOGIN_LOGOUT",
+    "text": "business travel portal",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/spreadsheets/d/1MaFLbALmrslHlBShSB4BQd63xPLlQap2IapfGKPX_d0/edit#gid=0",
+    "text": "salary error spreadsheet",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://services.htm.co.jp/Login.aspx",
+    "text": "Time Card System",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://r12a.github.io/apps/conversion/",
+    "text": "Unicode code converter",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "http://learnlayout.com/",
+    "text": "Learn CSS Layout",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://wiki.indeed.com/display/AggFeedQA/LevelUp+Process+for+AggOps+Feed+Maintenance",
+    "text": "feed maintainer level system",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://docs.google.com/document/d/10mjGACUOJ5jOZsd7Mm36DtV1WdCWeSIaz3PcqbHfr6I/edit?ts=59bbf4d8#heading=h.mz82i9p2htk2",
+    "text": "Agg Q4 goals",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://downforeveryoneorjustme.com/work.scch.com.au",
+    "text": "Down for everyone or just me?",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://indeed.avature.net/friendsindeed/JobDetail/Associate-Localization-Project-Manager/18730",
+    "text": "sawako referal",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "href": "https://www.indeed.com/about/indeed-crawlers",
+    "text": "indeed crawlers user agents and ip",
+    "col": 4
+  }
+]
