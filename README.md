@@ -4,11 +4,11 @@ An example Chrome extension built with React and Rsbuild.
 
 ```bash
 # init
-yarn
+pnpm
 
 # dev
-yarn dev
+pnpm dev
 
 # build
-yarn build
+pnpm build
 ```
