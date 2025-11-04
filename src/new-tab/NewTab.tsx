@@ -13,15 +13,25 @@ type Bookmarks = typeof bookmarksJson
 export default function NewTab() {
   const [showSearch, setShowSearch] = useState(true)
 
-  const { bookmarks, addBookmark, removeBookmark, updateBookmark, reset } =
-    useBookmarkController()
+  const {
+    bookmarks,
+    addBookmark,
+    removeBookmark,
+    updateBookmark,
+    updateGroupOrder,
+    reset,
+  } = useBookmarkController()
 
   const { bookmarkColumns } = useMemo(() => {
-    const columns = [...new Set(bookmarks.map((bk) => bk.col))]
+    // const sortedByCol = bookmarks.sort((a, b) => b.col - a.col)
+    const columns = [...new Set(bookmarks.map((bk) => bk.col))].sort(
+      (a, b) => a - b
+    )
     const bookmarkColumns = columns.map((col) =>
       bookmarks
         .filter((bk) => bk.col === col)
-        .sort((a, b) => a.group.length - b.group.length)
+        // .sort((a, b) => a.group.length - b.group.length)
+        .sort((a, b) => b.groupIndex - a.groupIndex)
     )
     console.log(bookmarkColumns)
     return { bookmarkColumns, columns }
@@ -48,6 +58,20 @@ export default function NewTab() {
                     {!sameAsLast || isFirst ? (
                       <div>
                         <h2>{groupName}</h2>
+                        <button
+                          onClick={() => {
+                            updateGroupOrder(groupName, index + 1, 'lower')
+                          }}
+                        >
+                          down
+                        </button>
+                        <button
+                          onClick={() => {
+                            updateGroupOrder(groupName, index + 1, 'raise')
+                          }}
+                        >
+                          up
+                        </button>
                       </div>
                     ) : null}
                     <>

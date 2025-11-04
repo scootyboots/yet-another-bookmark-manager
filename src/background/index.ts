@@ -9,7 +9,14 @@ chrome.action.onClicked.addListener(() => {
 })
 
 function addIdsToBookmarks(bookmarks: BookmarksBackup) {
+  // const columns = [...new Set([...bookmarks.map((bk) => bk.col)])]
+  // const columnGroups = columns.map((col, index) => ({
+  //   col,
+  //   numberOfGroups: new Set([...bookmarks.filter((bk) => bk.col === col)]).size,
+  // }))
+
   let initialId = 1000
+
   const bookmarksWithId = bookmarks.map((bk) => {
     initialId += 1
     return { ...bk, id: initialId }
@@ -112,4 +119,97 @@ export async function updateBookmark(bookmarkToUpdate: Bookmark) {
 
   await storeBookmarks(updatedBookmarks)
   return { data: 'updated bookmark id: ' + bookmarkToUpdate.id, error: null }
+}
+
+export async function updateGroupOrder(
+  groupName: string,
+  columnNumber: number,
+  change: 'raise' | 'lower'
+) {
+  const { data: bookmarks } = await getStoredBookmarks()
+  if (!bookmarks) {
+    return {
+      data: null,
+      error: 'failed to pull in stored bookmarks updateGroupOrder',
+    }
+  }
+  console.log(
+    '----- UPDATE GROUP ORDER -----\n\n\n',
+    groupName,
+    columnNumber,
+    change,
+    '\n\n\n----- UPDATE GROUP ORDER -----'
+  )
+  const isRaiseTargetGroup = change === 'raise'
+
+  const column = bookmarks.filter((bk) => bk.col === columnNumber)
+  const remainingColumns = bookmarks.filter((bk) => bk.col !== columnNumber)
+
+  const uniqueGroups = new Set([...column.map((bk) => bk.group)])
+  const numberOfGroupsInColumn = uniqueGroups.size
+
+  const targetGroup = column.filter((bk) => bk.group === groupName)
+  const remainingGroups = column.filter((bk) => bk.group !== groupName)
+
+  const updateTargetGroup = () => {
+    let isTargetIndexChanged = true
+    let prevIndex = 0
+    let updatedIndex = 0
+    const updatedGroup = targetGroup.map((bk) => {
+      prevIndex = bk.groupIndex
+      const raisedIndex = bk.groupIndex + 1
+      const loweredIndex = bk.groupIndex - 1
+      const isMaxIndex = bk.groupIndex === numberOfGroupsInColumn - 1
+      const isLastIndex = bk.groupIndex === 0
+      if (isRaiseTargetGroup) {
+        if (isMaxIndex) {
+          return bk
+        }
+
+        updatedIndex = raisedIndex
+        return { ...bk, groupIndex: raisedIndex }
+      } else {
+        if (isLastIndex) {
+          return bk
+        }
+        updatedIndex = loweredIndex
+        return { ...bk, groupIndex: loweredIndex }
+      }
+    })
+    return { updatedGroup, isTargetIndexChanged, prevIndex, updatedIndex }
+  }
+
+  const { updatedGroup, prevIndex, updatedIndex, isTargetIndexChanged } =
+    updateTargetGroup()
+
+  // const isTargetIndexChanged = Boolean(prevIndex === updatedIndex)
+
+  const updateRemainingGroups = () => {
+    if (!isTargetIndexChanged) return remainingGroups
+    return remainingGroups.map((bk) => {
+      const raisedIndex = bk.groupIndex + 1
+      const loweredIndex = bk.groupIndex - 1
+      const updateNotTargetIndex = () => {
+        console.log(updatedIndex)
+        if (updatedIndex === bk.groupIndex) {
+          console.log('MATCHING INDEX')
+          return isRaiseTargetGroup ? loweredIndex : raisedIndex
+        }
+        return bk.groupIndex
+      }
+      return {
+        ...bk,
+        groupIndex: updateNotTargetIndex(),
+      }
+    })
+  }
+
+  const updatedRemainingGroups = updateRemainingGroups()
+
+  const updatedColumn = [...updatedGroup, ...updatedRemainingGroups]
+
+  const updatedBookmarks = [...updatedColumn, ...remainingColumns]
+  // bookmarks.splice(columnNumber - 1, updatedColumn.length, ...updatedColumn)
+  await storeBookmarks(updatedBookmarks)
+  return { data: 'updated bookmark order for: ' + groupName, error: null }
 }

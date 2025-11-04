@@ -6,6 +6,7 @@ import {
   updateBookmark,
   Bookmark,
   resetBookmarks,
+  updateGroupOrder,
 } from '../background'
 
 type StoredResult = Awaited<ReturnType<typeof getStoredBookmarks>>
@@ -16,6 +17,7 @@ type ChangeResult = Awaited<
     | typeof removeBookmark
     | typeof updateBookmark
     | typeof resetBookmarks
+    | typeof updateGroupOrder
   >
 >
 
@@ -70,6 +72,15 @@ export default function useBookmarkController() {
     [bookmarks]
   )
 
+  const handleUpdateGroupOrder = useCallback(
+    (groupName: string, columnNumber: number, update: 'raise' | 'lower') => {
+      updateGroupOrder(groupName, columnNumber, update).then(
+        handleBookmarksChange
+      )
+    },
+    [bookmarks]
+  )
+
   const handleReset = useCallback(() => {
     resetBookmarks().then(handleBookmarksChange)
   }, [bookmarks])
@@ -79,6 +90,7 @@ export default function useBookmarkController() {
     addBookmark: handleAddBookmark,
     removeBookmark: handleRemoveBookmark,
     updateBookmark: handleUpdateBookmark,
+    updateGroupOrder: handleUpdateGroupOrder,
     reset: handleReset,
   }
 }
