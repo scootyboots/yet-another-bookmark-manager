@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { BookmarkEntryProps } from './BookmarkEntry'
+import Prompt from './Prompt'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
@@ -120,70 +121,60 @@ export default function Search({
     if (inputRef.current) {
       inputRef.current.focus()
     }
-    window.addEventListener('keydown', keydownHandler)
+    document.addEventListener('keydown', keydownHandler)
     return () => {
-      window.removeEventListener('keydown', keydownHandler)
+      document.removeEventListener('keydown', keydownHandler)
     }
-  }, [showSearch])
+  }, [keydownHandler])
 
   if (!showSearch) {
     return null
   }
 
   return (
-    <>
-      <div className="Search-background" />
-      <div className="Search" data-search-open={showSearch}>
-        <div className={`Search-content${shakeX ? ' shakeX' : ''}`}>
-          <div
-            data-link-to-open={Boolean(matchLink)}
-            style={{ display: 'none' }}
-          >
-            {matchLink}
-          </div>
-
-          <input
-            onChange={(e) => setInputText(e.target.value)}
-            type="text"
-            value={inputText}
-            ref={inputRef}
-            tabIndex={0}
-          />
-          {/* <div>computed match link: {matchLink}</div>
-      <div>forced state match link: {urlToOpen}</div> */}
-          <div style={{ paddingBlockStart: '1rem' }}>
-            {matchesToRender.map((match, index) => {
-              const moreThan18 = index + 1 > MAX_DISPLAYED_RESULTS
-              if (moreThan18) return null
-              return (
-                <div
-                  className="Search-result"
-                  style={{
-                    borderColor:
-                      index === focusIndex
-                        ? 'rgb(230, 60, 159)'
-                        : 'rgb(255 0 0 / 0%)',
-                  }}
-                  data-is-match
-                  key={'matching-bookmark-' + index}
-                >
-                  <div className="Search-result-text">{match.text}</div>
-                  <div className="Search-result-divider"> : </div>
-                  <div className="Search-result-link">{match.href}</div>
-                </div>
-              )
-            })}
-            {inputText && (
-              <div className="matches-number-display">
-                {matches.length > MAX_DISPLAYED_RESULTS
-                  ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
-                  : `${matches.length}`}
-              </div>
-            )}
-          </div>
-        </div>
+    <Prompt isShown={showSearch} className={`${shakeX ? ' shakeX' : ''}`}>
+      <div data-link-to-open={Boolean(matchLink)} style={{ display: 'none' }}>
+        {matchLink}
       </div>
-    </>
+
+      <input
+        onChange={(e) => setInputText(e.target.value)}
+        type="text"
+        value={inputText}
+        ref={inputRef}
+        tabIndex={0}
+      />
+      <div style={{ paddingBlockStart: '1rem' }}>
+        {matchesToRender.map((match, index) => {
+          const moreThan18 = index + 1 > MAX_DISPLAYED_RESULTS
+          if (moreThan18) return null
+          return (
+            <div
+              className="Search-result"
+              style={{
+                borderColor:
+                  index === focusIndex
+                    ? 'rgb(230, 60, 159)'
+                    : 'rgb(255 0 0 / 0%)',
+              }}
+              data-is-match
+              key={'matching-bookmark-' + index}
+            >
+              <div className="Search-result-text">{match.text}</div>
+              <div className="Search-result-divider"> : </div>
+              <div className="Search-result-link">{match.href}</div>
+            </div>
+          )
+        })}
+        {inputText && (
+          <div className="matches-number-display">
+            {matches.length > MAX_DISPLAYED_RESULTS
+              ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
+              : `${matches.length}`}
+          </div>
+        )}
+      </div>
+    </Prompt>
   )
 }
 

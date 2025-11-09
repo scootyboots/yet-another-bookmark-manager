@@ -1595,6 +1595,21 @@
     "text": "File System Access API - Web APIs | MDN",
     "col": 3
   },
+
+  {
+    "group": "agg ops wiki",
+    "groupIndex": 4,
+    "href": "https://indeed.atlassian.net/wiki/spaces/AggOpsInternal/pages/866194265/Job+Coverage+for+AggOps",
+    "text": "job coverage for aggops job-coverage",
+    "col": 2
+  },
+  {
+    "group": "agg ops wiki",
+    "groupIndex": 4,
+    "href": "https://indeed.atlassian.net/wiki/spaces/CFG/pages/185763267/How-to+Setup+AWS+CLI",
+    "text": "How-to: Setup AWS CLI",
+    "col": 2
+  },
   {
     "group": "agg ops wiki",
     "groupIndex": 4,

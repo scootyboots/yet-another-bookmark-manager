@@ -2,6 +2,7 @@ import bookmarks from '../../public/bookmarks-backup.json'
 
 export type BookmarksBackup = typeof bookmarks
 export type Bookmark = BookmarksBackup[number] & { id: number }
+export type NewBookmark = Omit<Bookmark, 'id'>
 export type Bookmarks = Array<Bookmark>
 
 chrome.action.onClicked.addListener(() => {
@@ -73,13 +74,13 @@ export async function getStoredLastId() {
   return { data: null, error: 'did not find stored lastId' }
 }
 
-export async function addBookmark(newBookmark: Bookmark) {
+export async function addBookmark(newBookmark: NewBookmark) {
   const { data: bookmarks } = await getStoredBookmarks()
   const { data: lastId } = await getStoredLastId()
   if (bookmarks && lastId) {
     const updatedLastId = lastId + 1
     const newBookmarkWithId = { ...newBookmark, id: updatedLastId }
-    await storeBookmarks([...bookmarks, newBookmarkWithId])
+    await storeBookmarks([newBookmarkWithId, ...bookmarks])
     await storeLastId(updatedLastId)
     return { data: makeAddRemoveMessage('add', newBookmarkWithId), error: null }
   }

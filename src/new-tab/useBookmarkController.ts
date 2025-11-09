@@ -7,6 +7,7 @@ import {
   Bookmark,
   resetBookmarks,
   updateGroupOrder,
+  NewBookmark,
 } from '../background'
 
 type StoredResult = Awaited<ReturnType<typeof getStoredBookmarks>>
@@ -49,9 +50,9 @@ export default function useBookmarkController() {
   }
 
   const handleAddBookmark = useCallback(
-    (bookmark: Bookmark) => {
-      console.log('tried to add', bookmark)
-      addBookmark(bookmark).then(handleBookmarksChange)
+    (newBookmark: NewBookmark) => {
+      console.log('tried to add', newBookmark)
+      addBookmark(newBookmark).then(handleBookmarksChange)
     },
     [bookmarks]
   )
