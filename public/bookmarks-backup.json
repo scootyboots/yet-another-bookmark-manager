@@ -1870,6 +1870,27 @@
     "col": 2
   },
   {
+    "group": "agg ops wiki",
+    "groupIndex": 4,
+    "href": "https://aggops.pages.corp.indeed.com/aggops-training-sites-pages/iql-link-generator.html",
+    "text": "uql long link generator",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "groupIndex": 5,
+    "href": "https://docs.n8n.io/integrations/creating-nodes/plan/choose-node-method/",
+    "text": "n8n docs - build custom node typescript",
+    "col": 2
+  },
+  {
+    "group": "Stuff to read",
+    "groupIndex": 5,
+    "href": "https://indeed.atlassian.net/wiki/spaces/WikiAdmin/pages/130549516/Confluence+Cloud+service+accounts+and+access+tokens",
+    "text": "confluence cloud service accounts and access tokens",
+    "col": 2
+  },
+  {
     "group": "Stuff to read",
     "groupIndex": 5,
     "href": "https://wiki.indeed.com/display/VRS/Indeed+PLUS+Policy+Hub%28JLM%29+-+Japan",
@@ -2022,6 +2043,20 @@
     "href": "https://superuser.com/questions/545826/is-it-possible-to-set-keyboard-shortcuts-on-a-webpage",
     "text": "Is it possible to set keyboard shortcuts on a webpage?",
     "col": 1
+  },
+  {
+    "group": "unsorted",
+    "groupIndex": 0,
+    "href": "https://n8n.indeed.tech/",
+    "text": "n8n indeed open source automation tool",
+    "col": 4
+  },
+  {
+    "group": "unsorted",
+    "groupIndex": 0,
+    "href": "https://docs.google.com/forms/d/e/1FAIpQLSdUw8nCk0wMwL7acmZWffQQU8X3-Fj8LVBvzYF1ds2aknyX4A/viewform",
+    "text": "General AggOps/Vendor feedback",
+    "col": 4
   },
   {
     "group": "unsorted",

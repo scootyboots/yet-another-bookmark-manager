@@ -1,0 +1,28 @@
+import { useCallback, useMemo } from 'react'
+import { Bookmarks } from '../background'
+
+export default function useBookmarkSorter(bookmarks: Bookmarks) {
+  const sorted = useMemo(() => {
+    const columns = [...new Set(bookmarks.map((bk) => bk.col))].sort(
+      (a, b) => a - b
+    )
+    const groupNames = [...new Set(bookmarks.map((bk) => bk.group))]
+    const sortedColumns = columns.map((col) =>
+      bookmarks
+        .filter((bk) => bk.col === col)
+        .sort((a, b) => b.groupIndex - a.groupIndex)
+    )
+    console.log(sortedColumns)
+    return { sortedColumns, columns, groupNames }
+  }, [bookmarks])
+
+  const findGroupColumNumber = useCallback(
+    (groupName: string) => {
+      const found = bookmarks.find((bk) => bk.group === groupName)
+      return found?.col
+    },
+    [bookmarks]
+  )
+
+  return { ...sorted, findGroupColumNumber }
+}

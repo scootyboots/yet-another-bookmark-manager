@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Prompt from './Prompt'
 import { Bookmark, NewBookmark } from '../background'
 import { EMPTY_BOOKMARK } from './NewTab'
@@ -8,7 +8,6 @@ export default function BookmarkPrompt({
   setIsShown,
   bookmark,
   setBookmark,
-  type,
   addBookmark,
   updateBookmark,
 }: {
@@ -16,54 +15,79 @@ export default function BookmarkPrompt({
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
   bookmark: Bookmark
   setBookmark: React.Dispatch<React.SetStateAction<Bookmark>>
-  type: 'add' | 'update'
   addBookmark: (newBookmark: NewBookmark) => void
   updateBookmark: (bookmark: Bookmark) => void
   // existingBookmark: Bookmark
 }) {
   const hrefInputRef = useRef<HTMLInputElement>(null)
   // const textInputRef = useRef<HTMLInputElement>(null)
+  const [shouldExit, setShouldExit] = useState(false)
+  const [shouldExecute, setShouldExecute] = useState(false)
 
-  const keydownPromptHandler = useCallback(
-    (event: KeyboardEvent) => {
-      console.log('PROMPT KEYBOARD LISTENER')
-      const { key } = event
-      if (key === 'Escape') {
-        setIsShown(false)
-      }
-      if (key === 'Enter') {
-        if (type === 'add') {
-          addBookmark({ ...bookmark })
-        }
-        if (type === 'update') {
-          updateBookmark({ ...bookmark })
-        }
-      }
-    },
+  const { href, text } = useMemo(
+    () => ({ href: bookmark.href, text: bookmark.text }),
     [bookmark]
   )
 
+  useMemo(() => {
+    const isEmptyBk = bookmark.id === 0
+    if (shouldExecute) {
+      if (isEmptyBk) {
+        addBookmark({ ...bookmark })
+        setIsShown(false)
+      } else {
+        updateBookmark({ ...bookmark })
+      }
+    }
+    if (shouldExit) {
+      setIsShown(false)
+    }
+  }, [bookmark, shouldExecute, shouldExit])
+
+  // const keydownPromptHandler = useCallback((event: KeyboardEvent) => {
+  //   console.log('BOOKMARK PROMPT KEYBOARD LISTENER')
+  //   const { key } = event
+  //   if (key === 'Escape') {
+  //     setShouldExit(true)
+  //   }
+  //   if (key === 'Enter') {
+  //     setShouldExecute(true)
+  //   }
+  // }, [])
+
   useEffect(() => {
-    if (hrefInputRef.current) {
-      hrefInputRef.current.focus()
+    console.log('MOUNT BOOKMARK PROMPT')
+    function keydownPromptHandler(event: KeyboardEvent) {
+      console.log('BOOKMARK PROMPT KEYBOARD LISTENER')
+      const { key } = event
+      if (key === 'Escape') {
+        setShouldExit(true)
+      }
+      if (key === 'Enter') {
+        setShouldExecute(true)
+      }
     }
 
     document.addEventListener('keydown', keydownPromptHandler)
     return () => {
+      // console.log('TRIED TO REMOVE KEYDOWN EVEN HANDLER')
+      console.log('UNMOUNT BOOKMARK PROMPT')
       document.removeEventListener('keydown', keydownPromptHandler)
-      setBookmark(EMPTY_BOOKMARK)
     }
-  }, [keydownPromptHandler])
+  }, [])
 
   useEffect(() => {
     if (hrefInputRef.current) {
       hrefInputRef.current.focus()
     }
+    // if (!isShown) {
+    //   setBookmark({ ...EMPTY_BOOKMARK })
+    // }
+    return () => {
+      // console.log('RAN EFFECT CLEANUP FUNCTION')
+      setBookmark({ ...EMPTY_BOOKMARK })
+    }
   }, [isShown])
-
-  const { href, text } = bookmark
-
-  if (!isShown) return null
 
   return (
     <Prompt isShown={isShown}>

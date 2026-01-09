@@ -4,5 +4,29 @@
     "href": "https://emilkowal.ski/ui/you-dont-need-animations",
     "text": "you don't need an animation (tasteful use of animations in ui)",
     "col": 1
+  },
+  {
+    "group": "design related",
+    "href": "https://developer.apple.com/design/human-interface-guidelines",
+    "text": "apple human interface guidelines",
+    "col": 1
+  },
+  {
+    "group": "design related",
+    "href": "https://practical-accessibility.today/",
+    "text": "practical accessibility course video course",
+    "col": 1
+  },
+  {
+    "group": "design related",
+    "href": "https://www.mackenziechild.me/",
+    "text": "nice portfolio site example",
+    "col": 1
+  },
+  {
+    "group": "design related",
+    "href": "https://www.svg.guide/",
+    "text": "svg guide - animate svg course",
+    "col": 1
   }
 ]

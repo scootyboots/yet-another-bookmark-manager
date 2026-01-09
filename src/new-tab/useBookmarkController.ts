@@ -36,10 +36,6 @@ export default function useBookmarkController() {
     })
   }, [])
 
-  useMemo(() => {
-    console.log('bookmarks changed: ', bookmarks?.length)
-  }, [bookmarks])
-
   function handleBookmarksChange(result: ChangeResult) {
     if (!result.error) {
       getStoredBookmarks().then((stored) => {

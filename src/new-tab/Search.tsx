@@ -66,21 +66,13 @@ export default function Search({
         isOpen === 'true' && event.preventDefault()
       }
       if (key === 'Escape') {
-        setInputText('')
-        setUrlToOpen('')
-        setFocusIndex(0)
+        // setInputText('')
+        // setUrlToOpen('')
+        // setFocusIndex(0)
         setShowSearch(false)
         return
       }
-      if (key === 'k' && metaKey) {
-        setShowSearch((prev) => {
-          const input = document.querySelector<HTMLInputElement>(
-            SEARCH_INPUT_SELECTOR
-          )
-          input?.focus()
-          return true
-        })
-      }
+
       if (key === 'Enter') {
         const link = document.querySelector(LINK_TO_OPEN_SELECTOR)?.textContent
         if (link) {

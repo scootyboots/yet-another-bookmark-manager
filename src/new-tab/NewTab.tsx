@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search'
@@ -6,6 +6,7 @@ import './NewTab.css'
 import useBookmarkController from './useBookmarkController'
 import BookmarkPrompt from './BookmarkPrompt'
 import { Bookmark } from '../background'
+import useBookmarkSorter from './useBookmarkSorter'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -24,10 +25,8 @@ export const EMPTY_BOOKMARK: Bookmark = {
 export default function NewTab() {
   const [showSearch, setShowSearch] = useState(true)
   const [showBkPrompt, setShowBkPrompt] = useState(false)
-  const [toUpdate, setToUpdate] = useState({ href: '', text: '' })
-  const [updateType, setUpdateType] = useState<'add' | 'update'>('add')
 
-  const [selectedBk, setSelectedBk] = useState<Bookmark>(EMPTY_BOOKMARK)
+  const [selectedBk, setSelectedBk] = useState<Bookmark>({ ...EMPTY_BOOKMARK })
 
   const {
     bookmarks,
@@ -38,39 +37,49 @@ export default function NewTab() {
     reset,
   } = useBookmarkController()
 
-  const { bookmarkColumns } = useMemo(() => {
-    // const sortedByCol = bookmarks.sort((a, b) => b.col - a.col)
-    const columns = [...new Set(bookmarks.map((bk) => bk.col))].sort(
-      (a, b) => a - b
-    )
-    const bookmarkColumns = columns.map((col) =>
-      bookmarks
-        .filter((bk) => bk.col === col)
-        // .sort((a, b) => a.group.length - b.group.length)
-        .sort((a, b) => b.groupIndex - a.groupIndex)
-    )
-    console.log(bookmarkColumns)
-    return { bookmarkColumns, columns }
-  }, [bookmarks])
+  const { sortedColumns } = useBookmarkSorter(bookmarks)
+
+  useMemo(() => {
+    console.log(selectedBk)
+  }, [selectedBk])
+
+  useEffect(() => {
+    function keydownHandler(event: KeyboardEvent) {
+      const { key, metaKey } = event
+      if (key === 'k' && metaKey) {
+        setShowSearch(true)
+      }
+    }
+    document.addEventListener('keydown', keydownHandler)
+  })
+
   return (
     <div className="NewTab">
       <button onClick={() => reset()}>reset</button>
-      <Search
-        bookmarks={bookmarks}
-        showSearch={showSearch}
-        setShowSearch={setShowSearch}
-      />
-      <BookmarkPrompt
-        isShown={showBkPrompt}
-        setIsShown={setShowBkPrompt}
-        bookmark={selectedBk}
-        type={updateType}
-        setBookmark={setSelectedBk}
-        addBookmark={addBookmark}
-        updateBookmark={updateBookmark}
-      />
+      {showSearch ? (
+        <Search
+          bookmarks={bookmarks}
+          showSearch={showSearch}
+          setShowSearch={setShowSearch}
+        />
+      ) : null}
+
+      {showBkPrompt ? (
+        <BookmarkPrompt
+          isShown={showBkPrompt}
+          setIsShown={setShowBkPrompt}
+          bookmark={selectedBk}
+          setBookmark={setSelectedBk}
+          addBookmark={addBookmark}
+          updateBookmark={updateBookmark}
+        />
+      ) : null}
+
+      <button onClick={() => setShowBkPrompt(true)}>
+        show bookmark prompt
+      </button>
       <div className="bookmark-groups">
-        {bookmarkColumns.map((col, index) => (
+        {sortedColumns.map((col, index) => (
           <div key={'col-' + index}>
             <div>
               {col.map((entry, i) => {
@@ -85,21 +94,12 @@ export default function NewTab() {
                         <h2>{groupName}</h2>
                         <button
                           onClick={() => {
-                            // addBookmark({
-                            //   href: 'placeholder href',
-                            //   text: 'placeholder text',
-                            //   group: groupName,
-                            //   groupIndex: entry.groupIndex,
-                            //   col: entry.col,
-                            // })
                             setSelectedBk({
-                              ...EMPTY_BOOKMARK,
-                              group: groupName,
-                              groupIndex: entry.groupIndex,
-                              col: entry.col,
+                              ...entry,
+                              id: 0,
+                              text: '',
+                              href: '',
                             })
-                            setUpdateType('add')
-                            // setToUpdate({ href: '', text: '' })
                             setShowBkPrompt(true)
                           }}
                         >
@@ -128,11 +128,8 @@ export default function NewTab() {
                       </button>
                       <button
                         onClick={() => {
-                          setSelectedBk(entry)
-                          setUpdateType('update')
-                          // setToUpdate({ href: entry.href, text: entry.text })
+                          setSelectedBk({ ...entry })
                           setShowBkPrompt(true)
-                          // updateBookmark({ ...entry, text: 'UPDATED' })
                         }}
                       >
                         update
