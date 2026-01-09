@@ -8,6 +8,7 @@ import {
   resetBookmarks,
   updateGroupOrder,
   NewBookmark,
+  addGroup,
 } from '../background'
 
 type StoredResult = Awaited<ReturnType<typeof getStoredBookmarks>>
@@ -82,12 +83,20 @@ export default function useBookmarkController() {
     resetBookmarks().then(handleBookmarksChange)
   }, [bookmarks])
 
+  const handleNewGroup = useCallback(
+    (groupName: string, groupIndex: number, col: number) => {
+      addGroup(groupName, groupIndex, col).then(handleBookmarksChange)
+    },
+    [bookmarks]
+  )
+
   return {
     bookmarks,
     addBookmark: handleAddBookmark,
     removeBookmark: handleRemoveBookmark,
     updateBookmark: handleUpdateBookmark,
     updateGroupOrder: handleUpdateGroupOrder,
+    addGroup: handleNewGroup,
     reset: handleReset,
   }
 }

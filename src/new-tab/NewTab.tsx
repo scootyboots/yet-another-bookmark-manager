@@ -34,10 +34,15 @@ export default function NewTab() {
     removeBookmark,
     updateBookmark,
     updateGroupOrder,
+    addGroup,
     reset,
   } = useBookmarkController()
 
-  const { sortedColumns } = useBookmarkSorter(bookmarks)
+  const { sortedColumns, groupNames } = useBookmarkSorter(bookmarks)
+
+  function isEmptyBookmark(bookmark: Bookmark) {
+    return !Boolean(bookmark.href) && !Boolean(bookmark.text)
+  }
 
   useMemo(() => {
     console.log(selectedBk)
@@ -51,7 +56,7 @@ export default function NewTab() {
       }
     }
     document.addEventListener('keydown', keydownHandler)
-  })
+  }, [])
 
   return (
     <div className="NewTab">
@@ -68,16 +73,13 @@ export default function NewTab() {
         <BookmarkPrompt
           isShown={showBkPrompt}
           setIsShown={setShowBkPrompt}
+          groupNames={groupNames}
           bookmark={selectedBk}
           setBookmark={setSelectedBk}
           addBookmark={addBookmark}
           updateBookmark={updateBookmark}
         />
       ) : null}
-
-      <button onClick={() => setShowBkPrompt(true)}>
-        show bookmark prompt
-      </button>
       <div className="bookmark-groups">
         {sortedColumns.map((col, index) => (
           <div key={'col-' + index}>
@@ -92,6 +94,21 @@ export default function NewTab() {
                     {!sameAsLast || isFirst ? (
                       <div>
                         <h2>{groupName}</h2>
+                        {isFirst && (
+                          <button
+                            onClick={() => {
+                              const name = prompt('whats the new group name?')
+                              addGroup(
+                                name ?? '',
+                                entry.groupIndex + 1,
+                                entry.col
+                              )
+                            }}
+                          >
+                            add group
+                          </button>
+                        )}
+
                         <button
                           onClick={() => {
                             setSelectedBk({
@@ -103,7 +120,7 @@ export default function NewTab() {
                             setShowBkPrompt(true)
                           }}
                         >
-                          add
+                          add bk
                         </button>
                         <button
                           onClick={() => {
@@ -121,20 +138,22 @@ export default function NewTab() {
                         </button>
                       </div>
                     ) : null}
-                    <>
-                      <BookmarkEntry {...entry} key={'bookmark-entry-' + i} />
-                      <button onClick={() => removeBookmark(entry)}>
-                        remove
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedBk({ ...entry })
-                          setShowBkPrompt(true)
-                        }}
-                      >
-                        update
-                      </button>
-                    </>
+                    {!isEmptyBookmark(entry) && (
+                      <>
+                        <BookmarkEntry {...entry} key={'bookmark-entry-' + i} />
+                        <button onClick={() => removeBookmark(entry)}>
+                          remove
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedBk({ ...entry })
+                            setShowBkPrompt(true)
+                          }}
+                        >
+                          update
+                        </button>
+                      </>
+                    )}
                   </div>
                 )
               })}

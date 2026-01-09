@@ -1,4 +1,5 @@
 import bookmarks from '../../public/bookmarks-backup.json'
+import { EMPTY_BOOKMARK } from '../new-tab/NewTab'
 
 export type BookmarksBackup = typeof bookmarks
 export type Bookmark = BookmarksBackup[number] & { id: number }
@@ -72,6 +73,18 @@ export async function getStoredLastId() {
   const stored = await chrome.storage.local.get<{ lastId: number }>('lastId')
   if (stored?.lastId) return { data: stored?.lastId, error: null }
   return { data: null, error: 'did not find stored lastId' }
+}
+
+export async function addGroup(name: string, groupIndex: number, col: number) {
+  const { data: bookmarks } = await getStoredBookmarks()
+  if (bookmarks) {
+    await storeBookmarks([
+      ...bookmarks,
+      { ...EMPTY_BOOKMARK, group: name, groupIndex, col },
+    ])
+    return { data: 'added new group name: ' + name, error: null }
+  }
+  return { data: null, error: 'failed to pull in exiting bookmarks' }
 }
 
 export async function addBookmark(newBookmark: NewBookmark) {

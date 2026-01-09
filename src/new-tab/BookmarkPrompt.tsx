@@ -3,9 +3,24 @@ import Prompt from './Prompt'
 import { Bookmark, NewBookmark } from '../background'
 import { EMPTY_BOOKMARK } from './NewTab'
 
+function BookmarkPromptGroup({
+  groupName,
+  allGroupNames,
+}: {
+  groupName?: string
+  allGroupNames: string[]
+}) {
+  return (
+    <div className="group-name-container">
+      <div className="BookmarkPrompt-group-name">{groupName}</div>
+    </div>
+  )
+}
+
 export default function BookmarkPrompt({
   isShown,
   setIsShown,
+  groupNames,
   bookmark,
   setBookmark,
   addBookmark,
@@ -13,6 +28,7 @@ export default function BookmarkPrompt({
 }: {
   isShown: boolean
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
+  groupNames: string[]
   bookmark: Bookmark
   setBookmark: React.Dispatch<React.SetStateAction<Bookmark>>
   addBookmark: (newBookmark: NewBookmark) => void
@@ -24,8 +40,8 @@ export default function BookmarkPrompt({
   const [shouldExit, setShouldExit] = useState(false)
   const [shouldExecute, setShouldExecute] = useState(false)
 
-  const { href, text } = useMemo(
-    () => ({ href: bookmark.href, text: bookmark.text }),
+  const { href, text, group } = useMemo(
+    () => ({ href: bookmark.href, text: bookmark.text, group: bookmark.group }),
     [bookmark]
   )
 
@@ -44,21 +60,8 @@ export default function BookmarkPrompt({
     }
   }, [bookmark, shouldExecute, shouldExit])
 
-  // const keydownPromptHandler = useCallback((event: KeyboardEvent) => {
-  //   console.log('BOOKMARK PROMPT KEYBOARD LISTENER')
-  //   const { key } = event
-  //   if (key === 'Escape') {
-  //     setShouldExit(true)
-  //   }
-  //   if (key === 'Enter') {
-  //     setShouldExecute(true)
-  //   }
-  // }, [])
-
   useEffect(() => {
-    console.log('MOUNT BOOKMARK PROMPT')
     function keydownPromptHandler(event: KeyboardEvent) {
-      console.log('BOOKMARK PROMPT KEYBOARD LISTENER')
       const { key } = event
       if (key === 'Escape') {
         setShouldExit(true)
@@ -70,8 +73,6 @@ export default function BookmarkPrompt({
 
     document.addEventListener('keydown', keydownPromptHandler)
     return () => {
-      // console.log('TRIED TO REMOVE KEYDOWN EVEN HANDLER')
-      console.log('UNMOUNT BOOKMARK PROMPT')
       document.removeEventListener('keydown', keydownPromptHandler)
     }
   }, [])
@@ -80,11 +81,7 @@ export default function BookmarkPrompt({
     if (hrefInputRef.current) {
       hrefInputRef.current.focus()
     }
-    // if (!isShown) {
-    //   setBookmark({ ...EMPTY_BOOKMARK })
-    // }
     return () => {
-      // console.log('RAN EFFECT CLEANUP FUNCTION')
       setBookmark({ ...EMPTY_BOOKMARK })
     }
   }, [isShown])
@@ -92,6 +89,7 @@ export default function BookmarkPrompt({
   return (
     <Prompt isShown={isShown}>
       <div className="BookmarkPrompt-content">
+        <BookmarkPromptGroup groupName={group} allGroupNames={groupNames} />
         <div className="Bookmark-input-group">
           <label>
             <div>href</div>

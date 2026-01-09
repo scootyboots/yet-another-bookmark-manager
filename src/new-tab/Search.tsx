@@ -66,9 +66,6 @@ export default function Search({
         isOpen === 'true' && event.preventDefault()
       }
       if (key === 'Escape') {
-        // setInputText('')
-        // setUrlToOpen('')
-        // setFocusIndex(0)
         setShowSearch(false)
         return
       }
@@ -136,7 +133,7 @@ export default function Search({
         ref={inputRef}
         tabIndex={0}
       />
-      <div style={{ paddingBlockStart: '1rem' }}>
+      <div style={{ paddingBlockStart: '1rem', position: 'relative' }}>
         {matchesToRender.map((match, index) => {
           const moreThan18 = index + 1 > MAX_DISPLAYED_RESULTS
           if (moreThan18) return null
@@ -159,10 +156,28 @@ export default function Search({
           )
         })}
         {inputText && (
-          <div className="matches-number-display">
-            {matches.length > MAX_DISPLAYED_RESULTS
-              ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
-              : `${matches.length}`}
+          <div
+            className="matches-number-display"
+            style={{ position: 'sticky', bottom: 0 }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div
+                style={{
+                  background: 'var(--background)',
+                  borderRadius: '0.5rem',
+                  paddingInline: '0.6rem',
+                  paddingBlock: '0.2rem',
+                  boxShadow: 'var(--box-shadow-primary)',
+                  // borderStyle: 'solid',
+                  // borderWidth: '1px',
+                  // borderColor: 'var(--primary-weak)',
+                }}
+              >
+                {matches.length > MAX_DISPLAYED_RESULTS
+                  ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
+                  : `${matches.length}`}
+              </div>
+            </div>
           </div>
         )}
       </div>
