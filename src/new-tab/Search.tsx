@@ -188,7 +188,9 @@ export default function Search({
                 <HighlightedMatch toMatch={match.item.text} input={inputText} />
               </div>
               <div className="Search-result-divider"> : </div>
-              <div className="Search-result-link">{match.item.href}</div>
+              <div className="Search-result-link" style={{ opacity: '0.45' }}>
+                {match.item.href}
+              </div>
             </div>
           )
         })}
@@ -263,13 +265,13 @@ function HighlightedMatch({
   // }
   const bestMatch = highlightedMatch({ match: toMatch, input })
   console.log(bestMatch)
-  const beforeMatch = toMatchLetters.slice(0, bestMatch.labelIndex)
+  const beforeMatch = toMatchLetters.slice(0, bestMatch?.labelIndex ?? 0)
   const matched = toMatchLetters.slice(
-    bestMatch.labelIndex,
-    bestMatch.labelIndex + bestMatch.length
+    bestMatch?.labelIndex ?? 0,
+    (bestMatch?.labelIndex ?? 0) + (bestMatch?.length ?? 0)
   )
   const afterMatched = toMatchLetters.slice(
-    bestMatch.labelIndex + bestMatch.length
+    (bestMatch?.labelIndex ?? 0) + (bestMatch?.length ?? 0)
   )
   if (toMatchLetters.includes('Unicode Lookup')) {
     // console.log('consecutive matches', consecutiveMatches)
@@ -283,8 +285,6 @@ function HighlightedMatch({
     </>
   )
 }
-
-// https://github.com/microsoft/vscode/blob/main/src/vs/base/common/fuzzyScorer.ts
 
 function findFuzzyMatches(input: string, bookmarks: SearchProps['bookmarks']) {
   // const groupFlagPattern = /^g:\s*(\S+)\s*(.*)/gi
