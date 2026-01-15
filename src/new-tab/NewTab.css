@@ -69,6 +69,11 @@
   box-shadow: var(--box-shadow-primary);
 }
 
+mark {
+  background-color: var(--primary-weak);
+  color: white;
+}
+
 .Search-result {
   font-weight: 700;
   font-size: 16px;
