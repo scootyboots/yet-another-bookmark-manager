@@ -1,3 +1,4 @@
+import { count } from 'console'
 import bookmarks from '../../public/bookmarks-backup.json'
 import { EMPTY_BOOKMARK } from '../new-tab/NewTab'
 
@@ -48,7 +49,11 @@ function makeAddRemoveMessage(
 
 export async function resetBookmarks() {
   const { bookmarksWithId, lastId } = addIdsToBookmarks(bookmarks)
-  await chrome.storage.local.set({ bookmarks: bookmarksWithId, lastId })
+  await chrome.storage.local.set({
+    bookmarks: bookmarksWithId,
+    lastId,
+    recentLinks: [],
+  })
   return { data: 'reset bookmarks', error: null }
 }
 
@@ -73,6 +78,42 @@ export async function getStoredLastId() {
   const stored = await chrome.storage.local.get<{ lastId: number }>('lastId')
   if (stored?.lastId) return { data: stored?.lastId, error: null }
   return { data: null, error: 'did not find stored lastId' }
+}
+
+export type RecentLinks = { url: string; text: string; count: number }
+
+export async function getStoredRecentLinks() {
+  const stored = await chrome.storage.local.get<{
+    recentLinks: Array<RecentLinks>
+  }>('recentLinks')
+  const { recentLinks } = stored
+  console.log('STORED LINKS', recentLinks)
+  if (recentLinks) return { data: recentLinks, error: null }
+  await chrome.storage.local.set({ recentLinks: [] })
+  return { data: null, error: 'did not find stored recent links' }
+}
+
+export async function updateRecentLinks(url: string, text: string) {
+  function capStoredLinks(links: RecentLinks[]) {
+    return links.slice(0, 25)
+  }
+  const { data: recentLinks } = await getStoredRecentLinks()
+  if (!recentLinks) return
+  const existing = recentLinks.find((link) => link.url === url)
+  if (existing) {
+    console.log('found existing', existing)
+    const updatedLink = { ...existing, count: existing.count + 1 }
+    console.log('updated existing', updatedLink)
+    const updatedLinks = recentLinks.map((link) =>
+      link.url === url ? updatedLink : link
+    )
+    console.log('LINKS', updatedLinks)
+    await chrome.storage.local.set({ recentLinks: updatedLinks })
+    return
+  }
+  const updatedLinks = capStoredLinks([{ url, text, count: 1 }, ...recentLinks])
+  console.log('LINKS', updatedLinks)
+  await chrome.storage.local.set({ recentLinks: updatedLinks })
 }
 
 export async function addGroup(name: string, groupIndex: number, col: number) {

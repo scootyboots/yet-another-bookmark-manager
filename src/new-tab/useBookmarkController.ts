@@ -9,6 +9,9 @@ import {
   updateGroupOrder,
   NewBookmark,
   addGroup,
+  getStoredRecentLinks,
+  updateRecentLinks,
+  RecentLinks,
 } from '../background'
 
 type StoredResult = Awaited<ReturnType<typeof getStoredBookmarks>>
@@ -25,6 +28,7 @@ type ChangeResult = Awaited<
 
 export default function useBookmarkController() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
+  const [recentLinks, setRecentLinks] = useState<RecentLinks[]>([])
 
   useLayoutEffect(() => {
     getStoredBookmarks().then((stored) => {
@@ -32,6 +36,14 @@ export default function useBookmarkController() {
       if (data) {
         if (data.length > 0) {
           setBookmarks(data)
+        }
+      }
+    })
+    getStoredRecentLinks().then((stored) => {
+      const { data } = stored
+      if (data) {
+        if (data.length > 0) {
+          setRecentLinks(data)
         }
       }
     })
@@ -90,6 +102,19 @@ export default function useBookmarkController() {
     [bookmarks]
   )
 
+  const handleGetRecentLinks = useCallback(() => {
+    getStoredRecentLinks().then((links) => {
+      const { data: recentLinks } = links
+      setRecentLinks(recentLinks ?? [])
+    })
+  }, [])
+
+  const handleAddRecentLink = useCallback((url: string, text: string) => {
+    updateRecentLinks(url, text).then((data) => {
+      handleGetRecentLinks()
+    })
+  }, [])
+
   return {
     bookmarks,
     addBookmark: handleAddBookmark,
@@ -97,6 +122,8 @@ export default function useBookmarkController() {
     updateBookmark: handleUpdateBookmark,
     updateGroupOrder: handleUpdateGroupOrder,
     addGroup: handleNewGroup,
+    recentLinks,
+    updateRecentLinks: handleAddRecentLink,
     reset: handleReset,
   }
 }

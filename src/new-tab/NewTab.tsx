@@ -30,10 +30,12 @@ export default function NewTab() {
 
   const {
     bookmarks,
+    recentLinks,
     addBookmark,
     removeBookmark,
     updateBookmark,
     updateGroupOrder,
+    updateRecentLinks,
     addGroup,
     reset,
   } = useBookmarkController()
@@ -64,6 +66,8 @@ export default function NewTab() {
       {showSearch ? (
         <Search
           bookmarks={bookmarks}
+          recentLinks={recentLinks}
+          updateRecentLinks={updateRecentLinks}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
         />

@@ -1,8 +1,9 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { createPortal } from 'react-dom'
+// import { createPortal } from 'react-dom'
 import { BookmarkEntryProps } from './BookmarkEntry'
 import Prompt from './Prompt'
 import { search, type MatchData } from 'fast-fuzzy'
+import { RecentLinks } from '../background'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
@@ -11,12 +12,16 @@ export const MAX_DISPLAYED_RESULTS = 16
 
 type SearchProps = {
   bookmarks: Array<BookmarkEntryProps>
+  recentLinks: Array<RecentLinks>
+  updateRecentLinks: (url: string, text: string) => void
   showSearch: boolean
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function Search({
   bookmarks,
+  recentLinks,
+  updateRecentLinks,
   showSearch,
   setShowSearch,
 }: SearchProps) {
@@ -60,8 +65,11 @@ export default function Search({
     return false
   }, [hasMatches, lastMatches])
 
-  const matchLink = useMemo(() => {
-    return matches?.[focusIndex]?.item.href ?? ''
+  const { matchLink, matchLinkText } = useMemo(() => {
+    return {
+      matchLink: matches?.[focusIndex]?.item.href ?? '',
+      matchLinkText: matches?.[focusIndex]?.item.text ?? '',
+    }
   }, [matches, focusIndex])
 
   const matchesToRender = useMemo(
@@ -89,10 +97,15 @@ export default function Search({
       }
 
       if (key === 'Enter') {
-        const link = document.querySelector(LINK_TO_OPEN_SELECTOR)?.textContent
-        if (link) {
+        const matchLinkEl = document.querySelector(
+          LINK_TO_OPEN_SELECTOR
+        ) as HTMLDivElement
+        if (matchLinkEl) {
+          const href = matchLinkEl?.textContent ?? ''
+          const text = matchLinkEl.getAttribute('data-link-text') ?? ''
           // TODO: store recently opened / most opened
-          chrome.tabs.create({ url: link })
+          chrome.tabs.create({ url: href })
+          updateRecentLinks(href, text)
           setInputText('')
           setUrlToOpen('')
           setFocusIndex(0)
@@ -141,7 +154,43 @@ export default function Search({
 
   return (
     <Prompt isShown={showSearch} className={`${shakeX ? ' shakeX' : ''}`}>
-      <div data-link-to-open={Boolean(matchLink)} style={{ display: 'none' }}>
+      {inputText && (
+        <div
+          className="matches-number-display"
+          style={{
+            position: 'absolute',
+            bottom: '0.55rem',
+            width: 'calc(100% - 4rem)',
+          }}
+        >
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div
+                style={{
+                  zIndex: '100',
+                  background: 'var(--background)',
+                  borderRadius: '0.5rem',
+                  paddingInline: '0.6rem',
+                  paddingBlock: '0.2rem',
+                  boxShadow: 'var(--box-shadow-primary)',
+                  borderStyle: 'solid',
+                  borderWidth: '1px',
+                  borderColor: 'var(--primary-weak)',
+                }}
+              >
+                {matches.length > MAX_DISPLAYED_RESULTS
+                  ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
+                  : `${matches.length}`}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <div
+        data-link-to-open={Boolean(matchLink)}
+        style={{ display: 'none' }}
+        data-link-text={matchLinkText}
+      >
         {matchLink}
       </div>
 
@@ -163,6 +212,9 @@ export default function Search({
             <p>{g}</p>
           ))}
         </div> */}
+        {matchesToRender.length === 0
+          ? recentLinks.map((link) => <p>{link.url}</p>)
+          : null}
         {matchesToRender.map((match, index) => {
           const moreThan18 = index + 1 > MAX_DISPLAYED_RESULTS
 
@@ -220,31 +272,6 @@ export default function Search({
             </div>
           )
         })}
-        {inputText && (
-          <div
-            className="matches-number-display"
-            style={{ position: 'sticky', bottom: 0 }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <div
-                style={{
-                  background: 'var(--background)',
-                  borderRadius: '0.5rem',
-                  paddingInline: '0.6rem',
-                  paddingBlock: '0.2rem',
-                  boxShadow: 'var(--box-shadow-primary)',
-                  // borderStyle: 'solid',
-                  // borderWidth: '1px',
-                  // borderColor: 'var(--primary-weak)',
-                }}
-              >
-                {matches.length > MAX_DISPLAYED_RESULTS
-                  ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
-                  : `${matches.length}`}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </Prompt>
   )
