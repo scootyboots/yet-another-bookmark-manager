@@ -4,6 +4,7 @@
   --foreground: white;
   --primary: rgb(230, 60, 159);
   --primary-weak: rgb(230, 60, 159, 0.55);
+  --background-accent: rgb(106 29 74);
   --box-shadow-primary: 0px 0px 25px 0px rgb(230, 60, 159, 0.25);
   --box-shadow-primary-inset: inset 0px 0px 15px 0px rgb(230, 60, 159, 0.35);
 }

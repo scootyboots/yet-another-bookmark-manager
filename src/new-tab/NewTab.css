@@ -153,6 +153,17 @@ mark {
   gap: 1rem;
 }
 
+.bookmark-groups > div:not(:last-child) {
+  border-inline-end-width: 1px;
+  border-inline-end-style: solid;
+  border-inline-end-color: var(--primary-weak);
+}
+
+.bookmark-groups > div {
+  padding-inline-start: 1rem;
+  padding-inline-end: 0.5rem;
+}
+
 h2 {
   text-decoration: underline;
   color: var(--primary);
