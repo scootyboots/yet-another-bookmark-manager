@@ -1,4 +1,11 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+  useCallback,
+  PropsWithChildren,
+} from 'react'
 // import { createPortal } from 'react-dom'
 import { BookmarkEntryProps } from './BookmarkEntry'
 import Prompt from './Prompt'
@@ -75,7 +82,7 @@ export default function Search({
   const matchesToRender = useMemo(
     () => (hasMatches ? matches : []),
     // () => (hasMatches ? matches : lastMatches),
-    [hasMatches, matches, lastMatches]
+    [hasMatches, matches, lastMatches, recentLinks]
   )
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -154,46 +161,6 @@ export default function Search({
 
   return (
     <Prompt isShown={showSearch} className={`${shakeX ? ' shakeX' : ''}`}>
-      {inputText && (
-        <div
-          className="matches-number-display"
-          style={{
-            position: 'absolute',
-            bottom: '0.55rem',
-            width: 'calc(100% - 4rem)',
-          }}
-        >
-          <div style={{ width: '100%' }}>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <div
-                style={{
-                  zIndex: '100',
-                  background: 'var(--background)',
-                  borderRadius: '0.5rem',
-                  paddingInline: '0.6rem',
-                  paddingBlock: '0.2rem',
-                  boxShadow: 'var(--box-shadow-primary)',
-                  borderStyle: 'solid',
-                  borderWidth: '1px',
-                  borderColor: 'var(--primary-weak)',
-                }}
-              >
-                {matches.length > MAX_DISPLAYED_RESULTS
-                  ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
-                  : `${matches.length}`}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      <div
-        data-link-to-open={Boolean(matchLink)}
-        style={{ display: 'none' }}
-        data-link-text={matchLinkText}
-      >
-        {matchLink}
-      </div>
-
       <input
         onChange={(e) => setInputText(e.target.value)}
         name="bookmark search"
@@ -203,77 +170,181 @@ export default function Search({
         tabIndex={0}
       />
       <div style={{ paddingBlockStart: '1rem', position: 'relative' }}>
-        {/* 
-
-        TODO: decide what to do with categories
-
-        <div>
-          {groupMatches?.map((g) => (
-            <p>{g}</p>
-          ))}
-        </div> */}
-        {matchesToRender.length === 0
+        {/* {matchesToRender.length === 0
           ? recentLinks.map((link) => <p>{link.url}</p>)
+          : null} */}
+        {matchesToRender.length === 0
+          ? recentLinks.map((link, index) => {
+              const isFocused = index === focusIndex
+              return (
+                <SearchResult isFocused={isFocused} resultIndex={index}>
+                  <Bookmark text={link.text} href={link.url} />
+                </SearchResult>
+              )
+            })
           : null}
         {matchesToRender.map((match, index) => {
           const moreThan18 = index + 1 > MAX_DISPLAYED_RESULTS
 
           if (moreThan18) return null
           const isFocused = index === focusIndex
+          const { group, href, text } = match.item
           return (
-            <div
-              className="Search-result"
-              style={{
-                borderColor:
-                  index === focusIndex
-                    ? 'rgb(230, 60, 159)'
-                    : 'rgb(255 0 0 / 0%)',
-                position: 'relative',
-              }}
-              data-is-match
-              key={'matching-bookmark-' + index}
-            >
-              <div
-                className="Search-result-group"
-                style={{
-                  position: 'absolute',
-                  transitionDuration: '0.125s',
-                  paddingInline: '0.5rem',
-                  borderTopRightRadius: '0.2rem',
-                  borderTopLeftRadius: '0.2rem',
-                  zIndex: '100',
-                  top: isFocused ? '-1.433rem' : '0rem',
-                  // left: '0.5rem',
-                  right: '0.5rem',
-                  // right: isFocused ? '0.5rem' : '-1.5rem',
-                  backgroundColor: 'var(--primary)',
-                  color: 'var(--background)',
-                  opacity: isFocused ? '1' : '0',
-                }}
-              >
-                {match.item.group}
-              </div>
-
-              <div className="Search-result-text">
-                <HighlightedMatch
-                  toMatch={match?.item.text}
-                  query={inputText}
-                  focused={isFocused}
-                />
-                {/* <HighlightedRegexMatch
-                  toMatch={match.item.text}
-                  query={inputText}
-                /> */}
-              </div>
-              <div className="Search-result-divider"> : </div>
-              <div className="Search-result-link" style={{ opacity: '0.45' }}>
-                {match?.item.href}
-              </div>
-            </div>
+            <SearchResult isFocused={isFocused} resultIndex={index}>
+              <SearchResultGroup isFocused={isFocused}>
+                {group}
+              </SearchResultGroup>
+              <Bookmark
+                text={text}
+                href={href}
+                query={inputText}
+                isFocused={isFocused}
+              />
+            </SearchResult>
           )
         })}
       </div>
+      {inputText && <SearchResultsOverview matches={matches} />}
+      <SelectedLink matchLink={matchLink} matchLinkText={matchLinkText} />
     </Prompt>
+  )
+}
+
+function SelectedLink({
+  matchLink,
+  matchLinkText,
+}: {
+  matchLink: string
+  matchLinkText: string
+}) {
+  return (
+    <div
+      data-link-to-open={Boolean(matchLink)}
+      style={{ display: 'none' }}
+      data-link-text={matchLinkText}
+    >
+      {matchLink}
+    </div>
+  )
+}
+
+function SearchResultsOverview({
+  matches,
+}: {
+  matches: MatchData<BookmarkEntryProps>[] | never[]
+}) {
+  return (
+    <div
+      className="matches-number-display"
+      style={{
+        position: 'absolute',
+        bottom: '0.55rem',
+        width: 'calc(100% - 4rem)',
+      }}
+    >
+      <div style={{ width: '100%' }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <div
+            style={{
+              zIndex: '100',
+              background: 'var(--background)',
+              borderRadius: '0.5rem',
+              paddingInline: '0.6rem',
+              paddingBlock: '0.2rem',
+              boxShadow: 'var(--box-shadow-primary)',
+              borderStyle: 'solid',
+              borderWidth: '1px',
+              borderColor: 'var(--primary-weak)',
+            }}
+          >
+            {matches.length > MAX_DISPLAYED_RESULTS
+              ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
+              : `${matches.length}`}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+type SearchResultProps = {
+  isFocused: boolean
+  resultIndex: number
+} & PropsWithChildren
+
+function SearchResult(props: SearchResultProps) {
+  const { isFocused, resultIndex, children } = props
+
+  return (
+    <div
+      className="Search-result"
+      style={{
+        borderColor: isFocused ? 'rgb(230, 60, 159)' : 'rgb(255 0 0 / 0%)',
+        position: 'relative',
+      }}
+      data-is-match
+      key={'matching-bookmark-' + resultIndex}
+    >
+      {children}
+      {/* <div className="Search-result-text">
+        <HighlightedMatch
+          toMatch={text}
+          query={searchInput}
+          focused={isFocused}
+        />
+      </div>
+      <div className="Search-result-divider"> : </div>
+      <div className="Search-result-link" style={{ opacity: '0.45' }}>
+        {href}
+      </div> */}
+    </div>
+  )
+}
+
+type BookmarkProps = {
+  text: string
+  href: string
+  query?: string
+  isFocused?: boolean
+}
+function Bookmark(props: BookmarkProps) {
+  const { text, href, query = '', isFocused = false } = props
+  return (
+    <>
+      <div className="Search-result-text">
+        <HighlightedMatch toMatch={text} query={query} focused={isFocused} />
+      </div>
+      <div className="Search-result-divider"> : </div>
+      <div className="Search-result-link" style={{ opacity: '0.45' }}>
+        {href}
+      </div>
+    </>
+  )
+}
+
+function SearchResultGroup({
+  isFocused,
+  children: groupName,
+}: { isFocused: boolean } & PropsWithChildren) {
+  return (
+    <div
+      className="Search-result-group"
+      style={{
+        position: 'absolute',
+        transitionDuration: '0.125s',
+        paddingInline: '0.5rem',
+        borderTopRightRadius: '0.2rem',
+        borderTopLeftRadius: '0.2rem',
+        zIndex: '100',
+        top: isFocused ? '-1.433rem' : '0rem',
+        right: '0.5rem',
+        backgroundColor: 'var(--primary)',
+        color: 'var(--background)',
+        opacity: isFocused ? '1' : '0',
+      }}
+    >
+      {groupName}
+    </div>
   )
 }
 
