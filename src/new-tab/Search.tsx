@@ -73,11 +73,18 @@ export default function Search({
   }, [hasMatches, lastMatches])
 
   const { matchLink, matchLinkText } = useMemo(() => {
+    const hasMatches = Boolean(matches.length)
+    const href = hasMatches
+      ? matches?.[focusIndex]?.item.href
+      : recentLinks?.[focusIndex]?.url
+    const text = hasMatches
+      ? matches?.[focusIndex]?.item.text
+      : recentLinks?.[focusIndex]?.text
     return {
-      matchLink: matches?.[focusIndex]?.item.href ?? '',
-      matchLinkText: matches?.[focusIndex]?.item.text ?? '',
+      matchLink: href ?? '',
+      matchLinkText: text ?? '',
     }
-  }, [matches, focusIndex])
+  }, [matches, focusIndex, recentLinks])
 
   const matchesToRender = useMemo(
     () => (hasMatches ? matches : []),
@@ -286,17 +293,6 @@ function SearchResult(props: SearchResultProps) {
       key={'matching-bookmark-' + resultIndex}
     >
       {children}
-      {/* <div className="Search-result-text">
-        <HighlightedMatch
-          toMatch={text}
-          query={searchInput}
-          focused={isFocused}
-        />
-      </div>
-      <div className="Search-result-divider"> : </div>
-      <div className="Search-result-link" style={{ opacity: '0.45' }}>
-        {href}
-      </div> */}
     </div>
   )
 }

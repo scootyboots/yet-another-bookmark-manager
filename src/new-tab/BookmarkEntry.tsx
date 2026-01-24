@@ -1,4 +1,9 @@
-export type BookmarkEntryProps = { group: string; href: string; text: string }
+export type BookmarkEntryProps = {
+  group: string
+  href: string
+  text: string
+  afterContent?: React.ReactNode
+}
 
 export default function BookmarkEntry(props: BookmarkEntryProps) {
   return (
@@ -12,6 +17,7 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
         {props.text}
       </a>
       <div style={{ display: 'none' }}>{props.href}</div>
+      {props.afterContent}
     </div>
   )
 }

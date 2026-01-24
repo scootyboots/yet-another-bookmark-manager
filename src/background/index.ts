@@ -93,7 +93,14 @@ export async function getStoredRecentLinks() {
   return { data: null, error: 'did not find stored recent links' }
 }
 
-export async function updateRecentLinks(url: string, text: string) {
+export async function updateRecentLinks(
+  url: string,
+  text: string,
+  clear = false
+) {
+  if (clear) {
+    return await chrome.storage.local.set({ recentLinks: [] })
+  }
   function capStoredLinks(links: RecentLinks[]) {
     return links.slice(0, 25)
   }

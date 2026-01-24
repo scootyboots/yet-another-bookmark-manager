@@ -36,3 +36,18 @@ body {
   font-weight: 400;
   opacity: 0.5;
 }
+
+svg {
+  width: 1.33rem;
+}
+
+svg .primary {
+  /* fill: var(--primary); */
+  fill: var(--background-accent);
+}
+
+svg .secondary {
+  /* fill: var(--background-accent); */
+  /* fill: var(--background); */
+  fill: var(--primary);
+}

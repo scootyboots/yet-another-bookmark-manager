@@ -2,15 +2,15 @@ import { ReactNode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import Button from '../components/Button'
 
-document.addEventListener('DOMContentLoaded', () => {
-  const container = appendComponent(document.body, <Root />)
-  Object.assign(container.style, {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    zIndex: '9999',
-  } as CSSStyleDeclaration)
-})
+// document.addEventListener('DOMContentLoaded', () => {
+//   const container = appendComponent(document.body, <Root />)
+//   Object.assign(container.style, {
+//     position: 'fixed',
+//     top: '0',
+//     left: '0',
+//     zIndex: '9999',
+//   } as CSSStyleDeclaration)
+// })
 
 function appendComponent(
   parent: HTMLElement,

@@ -109,11 +109,14 @@ export default function useBookmarkController() {
     })
   }, [])
 
-  const handleAddRecentLink = useCallback((url: string, text: string) => {
-    updateRecentLinks(url, text).then((data) => {
-      handleGetRecentLinks()
-    })
-  }, [])
+  const handleAddRecentLink = useCallback(
+    (url: string, text: string, clear = false) => {
+      updateRecentLinks(url, text, clear).then((data) => {
+        handleGetRecentLinks()
+      })
+    },
+    []
+  )
 
   return {
     bookmarks,

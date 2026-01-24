@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search'
@@ -7,6 +7,12 @@ import useBookmarkController from './useBookmarkController'
 import BookmarkPrompt from './BookmarkPrompt'
 import { Bookmark } from '../background'
 import useBookmarkSorter from './useBookmarkSorter'
+import ArrowDownCircle from '../components/Icons/ArrowDownCircle'
+import Add from '../components/Icons/Add'
+import AddCircle from '../components/Icons/AddCircle'
+import ArrowUpCircle from '../components/Icons/ArrowUpCircle'
+import DotsHorizontal from '../components/Icons/DotsHorizontal'
+import PopOutMenu from './PopOutMenu'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -62,7 +68,14 @@ export default function NewTab() {
 
   return (
     <div className="NewTab">
-      <button onClick={() => reset()}>reset</button>
+      <button
+        onClick={() => {
+          reset()
+          updateRecentLinks('', '', true)
+        }}
+      >
+        reset
+      </button>
       {showSearch ? (
         <Search
           bookmarks={bookmarks}
@@ -97,66 +110,80 @@ export default function NewTab() {
                   <div key={`${groupName}-${index}-${i}`}>
                     {!sameAsLast || isFirst ? (
                       <div>
-                        <h2>{groupName}</h2>
-                        {isFirst && (
-                          <button
-                            onClick={() => {
-                              const name = prompt('whats the new group name?')
-                              addGroup(
-                                name ?? '',
-                                entry.groupIndex + 1,
-                                entry.col
-                              )
-                            }}
-                          >
-                            add group
-                          </button>
-                        )}
-
-                        <button
-                          onClick={() => {
-                            setSelectedBk({
-                              ...entry,
-                              id: 0,
-                              text: '',
-                              href: '',
-                            })
-                            setShowBkPrompt(true)
-                          }}
-                        >
-                          add bk
-                        </button>
-                        <button
-                          onClick={() => {
-                            updateGroupOrder(groupName, index + 1, 'lower')
-                          }}
-                        >
-                          down
-                        </button>
-                        <button
-                          onClick={() => {
-                            updateGroupOrder(groupName, index + 1, 'raise')
-                          }}
-                        >
-                          up
-                        </button>
+                        <div className="bookmark-group">
+                          <h2>{groupName}</h2>
+                          <PopOutMenu menuWidth="10rem">
+                            {isFirst && (
+                              <IconButton
+                                icon={<AddCircle />}
+                                clickHandler={() => {
+                                  const name = prompt(
+                                    'whats the new group name?'
+                                  )
+                                  addGroup(
+                                    name ?? '',
+                                    entry.groupIndex + 1,
+                                    entry.col
+                                  )
+                                }}
+                              >
+                                add group
+                              </IconButton>
+                            )}
+                            <IconButton
+                              icon={<Add />}
+                              clickHandler={() => {
+                                setSelectedBk({
+                                  ...entry,
+                                  id: 0,
+                                  text: '',
+                                  href: '',
+                                })
+                                setShowBkPrompt(true)
+                              }}
+                            >
+                              add bookmark
+                            </IconButton>
+                            <IconButton
+                              icon={<ArrowDownCircle />}
+                              clickHandler={() =>
+                                updateGroupOrder(groupName, index + 1, 'lower')
+                              }
+                            >
+                              move group down
+                            </IconButton>
+                            <IconButton
+                              icon={<ArrowUpCircle />}
+                              clickHandler={() =>
+                                updateGroupOrder(groupName, index + 1, 'raise')
+                              }
+                            >
+                              move group up
+                            </IconButton>
+                          </PopOutMenu>
+                        </div>
                       </div>
                     ) : null}
                     {!isEmptyBookmark(entry) && (
-                      <>
-                        <BookmarkEntry {...entry} key={'bookmark-entry-' + i} />
-                        <button onClick={() => removeBookmark(entry)}>
-                          remove
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedBk({ ...entry })
-                            setShowBkPrompt(true)
-                          }}
-                        >
-                          update
-                        </button>
-                      </>
+                      <BookmarkEntry
+                        {...entry}
+                        key={'bookmark-entry-' + i}
+                        afterContent={
+                          <PopOutMenu>
+                            <button onClick={() => removeBookmark(entry)}>
+                              remove
+                            </button>
+                            <button
+                              onClick={() => {
+                                setSelectedBk({ ...entry })
+                                setShowBkPrompt(true)
+                              }}
+                            >
+                              update
+                            </button>
+                          </PopOutMenu>
+                        }
+                      />
                     )}
                   </div>
                 )
@@ -166,5 +193,18 @@ export default function NewTab() {
         ))}
       </div>
     </div>
+  )
+}
+
+function IconButton({
+  children,
+  icon,
+  clickHandler,
+}: { icon: React.ReactNode; clickHandler: () => void } & PropsWithChildren) {
+  return (
+    <button className="icon-button" onClick={clickHandler}>
+      {icon}
+      {children}
+    </button>
   )
 }

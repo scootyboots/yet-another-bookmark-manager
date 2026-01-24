@@ -1,3 +1,7 @@
+button {
+  cursor: pointer;
+}
+
 .NewTab {
   margin-block: 1rem;
   margin-inline: 1rem;
@@ -176,6 +180,9 @@ h2 {
 
 .BookmarkEntry {
   margin-block-end: 0.5rem;
+  /* display: flex;
+  gap: 0.3rem;
+  align-items: stretch; */
 }
 
 .bookmark-link {
@@ -217,4 +224,55 @@ h2 {
 .shakeX {
   animation-name: shakeX;
   animation-duration: 0.08s;
+}
+
+.pop-out-menu-button {
+  position: relative;
+}
+
+.pop-out-menu-button-icon-wrapper {
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+.pop-out-menu-menu {
+  position: absolute;
+  bottom: -1rem;
+  left: 2rem;
+  z-index: 100;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  border-style: solid;
+  border-color: var(--primary);
+  background-color: var(--background);
+  border-width: 1px;
+  border-radius: 0.4rem;
+  padding-inline: 0.6rem;
+  padding-block: 0.1rem;
+}
+
+button:focus {
+  outline: revert;
+}
+
+button:has(svg) {
+  border-width: 0;
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+.icon-button {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.bookmark-group {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
 }
