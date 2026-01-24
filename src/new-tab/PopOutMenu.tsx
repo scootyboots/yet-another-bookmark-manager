@@ -4,7 +4,15 @@ import DotsHorizontal from '../components/Icons/DotsHorizontal'
 export default function PopOutMenu({
   children,
   menuWidth,
-}: { menuWidth?: string } & PropsWithChildren) {
+  icon,
+  iconStyles = {
+    width: '24px',
+  },
+}: {
+  menuWidth?: string
+  icon?: React.ReactNode
+  iconStyles?: React.CSSProperties
+} & PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -15,8 +23,8 @@ export default function PopOutMenu({
           setIsOpen((prev) => !prev)
         }}
       >
-        <div className="pop-out-menu-button-icon-wrapper">
-          <DotsHorizontal />
+        <div className="pop-out-menu-button-icon-wrapper" style={iconStyles}>
+          {icon ? icon : <DotsHorizontal />}
         </div>
         {isOpen && (
           <div

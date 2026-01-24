@@ -13,6 +13,7 @@ import AddCircle from '../components/Icons/AddCircle'
 import ArrowUpCircle from '../components/Icons/ArrowUpCircle'
 import DotsHorizontal from '../components/Icons/DotsHorizontal'
 import PopOutMenu from './PopOutMenu'
+import Edit from '../components/Icons/Edit'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -169,7 +170,13 @@ export default function NewTab() {
                         {...entry}
                         key={'bookmark-entry-' + i}
                         afterContent={
-                          <PopOutMenu>
+                          <PopOutMenu
+                            icon={<Edit />}
+                            iconStyles={{
+                              width: '16px',
+                              paddingInlineStart: '0.4rem',
+                            }}
+                          >
                             <button onClick={() => removeBookmark(entry)}>
                               remove
                             </button>
