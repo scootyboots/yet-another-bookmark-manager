@@ -1,35 +1,84 @@
-import { useState, type PropsWithChildren } from 'react'
+import {
+  useCallback,
+  useState,
+  useRef,
+  useEffect,
+  type PropsWithChildren,
+} from 'react'
 import DotsHorizontal from '../components/Icons/DotsHorizontal'
+
+const POP_OUT_TRANSITION_MS = 150
 
 export default function PopOutMenu({
   children,
-  menuWidth,
   icon,
   iconStyles = {
     width: '24px',
   },
+  menuStyles,
 }: {
-  menuWidth?: string
   icon?: React.ReactNode
   iconStyles?: React.CSSProperties
+  menuStyles?: React.CSSProperties
 } & PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  const handleClick = useCallback(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        setIsOpen(false)
+      }, POP_OUT_TRANSITION_MS)
+    } else {
+      setIsOpen(true)
+      setTimeout(() => {
+        setIsVisible(true)
+      }, 10)
+    }
+    if (isVisible) {
+      setIsVisible(false)
+    }
+  }, [isOpen, isVisible])
+
+  useEffect(() => {
+    function listener(event: Event) {
+      const t = event.target as HTMLDivElement | null
+      if (!menuRef.current) {
+        return
+      }
+      if (menuRef?.current?.contains(t)) {
+        return
+      }
+      setIsVisible(false)
+      setTimeout(() => {
+        setIsOpen(false)
+      }, POP_OUT_TRANSITION_MS)
+    }
+    document.addEventListener('mousedown', listener)
+    document.addEventListener('touchstart', listener)
+    return () => {
+      document.removeEventListener('mousedown', listener)
+      document.removeEventListener('touchstart', listener)
+    }
+  }, [menuRef, isOpen, isVisible])
 
   return (
     <>
-      <button
-        className="pop-out-menu-button"
-        onClick={() => {
-          setIsOpen((prev) => !prev)
-        }}
-      >
+      <button className="pop-out-menu-button" onClick={handleClick}>
         <div className="pop-out-menu-button-icon-wrapper" style={iconStyles}>
           {icon ? icon : <DotsHorizontal />}
         </div>
         {isOpen && (
           <div
             className="pop-out-menu-menu"
-            style={{ width: menuWidth ?? 'inherit' }}
+            style={{
+              opacity: isVisible ? '1' : '0',
+              transform: isVisible ? 'translateY(1rem)' : 'translateY(0px)',
+              ...menuStyles,
+              // display: isOpen ? 'block' : 'none',
+            }}
+            ref={menuRef}
           >
             {children}
           </div>

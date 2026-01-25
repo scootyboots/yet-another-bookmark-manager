@@ -14,6 +14,8 @@ import ArrowUpCircle from '../components/Icons/ArrowUpCircle'
 import DotsHorizontal from '../components/Icons/DotsHorizontal'
 import PopOutMenu from './PopOutMenu'
 import Edit from '../components/Icons/Edit'
+import CloseCircle from '../components/Icons/CloseCircle'
+import Refresh from '../components/Icons/Refresh'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -113,7 +115,12 @@ export default function NewTab() {
                       <div>
                         <div className="bookmark-group">
                           <h2>{groupName}</h2>
-                          <PopOutMenu menuWidth="10rem">
+                          <PopOutMenu
+                            menuStyles={{
+                              bottom: isFirst ? '-4.5rem' : '-3.15rem',
+                              width: '8.5rem',
+                            }}
+                          >
                             {isFirst && (
                               <IconButton
                                 icon={<AddCircle />}
@@ -176,18 +183,23 @@ export default function NewTab() {
                               width: '16px',
                               paddingInlineStart: '0.4rem',
                             }}
+                            menuStyles={{ bottom: '-2rem', left: '1.75rem' }}
                           >
-                            <button onClick={() => removeBookmark(entry)}>
+                            <IconButton
+                              clickHandler={() => removeBookmark(entry)}
+                              icon={<CloseCircle />}
+                            >
                               remove
-                            </button>
-                            <button
-                              onClick={() => {
+                            </IconButton>
+                            <IconButton
+                              icon={<Refresh />}
+                              clickHandler={() => {
                                 setSelectedBk({ ...entry })
                                 setShowBkPrompt(true)
                               }}
                             >
                               update
-                            </button>
+                            </IconButton>
                           </PopOutMenu>
                         }
                       />
