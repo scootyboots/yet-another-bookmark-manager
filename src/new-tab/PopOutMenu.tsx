@@ -43,6 +43,7 @@ export default function PopOutMenu({
 
   useEffect(() => {
     function listener(event: Event) {
+      console.log('im listening')
       const t = event.target as HTMLDivElement | null
       if (!menuRef.current) {
         return
@@ -55,8 +56,14 @@ export default function PopOutMenu({
         setIsOpen(false)
       }, POP_OUT_TRANSITION_MS)
     }
-    document.addEventListener('mousedown', listener)
-    document.addEventListener('touchstart', listener)
+    if (isOpen) {
+      document.addEventListener('mousedown', listener)
+      document.addEventListener('touchstart', listener)
+    } else {
+      document.removeEventListener('mousedown', listener)
+      document.removeEventListener('touchstart', listener)
+    }
+
     return () => {
       document.removeEventListener('mousedown', listener)
       document.removeEventListener('touchstart', listener)

@@ -183,7 +183,11 @@ export default function NewTab() {
                               width: '16px',
                               paddingInlineStart: '0.4rem',
                             }}
-                            menuStyles={{ bottom: '-2rem', left: '1.75rem' }}
+                            menuStyles={{
+                              bottom: '-1.66rem',
+                              left: '1.5rem',
+                              padding: '0.4rem',
+                            }}
                           >
                             <IconButton
                               clickHandler={() => removeBookmark(entry)}
