@@ -6,8 +6,51 @@ import {
   type PropsWithChildren,
 } from 'react'
 import DotsHorizontal from '../components/Icons/DotsHorizontal'
+import Dot from '../components/Icons/Dot'
 
 const POP_OUT_TRANSITION_MS = 150
+
+const IconToUse = ({
+  isVis,
+  icon,
+}: {
+  isVis: boolean
+  icon?: React.ReactNode
+}) => {
+  if (icon) return icon
+
+  return (
+    <div style={{ width: '24px', height: '24px', position: 'relative' }}>
+      <div
+        style={{
+          position: 'absolute',
+          top: '0',
+          left: '2px',
+          transform: isVis
+            ? 'scale(1.66) translateY(2px)'
+            : 'scale(1) translateY(0)',
+          // transitionDuration: `${POP_OUT_TRANSITION_MS / 1000}s`,
+          transitionDuration: '0.25s',
+        }}
+      >
+        <Dot />
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          top: '0',
+          left: '2px',
+          opacity: isVis ? 0 : 1,
+          // transitionDuration: `${POP_OUT_TRANSITION_MS / 1000}s`,
+          // transitionDuration: '2s',
+          transitionDuration: '0.25s',
+        }}
+      >
+        <DotsHorizontal />
+      </div>
+    </div>
+  )
+}
 
 export default function PopOutMenu({
   children,
@@ -74,7 +117,7 @@ export default function PopOutMenu({
     <>
       <button className="pop-out-menu-button" onClick={handleClick}>
         <div className="pop-out-menu-button-icon-wrapper" style={iconStyles}>
-          {icon ? icon : <DotsHorizontal />}
+          <IconToUse isVis={isVisible} icon={icon} />
         </div>
         {isOpen && (
           <div
