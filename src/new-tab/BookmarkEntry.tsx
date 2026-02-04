@@ -15,15 +15,16 @@ function useHasFocus<T>(ref: React.RefObject<T | null>) {
       setIsFocused(true)
     }
     function handleUnfocus() {
+      // setTimeout(() => setIsFocused(false), 150)
       setIsFocused(false)
     }
-    el.addEventListener('focus', handleFocus)
-    el.addEventListener('blur', handleUnfocus)
+    el.addEventListener('focusin', handleFocus)
+    el.addEventListener('focusout', handleUnfocus)
     el.addEventListener('mouseenter', handleFocus)
     el.addEventListener('mouseleave', handleUnfocus)
     return () => {
       el.removeEventListener('focus', handleFocus)
-      el.removeEventListener('blur', handleUnfocus)
+      el.removeEventListener('focusout', handleUnfocus)
       el.removeEventListener('mouseenter', handleFocus)
       el.removeEventListener('mouseleave', handleUnfocus)
     }
@@ -41,9 +42,17 @@ export type BookmarkEntryProps = {
 
 export default function BookmarkEntry(props: BookmarkEntryProps) {
   const linkRef = useRef(null)
+  const bookmarkRef = useRef(null)
   const isLinkFocused = useHasFocus(linkRef)
+  const isBookmarkFocused = useHasFocus(bookmarkRef)
+  const [mountControls, setMountControls] = useState(true)
+  useEffect(() => {
+    return () => {
+      setMountControls(false)
+    }
+  }, [])
   return (
-    <div className="BookmarkEntry">
+    <div className="BookmarkEntry" ref={bookmarkRef}>
       <a
         className="bookmark-link"
         href={props.bookmark.href}
@@ -54,7 +63,13 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
         {props.bookmark.text}
       </a>
       <div style={{ display: 'none' }}>{props.bookmark.href}</div>
-      <BookmarkControls {...props} isLinkFocused={isLinkFocused} />
+      {mountControls ? (
+        <BookmarkControls
+          {...props}
+          isLinkFocused={isLinkFocused || isBookmarkFocused}
+          setMountControls={setMountControls}
+        />
+      ) : null}
     </div>
   )
 }
@@ -62,42 +77,63 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
 type BookmarkControlProps = Pick<
   BookmarkEntryProps,
   'bookmark' | 'selectBookmark' | 'showBookmarkPrompt' | 'removeBookmark'
-> & { isLinkFocused: boolean }
+> & {
+  isLinkFocused: boolean
+  setMountControls: React.Dispatch<React.SetStateAction<boolean>>
+}
 function BookmarkControls({
   bookmark,
   selectBookmark,
   showBookmarkPrompt,
   removeBookmark,
   isLinkFocused,
+  setMountControls,
 }: BookmarkControlProps) {
   const updateRef = useRef(null)
   const removeRef = useRef(null)
+  const controlsRef = useRef(null)
   const isUpdateFocused = useHasFocus(updateRef)
   const isRemoveFocused = useHasFocus(removeRef)
+  const isControlsFocused = useHasFocus(controlsRef)
   const isVisible = useMemo(() => {
-    const isVisible = isLinkFocused || isUpdateFocused || isRemoveFocused
-    return isVisible
+    if (isUpdateFocused) return true
+    if (isRemoveFocused) return true
+    if (isLinkFocused) return true
+    return false
+    // const isVisible = isLinkFocused || isUpdateFocused || isRemoveFocused
+    // return isVisible
   }, [isLinkFocused, isUpdateFocused, isRemoveFocused])
-  const displayText = useMemo(() => {
-    if (isUpdateFocused) return 'update'
-    if (isRemoveFocused) return 'remove'
-    return ''
-  }, [isUpdateFocused, isRemoveFocused])
+  const { displayText, isControlElFocused } = useMemo(() => {
+    let displayText = ''
+    let isControlElFocused =
+      isUpdateFocused || isRemoveFocused || isControlsFocused
+    if (isUpdateFocused || isControlsFocused) displayText = 'update'
+    if (isRemoveFocused) displayText = 'remove'
+    return { displayText, isControlElFocused }
+  }, [isUpdateFocused, isRemoveFocused, isControlsFocused])
   return (
     <div
       className="bookmark-controls"
+      ref={controlsRef}
       style={{
         position: 'absolute',
         right: 0,
-        top: 0,
+        top: '-0.2rem',
+        overflow: 'hidden',
         display: 'flex',
+        gap: isControlElFocused ? '0.4rem' : '0.1rem',
+        alignContent: 'center',
+        alignItems: 'center',
         flexWrap: 'nowrap',
-        gap: '0.2rem',
+        fontFamily: 'monospace',
         backgroundColor: 'var(--background-weak)',
         paddingInline: '0.2rem',
         paddingBlock: '0.2rem',
-        borderRadius: '0.4rem',
+        borderRadius: '999rem',
         transitionDuration: '0.02s',
+        borderStyle: 'solid',
+        borderWidth: '1px',
+        borderColor: 'var(--primary-weak)',
         visibility: isVisible ? 'visible' : 'hidden',
       }}
     >
@@ -111,10 +147,27 @@ function BookmarkControls({
         />
       </div>
 
-      <div>{displayText}</div>
+      <div
+        style={{
+          cursor: 'pointer',
+          transitionDuration: '0.085s',
+          width: isControlElFocused ? '2.2rem' : '0',
+          textOverflow: 'clip',
+        }}
+        onClick={() => {
+          selectBookmark({ ...bookmark })
+          showBookmarkPrompt(true)
+        }}
+      >
+        {displayText}
+      </div>
       <div ref={removeRef}>
         <IconButton
-          clickHandler={() => removeBookmark(bookmark)}
+          clickHandler={() => {
+            removeBookmark(bookmark)
+            // controls not getting remounted
+            setMountControls(false)
+          }}
           icon={<CloseCircle />}
         />
       </div>
