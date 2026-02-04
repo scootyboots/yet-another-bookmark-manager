@@ -7,10 +7,10 @@ import {
   PropsWithChildren,
 } from 'react'
 // import { createPortal } from 'react-dom'
-import { BookmarkEntryProps } from './BookmarkEntry'
+// import { BookmarkEntryProps } from './BookmarkEntry'
 import Prompt from './Prompt'
 import { search, type MatchData } from 'fast-fuzzy'
-import { RecentLinks } from '../background'
+import { type Bookmark, RecentLinks } from '../background'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
@@ -18,7 +18,7 @@ export const SEARCH_INPUT_SELECTOR = '.Search input'
 export const MAX_DISPLAYED_RESULTS = 16
 
 type SearchProps = {
-  bookmarks: Array<BookmarkEntryProps>
+  bookmarks: Array<Bookmark>
   recentLinks: Array<RecentLinks>
   updateRecentLinks: (url: string, text: string) => void
   showSearch: boolean
@@ -35,9 +35,7 @@ export default function Search({
   const [inputText, setInputText] = useState('')
   const [urlToOpen, setUrlToOpen] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
-  const [lastMatches, setLastMatches] = useState<
-    Array<MatchData<BookmarkEntryProps>>
-  >([])
+  const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
 
   const { matches, hasMatches, groupMatches } = useMemo(() => {
     // const inputRemovedSpaces = inputText.replace(/\s+/g, '')
@@ -89,7 +87,7 @@ export default function Search({
   const matchesToRender = useMemo(
     () => (hasMatches ? matches : []),
     // () => (hasMatches ? matches : lastMatches),
-    [hasMatches, matches, lastMatches, recentLinks]
+    [hasMatches, matches, lastMatches, recentLinks],
   )
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -112,7 +110,7 @@ export default function Search({
 
       if (key === 'Enter') {
         const matchLinkEl = document.querySelector(
-          LINK_TO_OPEN_SELECTOR
+          LINK_TO_OPEN_SELECTOR,
         ) as HTMLDivElement
         if (matchLinkEl) {
           const href = matchLinkEl?.textContent ?? ''
@@ -145,7 +143,7 @@ export default function Search({
       //   setFocusIndex((prev) => prev + 1)
       // }
     },
-    [urlToOpen]
+    [urlToOpen],
   )
 
   useMemo(() => {
@@ -238,7 +236,7 @@ function SelectedLink({
 function SearchResultsOverview({
   matches,
 }: {
-  matches: MatchData<BookmarkEntryProps>[] | never[]
+  matches: MatchData<Bookmark>[] | never[]
 }) {
   return (
     <div
@@ -387,7 +385,7 @@ function highlightedRegexMatch({
     // ... or pull in package
     const replacedQuery = query.replace(
       /([\^\$\.\*\+\?\\(\\)\[\]\{\}\|])/g,
-      '\\$1'
+      '\\$1',
     )
     const chunks: RegExp[] = []
     const queryChars = replacedQuery.split('')
@@ -433,7 +431,7 @@ function highlightedRegexMatch({
   const regexChunks = splitQueryToRegexChunks(query)
   const matchingRegex = regexChunks.filter((reg) => reg.test(toMatch))
   const [longestMatch] = matchingRegex.sort(
-    (a, b) => `${b}`.length - `${a}`.length
+    (a, b) => `${b}`.length - `${a}`.length,
   )
   const matchGroup = toMatch.match(longestMatch)
   if (!matchGroup) return emptyMatch
@@ -536,10 +534,10 @@ function highlightedMatch({ match, input }: { match: string; input: string }) {
   const beforeMatch = bookmarkLabel.slice(0, longestMatchIndex)
   const matched = bookmarkLabel.slice(
     longestMatchIndex,
-    longestMatchIndex + longestMatchLength
+    longestMatchIndex + longestMatchLength,
   )
   const afterMatched = bookmarkLabel.slice(
-    longestMatchIndex + longestMatchLength
+    longestMatchIndex + longestMatchLength,
   )
   return { beforeMatch, matched, afterMatched }
 }

@@ -1,4 +1,11 @@
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import {
+  PropsWithChildren,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search'
@@ -126,12 +133,12 @@ export default function NewTab() {
                                 icon={<AddCircle />}
                                 clickHandler={() => {
                                   const name = prompt(
-                                    'whats the new group name?'
+                                    'whats the new group name?',
                                   )
                                   addGroup(
                                     name ?? '',
                                     entry.groupIndex + 1,
-                                    entry.col
+                                    entry.col,
                                   )
                                 }}
                               >
@@ -174,38 +181,11 @@ export default function NewTab() {
                     ) : null}
                     {!isEmptyBookmark(entry) && (
                       <BookmarkEntry
-                        {...entry}
+                        bookmark={entry}
+                        selectBookmark={setSelectedBk}
+                        showBookmarkPrompt={setShowBkPrompt}
+                        removeBookmark={removeBookmark}
                         key={'bookmark-entry-' + i}
-                        afterContent={
-                          <PopOutMenu
-                            icon={<Edit />}
-                            iconStyles={{
-                              width: '16px',
-                              paddingInlineStart: '0.4rem',
-                            }}
-                            menuStyles={{
-                              bottom: '-1.66rem',
-                              left: '1.5rem',
-                              padding: '0.4rem',
-                            }}
-                          >
-                            <IconButton
-                              clickHandler={() => removeBookmark(entry)}
-                              icon={<CloseCircle />}
-                            >
-                              remove
-                            </IconButton>
-                            <IconButton
-                              icon={<Refresh />}
-                              clickHandler={() => {
-                                setSelectedBk({ ...entry })
-                                setShowBkPrompt(true)
-                              }}
-                            >
-                              update
-                            </IconButton>
-                          </PopOutMenu>
-                        }
                       />
                     )}
                   </div>
@@ -219,7 +199,7 @@ export default function NewTab() {
   )
 }
 
-function IconButton({
+export function IconButton({
   children,
   icon,
   clickHandler,
