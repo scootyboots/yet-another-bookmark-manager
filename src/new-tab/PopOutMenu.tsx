@@ -66,6 +66,7 @@ export default function PopOutMenu({
 } & PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const [childHadFocus, setChildHadFocus] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
   const handleClick = useCallback(() => {
@@ -85,8 +86,47 @@ export default function PopOutMenu({
   }, [isOpen, isVisible])
 
   useEffect(() => {
-    function listener(event: Event) {
-      console.log('im listening')
+    function keyboardHandler(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsVisible(false)
+        setIsOpen(false)
+        return
+      }
+      setTimeout(() => {
+        const menuEl = menuRef.current
+        const focusedEl = menuEl?.querySelector(':focus')
+        if (!focusedEl) {
+          setIsVisible(false)
+          setIsOpen(false)
+          return
+        }
+      }, 10)
+    }
+    if (isVisible) {
+      document.addEventListener('keydown', keyboardHandler)
+      setTimeout(() => {
+        const menuEl = menuRef.current
+        const focusableEl = menuEl?.querySelector<HTMLButtonElement>(
+          'button , a,  [tabindex]:not([tabindex="-1"]), input, select, textarea',
+        )
+        if (focusableEl) {
+          focusableEl.focus()
+          setChildHadFocus(true)
+        }
+      }, 10)
+    }
+    if (!isVisible) {
+      setChildHadFocus(false)
+      document.removeEventListener('keydown', keyboardHandler)
+    }
+
+    return () => {
+      document.removeEventListener('keydown', keyboardHandler)
+    }
+  }, [isVisible])
+
+  useEffect(() => {
+    function mouseToucheHandler(event: Event) {
       const t = event.target as HTMLDivElement | null
       if (!menuRef.current) {
         return
@@ -100,16 +140,16 @@ export default function PopOutMenu({
       }, POP_OUT_TRANSITION_MS)
     }
     if (isOpen) {
-      document.addEventListener('mousedown', listener)
-      document.addEventListener('touchstart', listener)
+      document.addEventListener('mousedown', mouseToucheHandler)
+      document.addEventListener('touchstart', mouseToucheHandler)
     } else {
-      document.removeEventListener('mousedown', listener)
-      document.removeEventListener('touchstart', listener)
+      document.removeEventListener('mousedown', mouseToucheHandler)
+      document.removeEventListener('touchstart', mouseToucheHandler)
     }
 
     return () => {
-      document.removeEventListener('mousedown', listener)
-      document.removeEventListener('touchstart', listener)
+      document.removeEventListener('mousedown', mouseToucheHandler)
+      document.removeEventListener('touchstart', mouseToucheHandler)
     }
   }, [menuRef, isOpen, isVisible])
 

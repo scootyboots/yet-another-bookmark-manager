@@ -95,14 +95,11 @@ function BookmarkControls({
   const isUpdateFocused = useHasFocus(updateRef)
   const isRemoveFocused = useHasFocus(removeRef)
   const isControlsFocused = useHasFocus(controlsRef)
-  const isVisible = useMemo(() => {
-    if (isUpdateFocused) return true
-    if (isRemoveFocused) return true
-    if (isLinkFocused) return true
-    return false
-    // const isVisible = isLinkFocused || isUpdateFocused || isRemoveFocused
-    // return isVisible
-  }, [isLinkFocused, isUpdateFocused, isRemoveFocused])
+
+  const isVisible = useMemo(
+    () => isLinkFocused || isUpdateFocused || isRemoveFocused,
+    [isLinkFocused, isUpdateFocused, isRemoveFocused],
+  )
   const { displayText, isControlElFocused } = useMemo(() => {
     let displayText = ''
     let isControlElFocused =
@@ -117,59 +114,78 @@ function BookmarkControls({
       ref={controlsRef}
       style={{
         position: 'absolute',
-        right: 0,
-        top: '-0.2rem',
-        overflow: 'hidden',
-        display: 'flex',
-        gap: isControlElFocused ? '0.4rem' : '0.1rem',
-        alignContent: 'center',
-        alignItems: 'center',
-        flexWrap: 'nowrap',
-        fontFamily: 'monospace',
-        backgroundColor: 'var(--background-weak)',
-        paddingInline: '0.2rem',
+        paddingInline: '1.8rem',
         paddingBlock: '0.2rem',
-        borderRadius: '999rem',
-        transitionDuration: '0.02s',
-        borderStyle: 'solid',
-        borderWidth: '1px',
-        borderColor: 'var(--primary-weak)',
+        right: '-1.8rem',
+        top: '-0.4rem',
         visibility: isVisible ? 'visible' : 'hidden',
+        cursor: 'pointer',
       }}
-    >
-      <div ref={updateRef}>
-        <IconButton
-          icon={<Refresh />}
-          clickHandler={() => {
-            selectBookmark({ ...bookmark })
-            showBookmarkPrompt(true)
-          }}
-        />
-      </div>
-
-      <div
-        style={{
-          cursor: 'pointer',
-          transitionDuration: '0.085s',
-          width: isControlElFocused ? '2.2rem' : '0',
-          textOverflow: 'clip',
-        }}
-        onClick={() => {
+      onClick={() => {
+        if (displayText === 'update') {
           selectBookmark({ ...bookmark })
           showBookmarkPrompt(true)
+        }
+        if (displayText === 'remove') {
+          removeBookmark(bookmark)
+          // controls not getting remounted
+          setMountControls(false)
+        }
+      }}
+    >
+      <div
+        style={{
+          overflow: 'hidden',
+          display: 'flex',
+          gap: isControlElFocused ? '0.4rem' : '0.1rem',
+          alignContent: 'center',
+          alignItems: 'center',
+          flexWrap: 'nowrap',
+          fontFamily: 'monospace',
+          backgroundColor: 'var(--background-weak)',
+          paddingInline: '0.2rem',
+          paddingBlock: '0.2rem',
+          borderRadius: '999rem',
+          transitionDuration: '0.02s',
+          borderStyle: 'solid',
+          borderWidth: '1px',
+          borderColor: 'var(--primary)',
         }}
       >
-        {displayText}
-      </div>
-      <div ref={removeRef}>
-        <IconButton
-          clickHandler={() => {
-            removeBookmark(bookmark)
-            // controls not getting remounted
-            setMountControls(false)
+        <div ref={updateRef}>
+          <IconButton
+            icon={<Refresh />}
+            clickHandler={() => {
+              selectBookmark({ ...bookmark })
+              showBookmarkPrompt(true)
+            }}
+          />
+        </div>
+
+        <div
+          style={{
+            transitionDuration: '0.085s',
+            width: isControlElFocused ? '2.2rem' : '0',
+            textOverflow: 'clip',
           }}
-          icon={<CloseCircle />}
-        />
+        >
+          {displayText}
+        </div>
+        <div ref={removeRef}>
+          <IconButton
+            clickHandler={() => {
+              removeBookmark(bookmark)
+              // controls not getting remounted
+              setMountControls(false)
+            }}
+            icon={
+              <CloseCircle
+                primaryFill="var(--error-weak)"
+                secondaryFill="var(--error)"
+              />
+            }
+          />
+        </div>
       </div>
     </div>
   )

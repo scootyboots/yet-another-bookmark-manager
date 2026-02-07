@@ -23,6 +23,7 @@ import PopOutMenu from './PopOutMenu'
 import Edit from '../components/Icons/Edit'
 import CloseCircle from '../components/Icons/CloseCircle'
 import Refresh from '../components/Icons/Refresh'
+import { useTrackFocus } from './useTrackFocus'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -58,6 +59,8 @@ export default function NewTab() {
 
   const { sortedColumns, groupNames } = useBookmarkSorter(bookmarks)
 
+  const { focusPreviousElement } = useTrackFocus()
+
   function isEmptyBookmark(bookmark: Bookmark) {
     return !Boolean(bookmark.href) && !Boolean(bookmark.text)
   }
@@ -86,6 +89,7 @@ export default function NewTab() {
       >
         reset
       </button>
+      <button onClick={focusPreviousElement}>focus previous</button>
       {showSearch ? (
         <Search
           bookmarks={bookmarks}

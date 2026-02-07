@@ -1,9 +1,14 @@
 import NewTab from '../new-tab/NewTab'
+import { TrackFocusProvider } from '../new-tab/useTrackFocus'
 import './App.css'
 
 const App = ({ page }: { page: 'new-tab' | 'other' }) => {
   if (page === 'new-tab') {
-    return <NewTab />
+    return (
+      <TrackFocusProvider>
+        <NewTab />
+      </TrackFocusProvider>
+    )
   }
   return (
     <div className="content">
