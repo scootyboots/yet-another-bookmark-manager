@@ -4,11 +4,14 @@ import {
   useRef,
   useEffect,
   type PropsWithChildren,
+  SyntheticEvent,
 } from 'react'
 import DotsHorizontal from '../components/Icons/DotsHorizontal'
 import Dot from '../components/Icons/Dot'
+import { useTrackFocus } from './useTrackFocus'
 
 const POP_OUT_TRANSITION_MS = 150
+const POP_OUT_MENU_CLASS_NAME = 'pop-out-menu-menu'
 
 const IconToUse = ({
   isVis,
@@ -52,52 +55,108 @@ const IconToUse = ({
   )
 }
 
+export function useClickOutside<T extends HTMLElement>(
+  ref: React.RefObject<T | null>,
+  onClickOutside?: () => void,
+  shouldRemoveListener?: boolean,
+) {
+  const [isClickOutside, setIsClickOutside] = useState(false)
+  useEffect(() => {
+    function mouseToucheHandler(event: Event) {
+      const t = event.target as HTMLElement | null
+      if (!ref.current) {
+        setIsClickOutside(false)
+        return
+      }
+      const targetIsInsideRefNode = ref?.current?.contains(t)
+      if (targetIsInsideRefNode) {
+        setIsClickOutside(false)
+        return
+      }
+      setIsClickOutside(true)
+      onClickOutside?.()
+    }
+
+    document.addEventListener('mousedown', mouseToucheHandler)
+    document.addEventListener('touchstart', mouseToucheHandler)
+    if (shouldRemoveListener) {
+      document.removeEventListener('mousedown', mouseToucheHandler)
+      document.removeEventListener('touchstart', mouseToucheHandler)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', mouseToucheHandler)
+      document.removeEventListener('touchstart', mouseToucheHandler)
+    }
+  }, [])
+  return isClickOutside
+}
+
 export default function PopOutMenu({
   children,
+  focusOnMount,
   icon,
   iconStyles = {
     width: '24px',
   },
   menuStyles,
 }: {
+  focusOnMount?: boolean
   icon?: React.ReactNode
   iconStyles?: React.CSSProperties
   menuStyles?: React.CSSProperties
 } & PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const [childHadFocus, setChildHadFocus] = useState(false)
+  const menuTriggerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const handleClick = useCallback(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        setIsOpen(false)
-      }, POP_OUT_TRANSITION_MS)
-    } else {
-      setIsOpen(true)
-      setTimeout(() => {
-        setIsVisible(true)
-      }, 10)
-    }
-    if (isVisible) {
-      setIsVisible(false)
-    }
-  }, [isOpen, isVisible])
+  const handleClick = useCallback(
+    (event: SyntheticEvent) => {
+      const checkTargetMenu = () => {
+        const t = event.target as HTMLElement
+        const className = t?.className ?? ''
+        return className === POP_OUT_MENU_CLASS_NAME
+      }
+      const targetIsMenu = checkTargetMenu()
+      if (targetIsMenu) return
+      if (isOpen) {
+        setTimeout(() => {
+          setIsOpen(false)
+        }, POP_OUT_TRANSITION_MS)
+      } else {
+        setIsOpen(true)
+        setTimeout(() => {
+          setIsVisible(true)
+        }, 10)
+      }
+      if (isVisible) {
+        setIsVisible(false)
+      }
+    },
+    [isOpen, isVisible],
+  )
+
+  const handleExit = useCallback(() => {
+    setIsVisible(false)
+    setTimeout(() => {
+      setIsOpen(false)
+    }, POP_OUT_TRANSITION_MS)
+  }, [])
+
+  useClickOutside(menuRef, handleExit, true)
 
   useEffect(() => {
     function keyboardHandler(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        setIsVisible(false)
-        setIsOpen(false)
+        handleExit()
         return
       }
       setTimeout(() => {
         const menuEl = menuRef.current
         const focusedEl = menuEl?.querySelector(':focus')
         if (!focusedEl) {
-          setIsVisible(false)
-          setIsOpen(false)
+          handleExit()
           return
         }
       }, 10)
@@ -111,12 +170,10 @@ export default function PopOutMenu({
         )
         if (focusableEl) {
           focusableEl.focus()
-          setChildHadFocus(true)
         }
       }, 10)
     }
     if (!isVisible) {
-      setChildHadFocus(false)
       document.removeEventListener('keydown', keyboardHandler)
     }
 
@@ -128,6 +185,8 @@ export default function PopOutMenu({
   useEffect(() => {
     function mouseToucheHandler(event: Event) {
       const t = event.target as HTMLDivElement | null
+      console.log('CLICK TARGET: ', t)
+      console.log('CLICK REF: ', menuRef.current)
       if (!menuRef.current) {
         return
       }
@@ -153,15 +212,25 @@ export default function PopOutMenu({
     }
   }, [menuRef, isOpen, isVisible])
 
+  useEffect(() => {
+    if (focusOnMount) {
+      menuTriggerRef?.current?.focus()
+    }
+  }, [])
+
   return (
     <>
-      <button className="pop-out-menu-button" onClick={handleClick}>
+      <button
+        className="pop-out-menu-button"
+        onClick={handleClick}
+        ref={menuTriggerRef}
+      >
         <div className="pop-out-menu-button-icon-wrapper" style={iconStyles}>
           <IconToUse isVis={isVisible} icon={icon} />
         </div>
         {isOpen && (
           <div
-            className="pop-out-menu-menu"
+            className={POP_OUT_MENU_CLASS_NAME}
             style={{
               opacity: isVisible ? '1' : '0',
               transform: isVisible ? 'translateY(1rem)' : 'translateY(0px)',

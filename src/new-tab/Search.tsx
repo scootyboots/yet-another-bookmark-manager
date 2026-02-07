@@ -94,7 +94,10 @@ export default function Search({
 
   const keydownHandler = useCallback(
     (event: KeyboardEvent) => {
-      const { key, metaKey } = event
+      console.log(
+        "if you're seeing this message too much you have not properly removed the event listener",
+      )
+      const { key, shiftKey } = event
       // console.log(key, event)
       function preventDefaultIfOpen() {
         const searchElement =
@@ -125,23 +128,22 @@ export default function Search({
         return
       }
       const matchesInDom = document.querySelectorAll(IS_MATCH_SELECTOR)
-      if (key === 'ArrowDown') {
+      const isTabUp = shiftKey && key === 'Tab'
+      const isTabDown = !shiftKey && key === 'Tab'
+      if (key === 'ArrowDown' || isTabDown) {
         preventDefaultIfOpen()
         setFocusIndex((prev) => {
           const next = prev + 1
           return matchesInDom?.[next] ? next : 0
         })
       }
-      if (key === 'ArrowUp') {
+      if (key === 'ArrowUp' || isTabUp) {
         preventDefaultIfOpen()
         setFocusIndex((prev) => {
           const next = prev - 1
           return matchesInDom?.[next] ? next : matchesInDom.length - 1
         })
       }
-      // if (key === 'Tab') {
-      //   setFocusIndex((prev) => prev + 1)
-      // }
     },
     [urlToOpen],
   )
@@ -165,7 +167,11 @@ export default function Search({
   }
 
   return (
-    <Prompt isShown={showSearch} className={`${shakeX ? ' shakeX' : ''}`}>
+    <Prompt
+      isShown={showSearch}
+      className={`${shakeX ? ' shakeX' : ''}`}
+      setIsShown={setShowSearch}
+    >
       <input
         onChange={(e) => setInputText(e.target.value)}
         name="bookmark search"

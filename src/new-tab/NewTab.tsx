@@ -1,11 +1,4 @@
-import {
-  PropsWithChildren,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search'
@@ -18,12 +11,9 @@ import ArrowDownCircle from '../components/Icons/ArrowDownCircle'
 import Add from '../components/Icons/Add'
 import AddCircle from '../components/Icons/AddCircle'
 import ArrowUpCircle from '../components/Icons/ArrowUpCircle'
-import DotsHorizontal from '../components/Icons/DotsHorizontal'
 import PopOutMenu from './PopOutMenu'
-import Edit from '../components/Icons/Edit'
-import CloseCircle from '../components/Icons/CloseCircle'
-import Refresh from '../components/Icons/Refresh'
 import { useTrackFocus } from './useTrackFocus'
+import IconButton from './IconButton'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -35,9 +25,6 @@ export const EMPTY_BOOKMARK: Bookmark = {
   href: '',
   text: '',
 }
-
-// const bookmarks = (await chrome.storage.local.get('bookmarks'))
-//   .bookmarks as Bookmarks
 
 export default function NewTab() {
   const [showSearch, setShowSearch] = useState(true)
@@ -120,6 +107,14 @@ export default function NewTab() {
                 const groupName = entry.group
                 const previousGroupName = col.at(i - 1)?.group
                 const sameAsLast = previousGroupName === groupName
+                const checkEmptyGroup = () => {
+                  const entriesInGroup = col.filter(
+                    (bk) => bk.group === groupName,
+                  )
+                  const firstEntry = entriesInGroup[0]
+                  return firstEntry.href === '' && entriesInGroup.length === 1
+                }
+                const isEmptyGroup = checkEmptyGroup()
                 return (
                   <div key={`${groupName}-${index}-${i}`}>
                     {!sameAsLast || isFirst ? (
@@ -127,6 +122,7 @@ export default function NewTab() {
                         <div className="bookmark-group">
                           <h2>{groupName}</h2>
                           <PopOutMenu
+                            focusOnMount={isEmptyGroup}
                             menuStyles={{
                               bottom: isFirst ? '-4.5rem' : '-3.15rem',
                               width: '8.5rem',
@@ -200,18 +196,5 @@ export default function NewTab() {
         ))}
       </div>
     </div>
-  )
-}
-
-export function IconButton({
-  children,
-  icon,
-  clickHandler,
-}: { icon: React.ReactNode; clickHandler: () => void } & PropsWithChildren) {
-  return (
-    <button className="icon-button" onClick={clickHandler}>
-      {icon}
-      {children}
-    </button>
   )
 }

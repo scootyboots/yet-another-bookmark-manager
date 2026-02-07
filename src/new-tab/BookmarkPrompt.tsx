@@ -42,7 +42,7 @@ export default function BookmarkPrompt({
 
   const { href, text, group } = useMemo(
     () => ({ href: bookmark.href, text: bookmark.text, group: bookmark.group }),
-    [bookmark]
+    [bookmark],
   )
 
   useMemo(() => {
@@ -62,12 +62,16 @@ export default function BookmarkPrompt({
 
   useEffect(() => {
     function keydownPromptHandler(event: KeyboardEvent) {
+      console.log(
+        "if you're seeing this message too much you have not properly removed the event listener",
+      )
       const { key } = event
       if (key === 'Escape') {
         setShouldExit(true)
       }
       if (key === 'Enter') {
         setShouldExecute(true)
+        setShouldExit(true)
       }
     }
 
@@ -87,7 +91,7 @@ export default function BookmarkPrompt({
   }, [isShown])
 
   return (
-    <Prompt isShown={isShown}>
+    <Prompt isShown={isShown} setIsShown={setIsShown}>
       <div className="BookmarkPrompt-content">
         <BookmarkPromptGroup groupName={group} allGroupNames={groupNames} />
         <div className="Bookmark-input-group">

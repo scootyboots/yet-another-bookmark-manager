@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Bookmark } from '../background'
 import Refresh from '../components/Icons/Refresh'
 import CloseCircle from '../components/Icons/CloseCircle'
-import { IconButton } from './NewTab'
+import IconButton from './IconButton'
 
 function useHasFocus<T>(ref: React.RefObject<T | null>) {
   const [isFocused, setIsFocused] = useState(false)
@@ -15,7 +15,6 @@ function useHasFocus<T>(ref: React.RefObject<T | null>) {
       setIsFocused(true)
     }
     function handleUnfocus() {
-      // setTimeout(() => setIsFocused(false), 150)
       setIsFocused(false)
     }
     el.addEventListener('focusin', handleFocus)
