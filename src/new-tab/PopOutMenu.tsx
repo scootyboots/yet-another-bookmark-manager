@@ -185,8 +185,6 @@ export default function PopOutMenu({
   useEffect(() => {
     function mouseToucheHandler(event: Event) {
       const t = event.target as HTMLDivElement | null
-      console.log('CLICK TARGET: ', t)
-      console.log('CLICK REF: ', menuRef.current)
       if (!menuRef.current) {
         return
       }
@@ -219,7 +217,7 @@ export default function PopOutMenu({
   }, [])
 
   return (
-    <>
+    <div style={{ position: 'relative', width: '24px', height: '24px' }}>
       <button
         className="pop-out-menu-button"
         onClick={handleClick}
@@ -228,21 +226,20 @@ export default function PopOutMenu({
         <div className="pop-out-menu-button-icon-wrapper" style={iconStyles}>
           <IconToUse isVis={isVisible} icon={icon} />
         </div>
-        {isOpen && (
-          <div
-            className={POP_OUT_MENU_CLASS_NAME}
-            style={{
-              opacity: isVisible ? '1' : '0',
-              transform: isVisible ? 'translateY(1rem)' : 'translateY(0px)',
-              ...menuStyles,
-              // display: isOpen ? 'block' : 'none',
-            }}
-            ref={menuRef}
-          >
-            {children}
-          </div>
-        )}
       </button>
-    </>
+      {isOpen && (
+        <div
+          className={POP_OUT_MENU_CLASS_NAME}
+          style={{
+            opacity: isVisible ? '1' : '0',
+            transform: isVisible ? 'translateY(1rem)' : 'translateY(0px)',
+            ...menuStyles,
+          }}
+          ref={menuRef}
+        >
+          {children}
+        </div>
+      )}
+    </div>
   )
 }

@@ -106,10 +106,6 @@ export default function Search({
         let isOpen = searchElement.getAttribute('data-search-open')
         isOpen === 'true' && event.preventDefault()
       }
-      if (key === 'Escape') {
-        setShowSearch(false)
-        return
-      }
 
       if (key === 'Enter') {
         const matchLinkEl = document.querySelector(

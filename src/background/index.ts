@@ -37,7 +37,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 function makeAddRemoveMessage(
   type: 'add' | 'remove' | 'update',
-  bookmark: Bookmark
+  bookmark: Bookmark,
 ) {
   return `${type}-ed bookmark
     group: ${bookmark.group}
@@ -63,7 +63,7 @@ export async function storeBookmarks(bookmarks: Bookmarks) {
 
 export async function getStoredBookmarks() {
   const stored = await chrome.storage.local.get<{ bookmarks: Bookmarks }>(
-    'bookmarks'
+    'bookmarks',
   )
   if (stored?.bookmarks) return { data: stored?.bookmarks, error: null }
 
@@ -96,7 +96,7 @@ export async function getStoredRecentLinks() {
 export async function updateRecentLinks(
   url: string,
   text: string,
-  clear = false
+  clear = false,
 ) {
   if (clear) {
     return await chrome.storage.local.set({ recentLinks: [] })
@@ -112,7 +112,7 @@ export async function updateRecentLinks(
     const updatedLink = { ...existing, count: existing.count + 1 }
     console.log('updated existing', updatedLink)
     const updatedLinks = recentLinks.map((link) =>
-      link.url === url ? updatedLink : link
+      link.url === url ? updatedLink : link,
     )
     console.log('LINKS', updatedLinks)
     await chrome.storage.local.set({ recentLinks: updatedLinks })
@@ -186,7 +186,7 @@ export async function updateBookmark(bookmarkToUpdate: Bookmark) {
 export async function updateGroupOrder(
   groupName: string,
   columnNumber: number,
-  change: 'raise' | 'lower'
+  change: 'raise' | 'lower',
 ) {
   const { data: bookmarks } = await getStoredBookmarks()
   if (!bookmarks) {
@@ -200,7 +200,7 @@ export async function updateGroupOrder(
     groupName,
     columnNumber,
     change,
-    '\n\n\n----- UPDATE GROUP ORDER -----'
+    '\n\n\n----- UPDATE GROUP ORDER -----',
   )
   const isRaiseTargetGroup = change === 'raise'
 

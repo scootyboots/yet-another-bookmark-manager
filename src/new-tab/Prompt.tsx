@@ -21,8 +21,15 @@ export default function Prompt({
     setIsShown?.(false)
   })
   useEffect(() => {
+    function keydownHandler(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsShown?.(false)
+      }
+    }
+    document.addEventListener('keydown', keydownHandler)
     return () => {
       focusPreviousElement()
+      document.removeEventListener('keydown', keydownHandler)
     }
   }, [])
   return (

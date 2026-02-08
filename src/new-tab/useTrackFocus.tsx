@@ -56,9 +56,9 @@ export function TrackFocusProvider({ children }: PropsWithChildren) {
       })
   }, [])
   const focusPreviousElement = useCallback(() => {
-    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus#focusvisible
     // @ts-ignore
     previousFocus.current?.focus({ focusVisible: true })
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus#focusvisible
   }, [currentFocus, previousFocus])
 
   const focusContext = { currentFocus, previousFocus, focusPreviousElement }

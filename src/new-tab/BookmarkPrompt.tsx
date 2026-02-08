@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import Prompt from './Prompt'
 import { Bookmark, NewBookmark } from '../background'
 import { EMPTY_BOOKMARK } from './NewTab'
@@ -8,7 +15,7 @@ function BookmarkPromptGroup({
   allGroupNames,
 }: {
   groupName?: string
-  allGroupNames: string[]
+  allGroupNames?: string[]
 }) {
   return (
     <div className="group-name-container">
@@ -17,15 +24,46 @@ function BookmarkPromptGroup({
   )
 }
 
-export default function BookmarkPrompt({
-  isShown,
-  setIsShown,
-  groupNames,
-  bookmark,
-  setBookmark,
-  addBookmark,
-  updateBookmark,
+export function Select({
+  options,
+  onChange,
 }: {
+  options: string[]
+  onChange: ChangeEventHandler<HTMLSelectElement>
+}) {
+  return (
+    <div className="group-name-selector">
+      <select
+        onChange={onChange}
+        style={{
+          borderWidth: '1px',
+          borderStyle: 'solid',
+          borderColor: 'var(--primary-weak)',
+          padding: 0,
+          margin: 0,
+          paddingInline: '0.6rem',
+          paddingBlock: '0.4rem',
+          borderRadius: '0.4rem',
+          backgroundColor: 'var(--background-weak)',
+          color: 'var(--foreground)',
+        }}
+      >
+        {options.map((name) => {
+          const optionValue = name.toLocaleLowerCase().replace(' ', '-')
+          return <option value={optionValue}>{name}</option>
+        })}
+      </select>
+    </div>
+  )
+}
+
+export type BookmarkPromptType =
+  | 'new-bookmark'
+  | 'new-group'
+  | 'update-bookmark'
+
+export type BookmarkPromptProps = {
+  type: BookmarkPromptType
   isShown: boolean
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
   groupNames: string[]
@@ -33,10 +71,24 @@ export default function BookmarkPrompt({
   setBookmark: React.Dispatch<React.SetStateAction<Bookmark>>
   addBookmark: (newBookmark: NewBookmark) => void
   updateBookmark: (bookmark: Bookmark) => void
-  // existingBookmark: Bookmark
-}) {
-  const hrefInputRef = useRef<HTMLInputElement>(null)
-  // const textInputRef = useRef<HTMLInputElement>(null)
+  addGroup: (groupName: string, groupIndex: number, col: number) => void
+  getNextGroupIndex: (col: number) => number
+}
+
+export default function BookmarkPrompt(props: BookmarkPromptProps) {
+  const {
+    type,
+    isShown,
+    setIsShown,
+    groupNames,
+    bookmark,
+    setBookmark,
+    addBookmark,
+    updateBookmark,
+    addGroup,
+    getNextGroupIndex,
+  } = props
+  const contentRef = useRef<HTMLInputElement>(null)
   const [shouldExit, setShouldExit] = useState(false)
   const [shouldExecute, setShouldExecute] = useState(false)
 
@@ -48,17 +100,21 @@ export default function BookmarkPrompt({
   useMemo(() => {
     const isEmptyBk = bookmark.id === 0
     if (shouldExecute) {
-      if (isEmptyBk) {
+      if (type === 'new-bookmark') {
         addBookmark({ ...bookmark })
         setIsShown(false)
-      } else {
+      }
+      if (type === 'update-bookmark') {
         updateBookmark({ ...bookmark })
+      }
+      if (type === 'new-group') {
+        addGroup(bookmark.group, getNextGroupIndex(bookmark.col), bookmark.col)
       }
     }
     if (shouldExit) {
       setIsShown(false)
     }
-  }, [bookmark, shouldExecute, shouldExit])
+  }, [bookmark, shouldExecute, shouldExit, type])
 
   useEffect(() => {
     function keydownPromptHandler(event: KeyboardEvent) {
@@ -82,48 +138,123 @@ export default function BookmarkPrompt({
   }, [])
 
   useEffect(() => {
-    if (hrefInputRef.current) {
-      hrefInputRef.current.focus()
+    const contentEl = contentRef.current
+    if (contentEl) {
+      const firstInteractiveEl = contentEl.querySelector<HTMLButtonElement>(
+        'a, button, input, select, textarea',
+      )
+      firstInteractiveEl?.focus()
     }
     return () => {
       setBookmark({ ...EMPTY_BOOKMARK })
     }
   }, [isShown])
 
+  // TODO: remove need for this early return
+  if (type === 'new-group') {
+    return (
+      <Prompt isShown={isShown} setIsShown={setIsShown}>
+        <div className="BookmarkPrompt-content" ref={contentRef}>
+          <BookmarkPromptGroup groupName="new group" />
+          <BookmarkInputGroup
+            label="name"
+            value={group}
+            onChange={(event) => {
+              const value = event.target.value
+              setBookmark((prev) => ({ ...prev, group: value }))
+            }}
+          />
+          <SelectGroup
+            label={'col'}
+            options={['1', '2', '3', '4']}
+            onChange={(event) => {
+              const value = Number(event.target.value)
+              setBookmark((prev) => ({ ...prev, col: value }))
+            }}
+          />
+        </div>
+      </Prompt>
+    )
+  }
+
   return (
     <Prompt isShown={isShown} setIsShown={setIsShown}>
-      <div className="BookmarkPrompt-content">
-        <BookmarkPromptGroup groupName={group} allGroupNames={groupNames} />
-        <div className="Bookmark-input-group">
-          <label>
-            <div>href</div>
-            <div className="Search-result-divider">:</div>
-          </label>
-          <input
-            onChange={(event) => {
-              const value = event.target.value
-              setBookmark((prev) => ({ ...prev, href: value }))
+      <div className="BookmarkPrompt-content" ref={contentRef}>
+        {group ? (
+          <BookmarkPromptGroup groupName={group} />
+        ) : (
+          <SelectGroup
+            label="group"
+            options={groupNames}
+            onChange={(e) => {
+              console.log(e.target.value)
             }}
-            type="text"
-            value={href}
-            ref={hrefInputRef}
           />
-        </div>
-        <div className="Bookmark-input-group">
-          <label>
-            <div>text</div>
-            <div className="Search-result-divider">:</div>
-          </label>
-          <input
-            onChange={(event) => {
-              const value = event.target.value
-              setBookmark((prev) => ({ ...prev, text: value }))
-            }}
-            type="text"
-            value={text}
-          />
-        </div>
+        )}
+        <BookmarkInputGroup
+          label="href"
+          value={href}
+          onChange={(event) => {
+            const value = event.target.value
+            setBookmark((prev) => ({ ...prev, href: value }))
+          }}
+        />
+        <BookmarkInputGroup
+          label="text"
+          value={text}
+          onChange={(event) => {
+            const value = event.target.value
+            setBookmark((prev) => ({ ...prev, text: value }))
+          }}
+        />
       </div>
+      {!group && (
+        <SelectGroup
+          label={'col'}
+          options={['1', '2', '3', '4']}
+          onChange={(e) => console.log(e.target.value)}
+        />
+      )}
     </Prompt>
+  )
+}
+
+function SelectGroup({
+  label,
+  options,
+  onChange,
+}: {
+  label: string
+  options: string[]
+  onChange: ChangeEventHandler<HTMLSelectElement>
+}) {
+  return (
+    <div className="Bookmark-input-group">
+      <label>
+        <div>{label}</div>
+        <div className="Search-result-divider">:</div>
+      </label>
+      <Select options={options} onChange={onChange} />
+    </div>
+  )
+}
+
+function BookmarkInputGroup({
+  label,
+  value,
+  onChange,
+}: {
+  label: string
+  value: string
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+}) {
+  return (
+    <div className="Bookmark-input-group">
+      <label>
+        <div>{label}</div>
+        <div className="Search-result-divider">:</div>
+      </label>
+      <input onChange={onChange} type="text" value={value} />
+    </div>
   )
 }

@@ -103,7 +103,7 @@ mark {
 
 .Bookmark-input-group {
   display: grid;
-  grid-template-columns: 60px 1fr;
+  grid-template-columns: 75px 1fr;
   align-items: baseline;
   gap: 0.5rem;
 }
@@ -117,6 +117,11 @@ mark {
   justify-content: space-around;
   gap: 0.6;
   /* color: var(--primary); */
+}
+
+.Bookmark-input-group label > :first-child {
+  width: 55px;
+  text-align: right;
 }
 
 .group-name-container {
@@ -228,7 +233,7 @@ h2 {
 }
 
 .pop-out-menu-button {
-  position: relative;
+  /* position: relative; */
 }
 
 .pop-out-menu-button-icon-wrapper {

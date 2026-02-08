@@ -63,7 +63,7 @@ export default function useBookmarkController() {
       console.log('tried to add', newBookmark)
       addBookmark(newBookmark).then(handleBookmarksChange)
     },
-    [bookmarks]
+    [bookmarks],
   )
 
   const handleRemoveBookmark = useCallback(
@@ -71,7 +71,7 @@ export default function useBookmarkController() {
       console.log('tried to remove', bookmark)
       removeBookmark(bookmark).then(handleBookmarksChange)
     },
-    [bookmarks]
+    [bookmarks],
   )
 
   const handleUpdateBookmark = useCallback(
@@ -79,16 +79,16 @@ export default function useBookmarkController() {
       console.log('tried to update', bookmark)
       updateBookmark(bookmark).then(handleBookmarksChange)
     },
-    [bookmarks]
+    [bookmarks],
   )
 
   const handleUpdateGroupOrder = useCallback(
     (groupName: string, columnNumber: number, update: 'raise' | 'lower') => {
       updateGroupOrder(groupName, columnNumber, update).then(
-        handleBookmarksChange
+        handleBookmarksChange,
       )
     },
-    [bookmarks]
+    [bookmarks],
   )
 
   const handleReset = useCallback(() => {
@@ -99,7 +99,7 @@ export default function useBookmarkController() {
     (groupName: string, groupIndex: number, col: number) => {
       addGroup(groupName, groupIndex, col).then(handleBookmarksChange)
     },
-    [bookmarks]
+    [bookmarks],
   )
 
   const handleGetRecentLinks = useCallback(() => {
@@ -115,7 +115,7 @@ export default function useBookmarkController() {
         handleGetRecentLinks()
       })
     },
-    []
+    [],
   )
 
   return {
