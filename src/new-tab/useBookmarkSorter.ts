@@ -19,7 +19,7 @@ export default function useBookmarkSorter(bookmarks: Bookmarks) {
   const findGroupColumNumber = useCallback(
     (groupName: string) => {
       const found = bookmarks.find((bk) => bk.group === groupName)
-      return found?.col
+      return found?.col ?? 1
     },
     [bookmarks],
   )

@@ -1,5 +1,5 @@
 import { FocusTrap } from 'focus-trap-react'
-import { PropsWithChildren, useEffect, useRef } from 'react'
+import { CSSProperties, PropsWithChildren, useEffect, useRef } from 'react'
 import { useTrackFocus } from './useTrackFocus'
 import { useClickOutside } from './PopOutMenu'
 
@@ -7,13 +7,17 @@ type PromptProps = PropsWithChildren<{
   isShown: boolean
   className?: string
   setIsShown?: (state: boolean) => void
+  promptStyles?: CSSProperties
+  contentStyles?: CSSProperties
 }>
 
 export default function Prompt({
   isShown,
-  className,
+  className = '',
   setIsShown,
   children,
+  promptStyles,
+  contentStyles,
 }: PromptProps) {
   const contentRef = useRef(null)
   const { focusPreviousElement } = useTrackFocus()
@@ -36,8 +40,16 @@ export default function Prompt({
     <>
       <div className="Prompt-background" />
       <FocusTrap>
-        <div className={'Prompt' + ' ' + className} data-prompt-open={isShown}>
-          <div className="Prompt-content" ref={contentRef}>
+        <div
+          className={className ? 'Prompt ' + className : 'Prompt'}
+          data-prompt-open={isShown}
+          style={promptStyles}
+        >
+          <div
+            className="Prompt-content"
+            ref={contentRef}
+            style={contentStyles}
+          >
             {children}
           </div>
         </div>

@@ -56,7 +56,8 @@ export default function NewTab() {
         setSelectedBk({ ...EMPTY_BOOKMARK })
         setShowBkPrompt(true)
       },
-      name: 'add-bookmark',
+      name: 'add bookmark',
+      hotKey: 'ff',
     },
     // { action: removeBookmark, name: 'remove bookmark' },
     // { action: updateBookmark, name: 'update bookmark' },
@@ -66,13 +67,14 @@ export default function NewTab() {
         setSelectedBk({ ...EMPTY_BOOKMARK })
         setShowBkPrompt(true)
       },
-      name: 'add-group',
+      name: 'add group',
+      hotKey: 'jj',
     },
     // TODO: update group / remove group
     // { action: setShowSearch, name: 'search' },
   ]
 
-  const { sortedColumns, groupNames, getNextGroupIndex } =
+  const { sortedColumns, groupNames, getNextGroupIndex, findGroupColumNumber } =
     useBookmarkSorter(bookmarks)
 
   const { focusPreviousElement } = useTrackFocus()
@@ -153,6 +155,7 @@ export default function NewTab() {
           updateBookmark={updateBookmark}
           addGroup={addGroup}
           getNextGroupIndex={getNextGroupIndex}
+          findGroupColumNumber={findGroupColumNumber}
         />
       ) : null}
       {showCommandLine ? (

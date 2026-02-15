@@ -49,8 +49,9 @@ export function Select({
         }}
       >
         {options.map((name) => {
-          const optionValue = name.toLocaleLowerCase().replace(' ', '-')
-          return <option value={optionValue}>{name}</option>
+          // const optionValue = name.toLocaleLowerCase().replace(' ', '-')
+          // TODO: provide actual values
+          return <option value={name}>{name}</option>
         })}
       </select>
     </div>
@@ -73,6 +74,7 @@ export type BookmarkPromptProps = {
   updateBookmark: (bookmark: Bookmark) => void
   addGroup: (groupName: string, groupIndex: number, col: number) => void
   getNextGroupIndex: (col: number) => number
+  findGroupColumNumber: (groupName: string) => number
 }
 
 export default function BookmarkPrompt(props: BookmarkPromptProps) {
@@ -87,6 +89,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     updateBookmark,
     addGroup,
     getNextGroupIndex,
+    findGroupColumNumber,
   } = props
   const contentRef = useRef<HTMLInputElement>(null)
   const [shouldExit, setShouldExit] = useState(false)
@@ -161,7 +164,10 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
             value={group}
             onChange={(event) => {
               const value = event.target.value
-              setBookmark((prev) => ({ ...prev, group: value }))
+              setBookmark((prev) => ({
+                ...prev,
+                group: value,
+              }))
             }}
           />
           <SelectGroup
@@ -188,6 +194,14 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
             options={groupNames}
             onChange={(e) => {
               console.log(e.target.value)
+              const value = e.target.value
+              console.log('group name: ', value, 'group')
+              setBookmark((prev) => ({
+                ...prev,
+                group: value,
+                // TODO: not working
+                col: findGroupColumNumber(value),
+              }))
             }}
           />
         )}
@@ -208,13 +222,13 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
           }}
         />
       </div>
-      {!group && (
+      {/* {!group && (
         <SelectGroup
           label={'col'}
           options={['1', '2', '3', '4']}
           onChange={(e) => console.log(e.target.value)}
         />
-      )}
+      )} */}
     </Prompt>
   )
 }
