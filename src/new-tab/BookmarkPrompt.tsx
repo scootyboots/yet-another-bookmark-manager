@@ -49,7 +49,6 @@ export function Select({
         }}
       >
         {options.map((name) => {
-          // const optionValue = name.toLocaleLowerCase().replace(' ', '-')
           // TODO: provide actual values
           return <option value={name}>{name}</option>
         })}
@@ -97,18 +96,36 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
   const contentRef = useRef<HTMLInputElement>(null)
   const [shouldExit, setShouldExit] = useState(false)
   const [shouldExecute, setShouldExecute] = useState(false)
+  const [shakeX, setShakeX] = useState(false)
+  const promptRef = useRef<HTMLDivElement>(null)
 
   const { href, text, group } = useMemo(
     () => ({ href: bookmark.href, text: bookmark.text, group: bookmark.group }),
     [bookmark],
   )
 
+  const hadNeededNewBookmarkProps =
+    Boolean(href) && Boolean(text) && Boolean(group)
+
+  const handleShake = () => {
+    setShakeX(true)
+    setTimeout(() => {
+      setShakeX(false)
+    }, 85)
+  }
+
   useMemo(() => {
     const isEmptyBk = bookmark.id === 0
     if (shouldExecute) {
       if (type === 'new-bookmark') {
-        addBookmark({ ...bookmark })
-        setIsShown(false)
+        const newBk = { ...bookmark }
+        const hasNeededProps = newBk.text && newBk.href && newBk.group
+        if (hasNeededProps) {
+          addBookmark(newBk)
+          setIsShown(false)
+        } else {
+          handleShake()
+        }
       }
       if (type === 'update-bookmark') {
         updateBookmark({ ...bookmark })
@@ -136,6 +153,27 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         const activeEl = document.activeElement
         const isCancelButton = activeEl?.getAttribute('data-prompt-cancel')
         if (isCancelButton) return
+        const hasNewBkData = document.querySelector(
+          '[data-has-new-bookmark-data="true"]',
+        )
+        const isNewBkPrompt = document.querySelector(
+          '[data-action-type="new-bookmark"]',
+        )
+        if (isNewBkPrompt && !hasNewBkData) {
+          handleShake()
+          return
+        }
+
+        const isNewGroupPrompt = document.querySelector(
+          '[data-action-type="new-group"]',
+        )
+        const hasGroup = document.querySelector('[data-has-group="true"]')
+
+        if (isNewGroupPrompt && !hasGroup) {
+          handleShake()
+          return
+        }
+
         setShouldExecute(true)
         setShouldExit(true)
       }
@@ -161,10 +199,22 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
   }, [isShown])
 
   // TODO: remove need for this early return
+  // TODO: SERIOUSLY THOUGH THIS NEEDS TO GO
   if (type === 'new-group') {
     return (
-      <Prompt isShown={isShown} setIsShown={setIsShown}>
-        <div className="BookmarkPrompt-content" ref={contentRef}>
+      <Prompt
+        className={shakeX ? ' shakeX' : ''}
+        isShown={isShown}
+        setIsShown={setIsShown}
+        ref={promptRef}
+      >
+        <div
+          className="BookmarkPrompt-content"
+          ref={contentRef}
+          data-has-new-bookmark-data={hadNeededNewBookmarkProps}
+          data-has-group={Boolean(group)}
+          data-action-type={type}
+        >
           <BookmarkPromptGroup groupName="new group" />
           <BookmarkInputGroup
             label="name"
@@ -185,14 +235,39 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               setBookmark((prev) => ({ ...prev, col: value }))
             }}
           />
+          <div
+            style={{
+              display: 'flex',
+              gap: '0.4rem',
+              justifyContent: 'space-evenly',
+            }}
+          >
+            <button data-prompt-cancel onClick={() => setIsShown(false)}>
+              cancel
+            </button>
+            <button data-prompt-create onClick={() => setShouldExecute(true)}>
+              create
+            </button>
+          </div>
         </div>
       </Prompt>
     )
   }
 
   return (
-    <Prompt isShown={isShown} setIsShown={setIsShown}>
-      <div className="BookmarkPrompt-content" ref={contentRef}>
+    <Prompt
+      isShown={isShown}
+      setIsShown={setIsShown}
+      className={shakeX ? ' shakeX' : ''}
+      ref={promptRef}
+    >
+      <div
+        className="BookmarkPrompt-content"
+        ref={contentRef}
+        data-has-new-bookmark-data={hadNeededNewBookmarkProps}
+        data-has-group={Boolean(group)}
+        data-action-type={type}
+      >
         {group ? (
           <BookmarkPromptGroup groupName={group} />
         ) : (

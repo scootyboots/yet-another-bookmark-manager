@@ -6,8 +6,6 @@ import {
   useCallback,
   PropsWithChildren,
 } from 'react'
-// import { createPortal } from 'react-dom'
-// import { BookmarkEntryProps } from './BookmarkEntry'
 import Prompt from './Prompt'
 import { search, type MatchData } from 'fast-fuzzy'
 import { type Bookmark, RecentLinks } from '../background'
@@ -38,7 +36,6 @@ export default function Search({
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
 
   const { matches, hasMatches, groupMatches } = useMemo(() => {
-    // const inputRemovedSpaces = inputText.replace(/\s+/g, '')
     const matches = search(inputText, bookmarks, {
       keySelector: (bk) => bk.text,
       returnMatchData: true,
@@ -48,10 +45,6 @@ export default function Search({
       returnMatchData: true,
     }).map((match) => match.item.group)
     const uniqueGroups = [...new Set([...groupMatches])]
-    // const fuzzyHref = search(inputRemovedSpaces, bookmarks, {
-    //   keySelector: (bk) => bk.href,
-    //   returnMatchData: true,
-    // })
 
     if (!inputText) {
       setUrlToOpen('')
@@ -177,9 +170,6 @@ export default function Search({
         tabIndex={0}
       />
       <div style={{ paddingBlockStart: '1rem', position: 'relative' }}>
-        {/* {matchesToRender.length === 0
-          ? recentLinks.map((link) => <p>{link.url}</p>)
-          : null} */}
         {matchesToRender.length === 0
           ? recentLinks.map((link, index) => {
               const isFocused = index === focusIndex

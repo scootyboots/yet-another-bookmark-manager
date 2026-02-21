@@ -12,12 +12,6 @@ chrome.action.onClicked.addListener(() => {
 })
 
 function addIdsToBookmarks(bookmarks: BookmarksBackup) {
-  // const columns = [...new Set([...bookmarks.map((bk) => bk.col)])]
-  // const columnGroups = columns.map((col, index) => ({
-  //   col,
-  //   numberOfGroups: new Set([...bookmarks.filter((bk) => bk.col === col)]).size,
-  // }))
-
   let initialId = 1000
 
   const bookmarksWithId = bookmarks.map((bk) => {
@@ -271,7 +265,8 @@ export async function updateGroupOrder(
   const updatedColumn = [...updatedGroup, ...updatedRemainingGroups]
 
   const updatedBookmarks = [...updatedColumn, ...remainingColumns]
-  // bookmarks.splice(columnNumber - 1, updatedColumn.length, ...updatedColumn)
+
   await storeBookmarks(updatedBookmarks)
+
   return { data: 'updated bookmark order for: ' + groupName, error: null }
 }
