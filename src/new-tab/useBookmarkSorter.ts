@@ -24,14 +24,16 @@ export default function useBookmarkSorter(bookmarks: Bookmarks) {
     [bookmarks],
   )
 
-  const getNextGroupIndex = useCallback(
+  const getGroupIndex = useCallback(
     (col: number) => {
       const inCol = sorted.sortedColumns[col - 1]
       const groupIndex = inCol?.[0]?.groupIndex ?? -1 // so that if not found will start at 0
-      return groupIndex + 1
+      const current = groupIndex
+      const next = groupIndex + 1
+      return { current, next }
     },
     [sorted],
   )
 
-  return { ...sorted, findGroupColumNumber, getNextGroupIndex }
+  return { ...sorted, findGroupColumNumber, getGroupIndex }
 }

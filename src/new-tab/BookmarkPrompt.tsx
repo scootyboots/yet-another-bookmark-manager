@@ -73,7 +73,10 @@ export type BookmarkPromptProps = {
   addBookmark: (newBookmark: NewBookmark) => void
   updateBookmark: (bookmark: Bookmark) => void
   addGroup: (groupName: string, groupIndex: number, col: number) => void
-  getNextGroupIndex: (col: number) => number
+  getGroupIndex: (col: number) => {
+    current: number
+    next: number
+  }
   findGroupColumNumber: (groupName: string) => number
 }
 
@@ -88,7 +91,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     addBookmark,
     updateBookmark,
     addGroup,
-    getNextGroupIndex,
+    getGroupIndex,
     findGroupColumNumber,
   } = props
   const contentRef = useRef<HTMLInputElement>(null)
@@ -111,7 +114,8 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         updateBookmark({ ...bookmark })
       }
       if (type === 'new-group') {
-        addGroup(bookmark.group, getNextGroupIndex(bookmark.col), bookmark.col)
+        const { next } = getGroupIndex(bookmark.col)
+        addGroup(bookmark.group, next, bookmark.col)
       }
     }
     if (shouldExit) {
@@ -129,6 +133,9 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         setShouldExit(true)
       }
       if (key === 'Enter') {
+        const activeEl = document.activeElement
+        const isCancelButton = activeEl?.getAttribute('data-prompt-cancel')
+        if (isCancelButton) return
         setShouldExecute(true)
         setShouldExit(true)
       }
@@ -196,12 +203,16 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               console.log(e.target.value)
               const value = e.target.value
               console.log('group name: ', value, 'group')
-              setBookmark((prev) => ({
-                ...prev,
-                group: value,
-                // TODO: not working
-                col: findGroupColumNumber(value),
-              }))
+              setBookmark((prev) => {
+                const col = findGroupColumNumber(value)
+                const { current: groupIndex } = getGroupIndex(col)
+                return {
+                  ...prev,
+                  group: value,
+                  col,
+                  groupIndex,
+                }
+              })
             }}
           />
         )}
@@ -221,14 +232,21 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
             setBookmark((prev) => ({ ...prev, text: value }))
           }}
         />
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.4rem',
+            justifyContent: 'space-evenly',
+          }}
+        >
+          <button data-prompt-cancel onClick={() => setIsShown(false)}>
+            cancel
+          </button>
+          <button data-prompt-create onClick={() => setShouldExecute(true)}>
+            create
+          </button>
+        </div>
       </div>
-      {/* {!group && (
-        <SelectGroup
-          label={'col'}
-          options={['1', '2', '3', '4']}
-          onChange={(e) => console.log(e.target.value)}
-        />
-      )} */}
     </Prompt>
   )
 }

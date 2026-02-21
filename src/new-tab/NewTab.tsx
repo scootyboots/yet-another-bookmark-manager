@@ -74,7 +74,7 @@ export default function NewTab() {
     // { action: setShowSearch, name: 'search' },
   ]
 
-  const { sortedColumns, groupNames, getNextGroupIndex, findGroupColumNumber } =
+  const { sortedColumns, groupNames, getGroupIndex, findGroupColumNumber } =
     useBookmarkSorter(bookmarks)
 
   const { focusPreviousElement } = useTrackFocus()
@@ -154,7 +154,7 @@ export default function NewTab() {
           addBookmark={addBookmark}
           updateBookmark={updateBookmark}
           addGroup={addGroup}
-          getNextGroupIndex={getNextGroupIndex}
+          getGroupIndex={getGroupIndex}
           findGroupColumNumber={findGroupColumNumber}
         />
       ) : null}
