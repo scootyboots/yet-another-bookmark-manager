@@ -9,6 +9,7 @@ import {
 import Prompt from './Prompt'
 import { Bookmark, NewBookmark } from '../background'
 import { EMPTY_BOOKMARK } from './NewTab'
+import { BookmarkSorter } from './useBookmarkSorter'
 
 function BookmarkPromptGroup({
   groupName,
@@ -66,33 +67,28 @@ export type BookmarkPromptProps = {
   type: BookmarkPromptType
   isShown: boolean
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
-  groupNames: string[]
   bookmark: Bookmark
   setBookmark: React.Dispatch<React.SetStateAction<Bookmark>>
   addBookmark: (newBookmark: NewBookmark) => void
   updateBookmark: (bookmark: Bookmark) => void
   addGroup: (groupName: string, groupIndex: number, col: number) => void
-  getGroupIndex: (col: number) => {
-    current: number
-    next: number
-  }
-  findGroupColumNumber: (groupName: string) => number
-}
+} & BookmarkSorter
 
 export default function BookmarkPrompt(props: BookmarkPromptProps) {
   const {
     type,
     isShown,
     setIsShown,
-    groupNames,
     bookmark,
     setBookmark,
     addBookmark,
     updateBookmark,
     addGroup,
-    getGroupIndex,
-    findGroupColumNumber,
+    groupNames,
+    getColumnGroupIndex,
+    findGroupProperties,
   } = props
+
   const contentRef = useRef<HTMLInputElement>(null)
   const [shouldExit, setShouldExit] = useState(false)
   const [shouldExecute, setShouldExecute] = useState(false)
@@ -123,15 +119,13 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         if (hasNeededProps) {
           addBookmark(newBk)
           setIsShown(false)
-        } else {
-          handleShake()
         }
       }
       if (type === 'update-bookmark') {
         updateBookmark({ ...bookmark })
       }
       if (type === 'new-group') {
-        const { next } = getGroupIndex(bookmark.col)
+        const { next } = getColumnGroupIndex(bookmark.col)
         addGroup(bookmark.group, next, bookmark.col)
       }
     }
@@ -279,8 +273,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               const value = e.target.value
               console.log('group name: ', value, 'group')
               setBookmark((prev) => {
-                const col = findGroupColumNumber(value)
-                const { current: groupIndex } = getGroupIndex(col)
+                const { col, groupIndex } = findGroupProperties(value)
                 return {
                   ...prev,
                   group: value,

@@ -16,15 +16,17 @@ export default function useBookmarkSorter(bookmarks: Bookmarks) {
     return { sortedColumns, columns, groupNames }
   }, [bookmarks])
 
-  const findGroupColumNumber = useCallback(
+  const findGroupProperties = useCallback(
     (groupName: string) => {
       const found = bookmarks.find((bk) => bk.group === groupName)
-      return found?.col ?? 1
+      const col = found?.col ?? 1
+      const groupIndex = found?.groupIndex ?? 0
+      return { col, groupIndex }
     },
     [bookmarks],
   )
 
-  const getGroupIndex = useCallback(
+  const getColumnGroupIndex = useCallback(
     (col: number) => {
       const inCol = sorted.sortedColumns[col - 1]
       const groupIndex = inCol?.[0]?.groupIndex ?? -1 // so that if not found will start at 0
@@ -35,5 +37,7 @@ export default function useBookmarkSorter(bookmarks: Bookmarks) {
     [sorted],
   )
 
-  return { ...sorted, findGroupColumNumber, getGroupIndex }
+  return { ...sorted, findGroupProperties, getColumnGroupIndex }
 }
+
+export type BookmarkSorter = ReturnType<typeof useBookmarkSorter>

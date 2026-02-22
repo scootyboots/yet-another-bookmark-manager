@@ -74,8 +74,7 @@ export default function NewTab() {
     // { action: setShowSearch, name: 'search' },
   ]
 
-  const { sortedColumns, groupNames, getGroupIndex, findGroupColumNumber } =
-    useBookmarkSorter(bookmarks)
+  const sorter = useBookmarkSorter(bookmarks)
 
   const { focusPreviousElement } = useTrackFocus()
 
@@ -148,14 +147,12 @@ export default function NewTab() {
           type={bookmarkPromptType}
           isShown={showBkPrompt}
           setIsShown={setShowBkPrompt}
-          groupNames={groupNames}
           bookmark={selectedBk}
           setBookmark={setSelectedBk}
           addBookmark={addBookmark}
           updateBookmark={updateBookmark}
           addGroup={addGroup}
-          getGroupIndex={getGroupIndex}
-          findGroupColumNumber={findGroupColumNumber}
+          {...sorter}
         />
       ) : null}
       {showCommandLine ? (
@@ -166,7 +163,7 @@ export default function NewTab() {
         />
       ) : null}
       <div className="bookmark-groups">
-        {sortedColumns.map((col, index) => (
+        {sorter.sortedColumns.map((col, index) => (
           <div key={'col-' + index}>
             <div>
               {col.map((entry, i) => {

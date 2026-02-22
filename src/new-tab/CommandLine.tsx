@@ -30,6 +30,8 @@ export default function CommandLine(props: CommandLineProps) {
         paddingInline: '0.5rem',
         paddingBlock: '0.5rem',
         borderRadius: '2rem',
+        position: 'relative',
+        overflow: 'visible',
       }}
     >
       <input
@@ -49,6 +51,7 @@ export default function CommandLine(props: CommandLineProps) {
             executeAction(matching[0].action)
           }
         }}
+        style={{ borderBottomWidth: '0px', marginBlockEnd: '0px' }}
       />
       <div
         style={{
@@ -56,6 +59,11 @@ export default function CommandLine(props: CommandLineProps) {
           gap: '0.4rem',
           flexWrap: 'nowrap',
           justifyContent: 'center',
+          position: 'absolute',
+          bottom: '-2rem',
+          width: '100%',
+          fontFamily: 'monospace',
+          fontSize: '0.8rem',
         }}
       >
         {matching.map((com, index) => {
