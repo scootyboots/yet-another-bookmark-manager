@@ -8,10 +8,11 @@ import {
 } from 'react'
 import DotsHorizontal from '../components/Icons/DotsHorizontal'
 import Dot from '../components/Icons/Dot'
-import { useTrackFocus } from './useTrackFocus'
 
 const POP_OUT_TRANSITION_MS = 150
 const POP_OUT_MENU_CLASS_NAME = 'pop-out-menu-menu'
+const FOCUSABLE_SELECTOR =
+  'button , a,  [tabindex]:not([tabindex="-1"]), input, select, textarea'
 
 const IconToUse = ({
   isVis,
@@ -32,7 +33,6 @@ const IconToUse = ({
           transform: isVis
             ? 'scale(1.66) translateY(2px)'
             : 'scale(1) translateY(0)',
-          // transitionDuration: `${POP_OUT_TRANSITION_MS / 1000}s`,
           transitionDuration: '0.25s',
         }}
       >
@@ -44,8 +44,6 @@ const IconToUse = ({
           top: '0',
           left: '2px',
           opacity: isVis ? 0 : 1,
-          // transitionDuration: `${POP_OUT_TRANSITION_MS / 1000}s`,
-          // transitionDuration: '2s',
           transitionDuration: '0.25s',
         }}
       >
@@ -165,9 +163,8 @@ export default function PopOutMenu({
       document.addEventListener('keydown', keyboardHandler)
       setTimeout(() => {
         const menuEl = menuRef.current
-        const focusableEl = menuEl?.querySelector<HTMLButtonElement>(
-          'button , a,  [tabindex]:not([tabindex="-1"]), input, select, textarea',
-        )
+        const focusableEl =
+          menuEl?.querySelector<HTMLButtonElement>(FOCUSABLE_SELECTOR)
         if (focusableEl) {
           focusableEl.focus()
         }
@@ -181,6 +178,17 @@ export default function PopOutMenu({
       document.removeEventListener('keydown', keyboardHandler)
     }
   }, [isVisible])
+
+  function menuClickHandler(event: React.MouseEvent<HTMLDivElement>) {
+    const t = event.target as HTMLElement
+    if (t) {
+      const isButton = t.localName === 'button'
+      const isLink = t.localName === 'a'
+      if (isButton || isLink) {
+        handleExit()
+      }
+    }
+  }
 
   useEffect(() => {
     function mouseToucheHandler(event: Event) {
@@ -236,6 +244,7 @@ export default function PopOutMenu({
             ...menuStyles,
           }}
           ref={menuRef}
+          onClick={menuClickHandler}
         >
           {children}
         </div>

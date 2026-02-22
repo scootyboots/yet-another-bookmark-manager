@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Bookmark } from '../background'
+import { BookmarkPromptType } from './BookmarkPrompt'
 import Refresh from '../components/Icons/Refresh'
 import CloseCircle from '../components/Icons/CloseCircle'
 import IconButton from './IconButton'
-import { BookmarkPromptProps, BookmarkPromptType } from './BookmarkPrompt'
 
 function useHasFocus<T>(ref: React.RefObject<T | null>) {
   const [isFocused, setIsFocused] = useState(false)
@@ -130,12 +130,12 @@ function BookmarkControls({
       }}
       onClick={() => {
         if (displayText === 'update') {
+          setBookmarkPromptType('update-bookmark')
           selectBookmark({ ...bookmark })
           showBookmarkPrompt(true)
         }
         if (displayText === 'remove') {
           removeBookmark(bookmark)
-          setBookmarkPromptType('update-bookmark')
           // controls not getting remounted
           setMountControls(false)
         }

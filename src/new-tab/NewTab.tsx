@@ -116,6 +116,7 @@ export default function NewTab() {
         </div>
         <button
           onClick={() => {
+            setBookmarkPromptType('new-bookmark')
             setSelectedBk({ ...EMPTY_BOOKMARK })
             setShowBkPrompt(true)
           }}
@@ -125,6 +126,7 @@ export default function NewTab() {
         <button
           onClick={() => {
             setBookmarkPromptType('new-group')
+            setSelectedBk({ ...EMPTY_BOOKMARK })
             setShowBkPrompt(true)
           }}
         >
@@ -195,12 +197,14 @@ export default function NewTab() {
                             <IconButton
                               icon={<Add />}
                               clickHandler={() => {
-                                setSelectedBk({
+                                const holding = {
                                   ...entry,
                                   id: 0,
                                   text: '',
                                   href: '',
-                                })
+                                }
+                                console.log('set selected', holding)
+                                setSelectedBk(holding)
                                 setBookmarkPromptType('new-bookmark')
                                 setShowBkPrompt(true)
                               }}
@@ -210,15 +214,8 @@ export default function NewTab() {
                             <IconButton
                               icon={<AddCircle />}
                               clickHandler={() => {
-                                // setSelectedBk({ ...entry })
-                                // const name = prompt('whats the new group name?')
                                 setBookmarkPromptType('new-group')
                                 setShowBkPrompt(true)
-                                // addGroup(
-                                //   name ?? '',
-                                //   entry.groupIndex + 1,
-                                //   entry.col,
-                                // )
                               }}
                             >
                               add group

@@ -119,6 +119,12 @@ mark {
   /* color: var(--primary); */
 }
 
+.Bookmark-input-group .text {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+}
+
 .Bookmark-input-group label > :first-child {
   width: 55px;
   text-align: right;

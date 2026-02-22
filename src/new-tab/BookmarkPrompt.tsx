@@ -1,6 +1,7 @@
 import {
   ChangeEvent,
   ChangeEventHandler,
+  PropsWithChildren,
   useEffect,
   useMemo,
   useRef,
@@ -14,13 +15,28 @@ import { BookmarkSorter } from './useBookmarkSorter'
 function BookmarkPromptGroup({
   groupName,
   allGroupNames,
-}: {
+  promptType,
+  children,
+}: PropsWithChildren<{
   groupName?: string
   allGroupNames?: string[]
-}) {
+  promptType: BookmarkPromptType
+}>) {
+  const findNameToUse = () => {
+    if (promptType === 'new-bookmark') {
+      return 'new bookmark'
+    }
+    if (promptType === 'new-group') {
+      return 'new group'
+    }
+    if (promptType === 'update-bookmark') {
+      return 'update bookmark'
+    }
+  }
   return (
     <div className="group-name-container">
-      <div className="BookmarkPrompt-group-name">{groupName}</div>
+      <div className="BookmarkPrompt-group-name">{findNameToUse()}</div>
+      {children}
     </div>
   )
 }
@@ -28,10 +44,13 @@ function BookmarkPromptGroup({
 export function Select({
   options,
   onChange,
+  firstOptionEmpty,
 }: {
   options: string[]
   onChange: ChangeEventHandler<HTMLSelectElement>
+  firstOptionEmpty: boolean
 }) {
+  const optionsToUse = firstOptionEmpty ? ['', ...options] : options
   return (
     <div className="group-name-selector">
       <select
@@ -49,7 +68,7 @@ export function Select({
           color: 'var(--foreground)',
         }}
       >
-        {options.map((name) => {
+        {optionsToUse.map((name) => {
           // TODO: provide actual values
           return <option value={name}>{name}</option>
         })}
@@ -100,15 +119,33 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     [bookmark],
   )
 
-  const confirmButtonText = useMemo(() => {
+  const {
+    confirmButtonText,
+    isCreateNewBk,
+    isCreateNewGroup,
+    isUpdateBookmark,
+  } = useMemo(() => {
+    let confirmButtonText = ''
+    let isCreateNewBk = false
+    let isCreateNewGroup = false
+    let isUpdateBookmark = false
     if (type === 'new-bookmark') {
-      return 'create bookmark'
+      confirmButtonText = 'create bookmark'
+      isCreateNewBk = true
     }
     if (type === 'new-group') {
-      return 'create group'
+      confirmButtonText = 'create group'
+      isCreateNewGroup = true
     }
     if (type === 'update-bookmark') {
-      return 'update'
+      confirmButtonText = 'update'
+      isUpdateBookmark = true
+    }
+    return {
+      confirmButtonText,
+      isCreateNewBk,
+      isCreateNewGroup,
+      isUpdateBookmark,
     }
   }, [type])
 
@@ -122,8 +159,8 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     }, 85)
   }
 
-  useMemo(() => {
-    const isEmptyBk = bookmark.id === 0
+  const { selectedBkHasGroup } = useMemo(() => {
+    const selectedBkHasGroup = Boolean(bookmark.group)
     if (shouldExecute) {
       if (type === 'new-bookmark') {
         const newBk = { ...bookmark }
@@ -144,6 +181,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     if (shouldExit) {
       setIsShown(false)
     }
+    return { selectedBkHasGroup }
   }, [bookmark, shouldExecute, shouldExit, type])
 
   useEffect(() => {
@@ -188,6 +226,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     document.addEventListener('keydown', keydownPromptHandler)
     return () => {
       document.removeEventListener('keydown', keydownPromptHandler)
+      setBookmark({ ...EMPTY_BOOKMARK })
     }
   }, [])
 
@@ -204,62 +243,6 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     }
   }, [isShown])
 
-  // TODO: remove need for this early return
-  // TODO: SERIOUSLY THOUGH THIS NEEDS TO GO
-  if (type === 'new-group') {
-    return (
-      <Prompt
-        className={shakeX ? ' shakeX' : ''}
-        isShown={isShown}
-        setIsShown={setIsShown}
-        ref={promptRef}
-      >
-        <div
-          className="BookmarkPrompt-content"
-          ref={contentRef}
-          data-has-new-bookmark-data={hadNeededNewBookmarkProps}
-          data-has-group={Boolean(group)}
-          data-action-type={type}
-        >
-          <BookmarkPromptGroup groupName="new group" />
-          <BookmarkInputGroup
-            label="name"
-            value={group}
-            onChange={(event) => {
-              const value = event.target.value
-              setBookmark((prev) => ({
-                ...prev,
-                group: value,
-              }))
-            }}
-          />
-          <SelectGroup
-            label={'col'}
-            options={['1', '2', '3', '4']}
-            onChange={(event) => {
-              const value = Number(event.target.value)
-              setBookmark((prev) => ({ ...prev, col: value }))
-            }}
-          />
-          <div
-            style={{
-              display: 'flex',
-              gap: '0.4rem',
-              justifyContent: 'space-evenly',
-            }}
-          >
-            <button data-prompt-cancel onClick={() => setIsShown(false)}>
-              cancel
-            </button>
-            <button data-prompt-create onClick={() => setShouldExecute(true)}>
-              create
-            </button>
-          </div>
-        </div>
-      </Prompt>
-    )
-  }
-
   return (
     <Prompt
       isShown={isShown}
@@ -274,12 +257,14 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         data-has-group={Boolean(group)}
         data-action-type={type}
       >
-        {group ? (
-          <BookmarkPromptGroup groupName={group} />
-        ) : (
+        <BookmarkPromptGroup groupName={group} promptType={type} />
+        {isCreateNewBk && (
           <SelectGroup
             label="group"
             options={groupNames}
+            setBookmark={setBookmark}
+            selectedBookmark={bookmark}
+            firstOptionEmpty={selectedBkHasGroup ? false : true}
             onChange={(e) => {
               console.log(e.target.value)
               const value = e.target.value
@@ -296,22 +281,51 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
             }}
           />
         )}
-        <BookmarkInputGroup
-          label="href"
-          value={href}
-          onChange={(event) => {
-            const value = event.target.value
-            setBookmark((prev) => ({ ...prev, href: value }))
-          }}
-        />
-        <BookmarkInputGroup
-          label="text"
-          value={text}
-          onChange={(event) => {
-            const value = event.target.value
-            setBookmark((prev) => ({ ...prev, text: value }))
-          }}
-        />
+
+        {isCreateNewBk || isUpdateBookmark ? (
+          <>
+            <BookmarkInputGroup
+              label="href"
+              value={href}
+              onChange={(event) => {
+                const value = event.target.value
+                setBookmark((prev) => ({ ...prev, href: value }))
+              }}
+            />
+            <BookmarkInputGroup
+              label="text"
+              value={text}
+              onChange={(event) => {
+                const value = event.target.value
+                setBookmark((prev) => ({ ...prev, text: value }))
+              }}
+            />
+          </>
+        ) : null}
+
+        {isCreateNewGroup && (
+          <>
+            <BookmarkInputGroup
+              label="group"
+              value={group}
+              onChange={(event) => {
+                const value = event.target.value
+                setBookmark((prev) => ({ ...prev, group: value }))
+              }}
+            />
+            <SelectGroup
+              label={'col'}
+              options={['1', '2', '3', '4']}
+              setBookmark={setBookmark}
+              selectedBookmark={bookmark}
+              firstOptionEmpty={false}
+              onChange={(event) => {
+                const value = Number(event.target.value)
+                setBookmark((prev) => ({ ...prev, col: value }))
+              }}
+            />
+          </>
+        )}
         <div
           style={{
             display: 'flex',
@@ -322,7 +336,14 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
           <button data-prompt-cancel onClick={() => setIsShown(false)}>
             cancel
           </button>
-          <button data-prompt-create onClick={() => setShouldExecute(true)}>
+          <button>{group}</button>
+          <button
+            data-prompt-create
+            onClick={() => {
+              setShouldExecute(true)
+              setShouldExit(true)
+            }}
+          >
             {confirmButtonText}
           </button>
         </div>
@@ -335,18 +356,52 @@ function SelectGroup({
   label,
   options,
   onChange,
+  setBookmark,
+  firstOptionEmpty,
+  selectedBookmark,
 }: {
   label: string
   options: string[]
   onChange: ChangeEventHandler<HTMLSelectElement>
+  setBookmark: (value: React.SetStateAction<Bookmark>) => void
+  firstOptionEmpty: boolean
+  selectedBookmark: Bookmark
 }) {
+  const hasGroup = Boolean(selectedBookmark.group)
+  const isColSelect = label === 'col'
+
+  useEffect(() => {
+    if (firstOptionEmpty) {
+      setBookmark((prev) => ({ ...prev, group: '' }))
+      return
+    }
+    if (hasGroup && !isColSelect) {
+      return
+    }
+    const firstOption = options[0]
+    const firstAsNumber = Number(firstOption)
+    if (isNaN(firstAsNumber)) {
+      setBookmark((prev) => ({ ...prev, group: firstOption }))
+    } else {
+      setBookmark((prev) => ({ ...prev, col: firstAsNumber }))
+    }
+  }, [])
+
   return (
     <div className="Bookmark-input-group">
       <label>
         <div>{label}</div>
         <div className="Search-result-divider">:</div>
       </label>
-      <Select options={options} onChange={onChange} />
+      {hasGroup && !isColSelect ? (
+        <div className="text">{selectedBookmark.group}</div>
+      ) : (
+        <Select
+          options={options}
+          onChange={onChange}
+          firstOptionEmpty={firstOptionEmpty}
+        />
+      )}
     </div>
   )
 }
