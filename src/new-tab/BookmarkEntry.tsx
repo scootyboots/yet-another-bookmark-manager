@@ -3,6 +3,7 @@ import { Bookmark } from '../background'
 import Refresh from '../components/Icons/Refresh'
 import CloseCircle from '../components/Icons/CloseCircle'
 import IconButton from './IconButton'
+import { BookmarkPromptProps, BookmarkPromptType } from './BookmarkPrompt'
 
 function useHasFocus<T>(ref: React.RefObject<T | null>) {
   const [isFocused, setIsFocused] = useState(false)
@@ -37,6 +38,9 @@ export type BookmarkEntryProps = {
   selectBookmark: (bk: Bookmark) => void
   showBookmarkPrompt: (show: boolean) => void
   removeBookmark: (bk: Bookmark) => void
+  setBookmarkPromptType: React.Dispatch<
+    React.SetStateAction<BookmarkPromptType>
+  >
 }
 
 export default function BookmarkEntry(props: BookmarkEntryProps) {
@@ -79,6 +83,9 @@ type BookmarkControlProps = Pick<
 > & {
   isLinkFocused: boolean
   setMountControls: React.Dispatch<React.SetStateAction<boolean>>
+  setBookmarkPromptType: React.Dispatch<
+    React.SetStateAction<BookmarkPromptType>
+  >
 }
 function BookmarkControls({
   bookmark,
@@ -87,6 +94,7 @@ function BookmarkControls({
   removeBookmark,
   isLinkFocused,
   setMountControls,
+  setBookmarkPromptType,
 }: BookmarkControlProps) {
   const updateRef = useRef(null)
   const removeRef = useRef(null)
@@ -127,6 +135,7 @@ function BookmarkControls({
         }
         if (displayText === 'remove') {
           removeBookmark(bookmark)
+          setBookmarkPromptType('update-bookmark')
           // controls not getting remounted
           setMountControls(false)
         }
@@ -156,6 +165,7 @@ function BookmarkControls({
             icon={<Refresh />}
             clickHandler={() => {
               selectBookmark({ ...bookmark })
+              setBookmarkPromptType('update-bookmark')
               showBookmarkPrompt(true)
             }}
           />

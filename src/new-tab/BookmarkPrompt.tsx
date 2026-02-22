@@ -100,6 +100,18 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     [bookmark],
   )
 
+  const confirmButtonText = useMemo(() => {
+    if (type === 'new-bookmark') {
+      return 'create bookmark'
+    }
+    if (type === 'new-group') {
+      return 'create group'
+    }
+    if (type === 'update-bookmark') {
+      return 'update'
+    }
+  }, [type])
+
   const hadNeededNewBookmarkProps =
     Boolean(href) && Boolean(text) && Boolean(group)
 
@@ -311,7 +323,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
             cancel
           </button>
           <button data-prompt-create onClick={() => setShouldExecute(true)}>
-            create
+            {confirmButtonText}
           </button>
         </div>
       </div>
