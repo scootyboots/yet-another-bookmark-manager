@@ -42,11 +42,15 @@ function BookmarkPromptGroup({
 }
 
 export function Select({
+  name,
   options,
+  initialValue,
   onChange,
   firstOptionEmpty,
 }: {
+  name: string
   options: string[]
+  initialValue?: string
   onChange: ChangeEventHandler<HTMLSelectElement>
   firstOptionEmpty: boolean
 }) {
@@ -54,6 +58,7 @@ export function Select({
   return (
     <div className="group-name-selector">
       <select
+        name={name}
         onChange={onChange}
         style={{
           borderWidth: '1px',
@@ -69,6 +74,15 @@ export function Select({
         }}
       >
         {optionsToUse.map((name) => {
+          const selected = name === initialValue
+
+          if (selected) {
+            return (
+              <option value={name} selected>
+                {name}
+              </option>
+            )
+          }
           // TODO: provide actual values
           return <option value={name}>{name}</option>
         })}
@@ -261,7 +275,9 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         {isCreateNewBk && (
           <SelectGroup
             label="group"
+            name="group-name"
             options={groupNames}
+            initialValue=""
             setBookmark={setBookmark}
             selectedBookmark={bookmark}
             firstOptionEmpty={selectedBkHasGroup ? false : true}
@@ -314,8 +330,10 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               }}
             />
             <SelectGroup
-              label={'col'}
+              name="column-number"
+              label="col"
               options={['1', '2', '3', '4']}
+              initialValue={`${bookmark.col}`}
               setBookmark={setBookmark}
               selectedBookmark={bookmark}
               firstOptionEmpty={false}
@@ -336,7 +354,6 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
           <button data-prompt-cancel onClick={() => setIsShown(false)}>
             cancel
           </button>
-          <button>{group}</button>
           <button
             data-prompt-create
             onClick={() => {
@@ -354,14 +371,18 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
 
 function SelectGroup({
   label,
+  name,
   options,
+  initialValue,
   onChange,
   setBookmark,
   firstOptionEmpty,
   selectedBookmark,
 }: {
   label: string
+  name: string
   options: string[]
+  initialValue?: string
   onChange: ChangeEventHandler<HTMLSelectElement>
   setBookmark: (value: React.SetStateAction<Bookmark>) => void
   firstOptionEmpty: boolean
@@ -371,6 +392,7 @@ function SelectGroup({
   const isColSelect = label === 'col'
 
   useEffect(() => {
+    if (initialValue) return
     if (firstOptionEmpty) {
       setBookmark((prev) => ({ ...prev, group: '' }))
       return
@@ -389,7 +411,7 @@ function SelectGroup({
 
   return (
     <div className="Bookmark-input-group">
-      <label>
+      <label htmlFor={name}>
         <div>{label}</div>
         <div className="Search-result-divider">:</div>
       </label>
@@ -397,6 +419,8 @@ function SelectGroup({
         <div className="text">{selectedBookmark.group}</div>
       ) : (
         <Select
+          name={name}
+          initialValue={initialValue}
           options={options}
           onChange={onChange}
           firstOptionEmpty={firstOptionEmpty}

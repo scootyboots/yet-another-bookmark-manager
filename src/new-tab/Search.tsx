@@ -21,6 +21,7 @@ type SearchProps = {
   updateRecentLinks: (url: string, text: string) => void
   showSearch: boolean
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
+  promptUpdateBookmark: (bk: Bookmark) => void
 }
 
 export default function Search({
@@ -29,6 +30,7 @@ export default function Search({
   updateRecentLinks,
   showSearch,
   setShowSearch,
+  promptUpdateBookmark,
 }: SearchProps) {
   const [inputText, setInputText] = useState('')
   const [urlToOpen, setUrlToOpen] = useState('')
@@ -90,14 +92,23 @@ export default function Search({
       console.log(
         "if you're seeing this message too much you have not properly removed the event listener",
       )
-      const { key, shiftKey } = event
-      // console.log(key, event)
+      const { key, shiftKey, metaKey } = event
+      console.log(key, event)
       function preventDefaultIfOpen() {
         const searchElement =
           document.querySelector<HTMLDivElement>('[data-search-open]')
         if (!searchElement) return
         let isOpen = searchElement.getAttribute('data-search-open')
         isOpen === 'true' && event.preventDefault()
+      }
+
+      if (key === 'Enter' && metaKey) {
+        const focusedMatch = matches?.[focusIndex]?.item
+        if (focusedMatch) {
+          promptUpdateBookmark(focusedMatch)
+          setShowSearch(false)
+        }
+        return
       }
 
       if (key === 'Enter') {
@@ -116,6 +127,7 @@ export default function Search({
         }
         return
       }
+
       const matchesInDom = document.querySelectorAll(IS_MATCH_SELECTOR)
       const isTabUp = shiftKey && key === 'Tab'
       const isTabDown = !shiftKey && key === 'Tab'
@@ -134,7 +146,7 @@ export default function Search({
         })
       }
     },
-    [urlToOpen],
+    [urlToOpen, hasMatches, matches, focusIndex],
   )
 
   useMemo(() => {
@@ -196,6 +208,13 @@ export default function Search({
                 href={href}
                 query={inputText}
                 isFocused={isFocused}
+              />
+              <SearchResultEdit
+                isFocused={isFocused}
+                onClick={() => {
+                  promptUpdateBookmark(match.item)
+                  setShowSearch(false)
+                }}
               />
             </SearchResult>
           )
@@ -330,6 +349,37 @@ function SearchResultGroup({
       }}
     >
       {groupName}
+    </div>
+  )
+}
+
+function SearchResultEdit({
+  isFocused,
+  children: groupName,
+  onClick,
+}: { isFocused: boolean; onClick: () => void } & PropsWithChildren) {
+  return (
+    <div
+      className="Search-result-edit"
+      style={{
+        position: 'absolute',
+        transitionDuration: '0.125s',
+        paddingInline: '0.5rem',
+        borderBottomRightRadius: '0.2rem',
+        borderBottomLeftRadius: '0.2rem',
+        zIndex: '100',
+        bottom: isFocused ? '-1.49rem' : '0rem',
+        left: 'calc(50% - 70px)',
+        backgroundColor: 'var(--primary-weak)',
+        color: 'var(--background)',
+        opacity: isFocused ? '1' : '0',
+        widows: '140px',
+        cursor: 'pointer',
+        fontSize: '0.8rems',
+      }}
+      onClick={onClick}
+    >
+      <div>edit: mod + enter</div>
     </div>
   )
 }

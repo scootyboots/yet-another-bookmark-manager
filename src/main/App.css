@@ -3,7 +3,8 @@
   --background-weak: rgba(24, 6, 17, 0.85);
   --foreground: white;
   --primary: rgb(230, 60, 159);
-  --primary-weak: rgb(230, 60, 159, 0.55);
+  --primary-weak: rgb(137, 37, 95, 1);
+  --primary-weak-transparent: rgb(230, 60, 159, 0.55);
   --background-accent: rgb(106 29 74);
   --error: rgb(236 204 62);
   --error-weak: rgb(150 131 47);

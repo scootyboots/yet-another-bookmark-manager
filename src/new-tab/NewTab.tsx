@@ -49,12 +49,28 @@ export default function NewTab() {
     reset,
   } = useBookmarkController()
 
+  function promptUpdateBookmark(bk: Bookmark) {
+    setBookmarkPromptType('update-bookmark')
+    setSelectedBk(bk)
+    setShowBkPrompt(true)
+  }
+
+  function promptNewBookmark() {
+    setBookmarkPromptType('new-bookmark')
+    setSelectedBk({ ...EMPTY_BOOKMARK })
+    setShowBkPrompt(true)
+  }
+
+  function promptNewGroup() {
+    setBookmarkPromptType('new-group')
+    setSelectedBk({ ...EMPTY_BOOKMARK })
+    setShowBkPrompt(true)
+  }
+
   const commands = [
     {
       action: () => {
-        setBookmarkPromptType('new-bookmark')
-        setSelectedBk({ ...EMPTY_BOOKMARK })
-        setShowBkPrompt(true)
+        promptNewBookmark()
       },
       name: 'add bookmark',
       hotKey: 'ff',
@@ -63,9 +79,7 @@ export default function NewTab() {
     // { action: updateBookmark, name: 'update bookmark' },
     {
       action: () => {
-        setBookmarkPromptType('new-group')
-        setSelectedBk({ ...EMPTY_BOOKMARK })
-        setShowBkPrompt(true)
+        promptNewGroup()
       },
       name: 'add group',
       hotKey: 'jj',
@@ -98,6 +112,9 @@ export default function NewTab() {
 
   return (
     <div className="NewTab">
+      <div className="selected-bookmark" style={{ display: 'none' }}>
+        {JSON.stringify(selectedBk)}
+      </div>
       <TopContextRow>
         <button
           onClick={() => {
@@ -141,6 +158,7 @@ export default function NewTab() {
           updateRecentLinks={updateRecentLinks}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
+          promptUpdateBookmark={promptUpdateBookmark}
         />
       ) : null}
 
@@ -216,6 +234,10 @@ export default function NewTab() {
                               clickHandler={() => {
                                 setBookmarkPromptType('new-group')
                                 setShowBkPrompt(true)
+                                setSelectedBk({
+                                  ...EMPTY_BOOKMARK,
+                                  col: entry.col,
+                                })
                               }}
                             >
                               add group
