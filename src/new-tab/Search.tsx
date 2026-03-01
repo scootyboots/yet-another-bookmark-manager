@@ -22,6 +22,7 @@ type SearchProps = {
   showSearch: boolean
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
   promptUpdateBookmark: (bk: Bookmark) => void
+  setSelectedBk: React.Dispatch<React.SetStateAction<Bookmark>>
 }
 
 export default function Search({
@@ -31,6 +32,7 @@ export default function Search({
   showSearch,
   setShowSearch,
   promptUpdateBookmark,
+  setSelectedBk,
 }: SearchProps) {
   const [inputText, setInputText] = useState('')
   const [urlToOpen, setUrlToOpen] = useState('')
@@ -197,6 +199,9 @@ export default function Search({
 
           if (moreThan18) return null
           const isFocused = index === focusIndex
+          if (isFocused) {
+            setSelectedBk(match.item)
+          }
           const { group, href, text } = match.item
           return (
             <SearchResult isFocused={isFocused} resultIndex={index}>

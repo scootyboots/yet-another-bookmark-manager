@@ -12,6 +12,8 @@ import {
   getStoredRecentLinks,
   updateRecentLinks,
   RecentLinks,
+  removeGroup,
+  updateGroupName,
 } from '../background'
 
 type StoredResult = Awaited<ReturnType<typeof getStoredBookmarks>>
@@ -25,6 +27,8 @@ type ChangeResult = Awaited<
     | typeof updateGroupOrder
   >
 >
+
+export type BookmarkController = ReturnType<typeof useBookmarkController>
 
 export default function useBookmarkController() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([])
@@ -102,6 +106,20 @@ export default function useBookmarkController() {
     [bookmarks],
   )
 
+  const handleRemoveGroup = useCallback(
+    (groupName: string) => {
+      removeGroup(groupName).then(handleBookmarksChange)
+    },
+    [bookmarks],
+  )
+
+  const handleUpdateGroupName = useCallback(
+    (groupName: string, nextName: string) => {
+      updateGroupName(groupName, nextName).then(handleBookmarksChange)
+    },
+    [bookmarks],
+  )
+
   const handleGetRecentLinks = useCallback(() => {
     getStoredRecentLinks().then((links) => {
       const { data: recentLinks } = links
@@ -125,6 +143,8 @@ export default function useBookmarkController() {
     updateBookmark: handleUpdateBookmark,
     updateGroupOrder: handleUpdateGroupOrder,
     addGroup: handleNewGroup,
+    updateGroupName: handleUpdateGroupName,
+    removeGroup: handleRemoveGroup,
     recentLinks,
     updateRecentLinks: handleAddRecentLink,
     reset: handleReset,

@@ -16,7 +16,9 @@ import { useTrackFocus } from './useTrackFocus'
 import IconButton from './IconButton'
 import TopContextRow from './TopContextRow'
 import { checkPromptOpen } from './util'
-import CommandLine from './CommandLine'
+import CommandLine, { Command } from './CommandLine'
+import RemoveCircle from '../components/Icons/RemoveCircle'
+import Edit from '../components/Icons/Edit'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -37,6 +39,10 @@ export default function NewTab() {
   const [bookmarkPromptType, setBookmarkPromptType] =
     useState<BookmarkPromptType>('new-bookmark')
 
+  const controller = useBookmarkController()
+  const sorter = useBookmarkSorter(controller.bookmarks)
+  const { focusPreviousElement } = useTrackFocus()
+
   const {
     bookmarks,
     recentLinks,
@@ -46,8 +52,9 @@ export default function NewTab() {
     updateGroupOrder,
     updateRecentLinks,
     addGroup,
+    removeGroup,
     reset,
-  } = useBookmarkController()
+  } = controller
 
   function promptUpdateBookmark(bk: Bookmark) {
     setBookmarkPromptType('update-bookmark')
@@ -67,7 +74,17 @@ export default function NewTab() {
     setShowBkPrompt(true)
   }
 
-  const commands = [
+  function promptRemoveGroup() {
+    setBookmarkPromptType('remove-group')
+    setShowBkPrompt(true)
+  }
+
+  function promptUpdateGroup() {
+    setBookmarkPromptType('update-group')
+    setShowBkPrompt(true)
+  }
+
+  const commands: Command[] = [
     {
       action: () => {
         promptNewBookmark()
@@ -76,6 +93,7 @@ export default function NewTab() {
       hotKey: 'ff',
     },
     // { action: removeBookmark, name: 'remove bookmark' },
+    // looks like we'll handle both of these from search
     // { action: updateBookmark, name: 'update bookmark' },
     {
       action: () => {
@@ -84,13 +102,22 @@ export default function NewTab() {
       name: 'add group',
       hotKey: 'jj',
     },
-    // TODO: update group / remove group
-    // { action: setShowSearch, name: 'search' },
+    {
+      action: () => {
+        promptRemoveGroup()
+      },
+      name: 'remove group',
+      hotKey: 'dd',
+    },
+    {
+      action: () => {
+        promptUpdateGroup()
+      },
+      name: 'update group',
+      hotKey: 'uu',
+    },
+    // TODO: rename group
   ]
-
-  const sorter = useBookmarkSorter(bookmarks)
-
-  const { focusPreviousElement } = useTrackFocus()
 
   function isEmptyBookmark(bookmark: Bookmark) {
     return !Boolean(bookmark.href) && !Boolean(bookmark.text)
@@ -159,6 +186,7 @@ export default function NewTab() {
           showSearch={showSearch}
           setShowSearch={setShowSearch}
           promptUpdateBookmark={promptUpdateBookmark}
+          setSelectedBk={setSelectedBk}
         />
       ) : null}
 
@@ -169,9 +197,7 @@ export default function NewTab() {
           setIsShown={setShowBkPrompt}
           bookmark={selectedBk}
           setBookmark={setSelectedBk}
-          addBookmark={addBookmark}
-          updateBookmark={updateBookmark}
-          addGroup={addGroup}
+          {...controller}
           {...sorter}
         />
       ) : null}
@@ -241,6 +267,28 @@ export default function NewTab() {
                               }}
                             >
                               add group
+                            </IconButton>
+                            <IconButton
+                              icon={<Edit />}
+                              clickHandler={() => {
+                                setSelectedBk({ ...entry })
+                                promptUpdateGroup()
+                              }}
+                            >
+                              update group
+                            </IconButton>
+                            <IconButton
+                              icon={<RemoveCircle />}
+                              clickHandler={() => {
+                                setSelectedBk({
+                                  ...EMPTY_BOOKMARK,
+                                  col: entry.col,
+                                  group: entry.group,
+                                })
+                                promptRemoveGroup()
+                              }}
+                            >
+                              remove group
                             </IconButton>
 
                             <IconButton

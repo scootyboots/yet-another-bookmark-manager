@@ -129,6 +129,76 @@ export async function addGroup(name: string, groupIndex: number, col: number) {
   return { data: null, error: 'failed to pull in exiting bookmarks' }
 }
 
+// type Group = { name: string; groupIndex: number; col: number }
+
+// function checkTargetGroup(group: Group, bk: Bookmark) {
+//   return (
+//     bk.group === group.name &&
+//     bk.groupIndex === group.groupIndex &&
+//     bk.col === group.col
+//   )
+// }
+
+export async function removeGroup(groupName: string) {
+  const { data: bookmarks } = await getStoredBookmarks()
+  if (bookmarks) {
+    const removed = bookmarks.filter((bk) => {
+      const isTargetBookmark = bk.group === groupName
+      return !isTargetBookmark
+    })
+    await storeBookmarks(removed)
+    return { data: 'BACKGROUND removed group: ' + groupName, error: null }
+  }
+  return { data: null, error: 'failed to pull in existing bookmarks' }
+}
+
+export async function updateGroupName(groupName: string, next: string) {
+  const { data: bookmarks } = await getStoredBookmarks()
+  if (bookmarks) {
+    await storeBookmarks(
+      bookmarks.map((bk) => {
+        if (bk.group === groupName) {
+          return { ...bk, group: next }
+        }
+        return bk
+      }),
+    )
+  }
+  return { data: null, error: 'failed to pull in existing group bookmarks' }
+}
+
+// TODO: revisit this logic
+export async function joinGroups(
+  groupA: string,
+  groupB: string,
+  newName?: string,
+) {
+  const { data: bookmarks } = await getStoredBookmarks()
+  if (bookmarks) {
+    const firstGroupA = bookmarks.find((bk) => groupA === bk.group) as Bookmark
+    const newGroupTemplate = {
+      ...firstGroupA,
+      group: newName ?? firstGroupA?.group ?? '',
+    }
+
+    const updated = bookmarks.map((bk) => {
+      const isGroupA = groupA === bk.group
+      const isGroupB = groupB === bk.group
+      if (isGroupA) {
+        const nameToUse = newName ?? bk.group
+        return { ...bk, group: nameToUse }
+      }
+      if (isGroupB) {
+        return { ...newGroupTemplate, href: bk.href, text: bk.text }
+      }
+      return bk
+    })
+    await storeBookmarks(updated)
+    return { data: `joined groups: ${groupA} and ${groupB}` }
+  }
+  return { data: null, error: 'failed to pull in existing bookmarks' }
+}
+
 export async function addBookmark(newBookmark: NewBookmark) {
   const { data: bookmarks } = await getStoredBookmarks()
   const { data: lastId } = await getStoredLastId()

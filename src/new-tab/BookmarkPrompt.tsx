@@ -8,9 +8,10 @@ import {
   useState,
 } from 'react'
 import Prompt from './Prompt'
-import { Bookmark, NewBookmark } from '../background'
+import { Bookmark } from '../background'
 import { EMPTY_BOOKMARK } from './NewTab'
 import { BookmarkSorter } from './useBookmarkSorter'
+import { BookmarkController } from './useBookmarkController'
 
 function BookmarkPromptGroup({
   groupName,
@@ -93,8 +94,10 @@ export function Select({
 
 export type BookmarkPromptType =
   | 'new-bookmark'
-  | 'new-group'
   | 'update-bookmark'
+  | 'new-group'
+  | 'update-group'
+  | 'remove-group'
 
 export type BookmarkPromptProps = {
   type: BookmarkPromptType
@@ -102,10 +105,8 @@ export type BookmarkPromptProps = {
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
   bookmark: Bookmark
   setBookmark: React.Dispatch<React.SetStateAction<Bookmark>>
-  addBookmark: (newBookmark: NewBookmark) => void
-  updateBookmark: (bookmark: Bookmark) => void
-  addGroup: (groupName: string, groupIndex: number, col: number) => void
-} & BookmarkSorter
+} & BookmarkSorter &
+  BookmarkController
 
 export default function BookmarkPrompt(props: BookmarkPromptProps) {
   const {
@@ -120,6 +121,9 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     groupNames,
     getColumnGroupIndex,
     findGroupProperties,
+    removeBookmark,
+    removeGroup,
+    updateGroupName,
   } = props
 
   const contentRef = useRef<HTMLInputElement>(null)
@@ -138,11 +142,14 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     isCreateNewBk,
     isCreateNewGroup,
     isUpdateBookmark,
+    isRemoveGroup,
   } = useMemo(() => {
     let confirmButtonText = ''
     let isCreateNewBk = false
     let isCreateNewGroup = false
     let isUpdateBookmark = false
+    let isUpdateGroup = false
+    let isRemoveGroup = false
     if (type === 'new-bookmark') {
       confirmButtonText = 'create bookmark'
       isCreateNewBk = true
@@ -155,11 +162,21 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
       confirmButtonText = 'update'
       isUpdateBookmark = true
     }
+    if (type === 'remove-group') {
+      confirmButtonText = 'remove'
+      isRemoveGroup = true
+    }
+    if (type === 'update-group') {
+      confirmButtonText = 'update'
+      isUpdateGroup = true
+    }
     return {
       confirmButtonText,
       isCreateNewBk,
       isCreateNewGroup,
       isUpdateBookmark,
+      isUpdateGroup,
+      isRemoveGroup,
     }
   }, [type])
 
@@ -191,6 +208,16 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         const { next } = getColumnGroupIndex(bookmark.col)
         addGroup(bookmark.group, next, bookmark.col)
       }
+      if (type === 'remove-group') {
+        if (bookmark.group) {
+          console.log('tried to remove group: ', bookmark.group)
+          removeGroup(bookmark.group)
+        }
+      }
+      if (type === 'update-group') {
+        // TODO: track initial group name
+        // updateGroupName(bookmark.group, )
+      }
     }
     if (shouldExit) {
       setIsShown(false)
@@ -210,7 +237,8 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
       if (key === 'Enter') {
         const activeEl = document.activeElement
         const isCancelButton = activeEl?.getAttribute('data-prompt-cancel')
-        if (isCancelButton) return
+        const isRemoveButton = activeEl?.getAttribute('data-prompt-remove')
+        if (isCancelButton || isRemoveButton) return
         const hasNewBkData = document.querySelector(
           '[data-has-new-bookmark-data="true"]',
         )
@@ -272,31 +300,32 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         data-action-type={type}
       >
         <BookmarkPromptGroup groupName={group} promptType={type} />
-        {isCreateNewBk && (
-          <SelectGroup
-            label="group"
-            name="group-name"
-            options={groupNames}
-            initialValue=""
-            setBookmark={setBookmark}
-            selectedBookmark={bookmark}
-            firstOptionEmpty={selectedBkHasGroup ? false : true}
-            onChange={(e) => {
-              console.log(e.target.value)
-              const value = e.target.value
-              console.log('group name: ', value, 'group')
-              setBookmark((prev) => {
-                const { col, groupIndex } = findGroupProperties(value)
-                return {
-                  ...prev,
-                  group: value,
-                  col,
-                  groupIndex,
-                }
-              })
-            }}
-          />
-        )}
+        {isCreateNewBk ||
+          (isRemoveGroup && (
+            <SelectGroup
+              label="group"
+              name="group-name"
+              options={groupNames}
+              initialValue=""
+              setBookmark={setBookmark}
+              selectedBookmark={bookmark}
+              firstOptionEmpty={selectedBkHasGroup ? false : true}
+              onChange={(e) => {
+                console.log(e.target.value)
+                const value = e.target.value
+                console.log('group name: ', value, 'group')
+                setBookmark((prev) => {
+                  const { col, groupIndex } = findGroupProperties(value)
+                  return {
+                    ...prev,
+                    group: value,
+                    col,
+                    groupIndex,
+                  }
+                })
+              }}
+            />
+          ))}
 
         {isCreateNewBk || isUpdateBookmark ? (
           <>
@@ -354,6 +383,19 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
           <button data-prompt-cancel onClick={() => setIsShown(false)}>
             cancel
           </button>
+          {isUpdateBookmark && (
+            <button
+              data-prompt-remove
+              onClick={() => {
+                if (isUpdateBookmark) {
+                  removeBookmark(bookmark)
+                }
+                setIsShown(false)
+              }}
+            >
+              remove
+            </button>
+          )}
           <button
             data-prompt-create
             onClick={() => {
