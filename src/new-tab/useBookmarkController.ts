@@ -14,6 +14,7 @@ import {
   RecentLinks,
   removeGroup,
   updateGroupName,
+  moveGroupToNewColumn,
 } from '../background'
 
 type StoredResult = Awaited<ReturnType<typeof getStoredBookmarks>>
@@ -136,6 +137,13 @@ export default function useBookmarkController() {
     [],
   )
 
+  const handleMoveGroupToColumn = useCallback(
+    (groupName: string, targetColumn: number) => {
+      moveGroupToNewColumn(groupName, targetColumn).then(handleBookmarksChange)
+    },
+    [],
+  )
+
   return {
     bookmarks,
     addBookmark: handleAddBookmark,
@@ -146,6 +154,7 @@ export default function useBookmarkController() {
     updateGroupName: handleUpdateGroupName,
     removeGroup: handleRemoveGroup,
     recentLinks,
+    moveGroupToColumn: handleMoveGroupToColumn,
     updateRecentLinks: handleAddRecentLink,
     reset: handleReset,
   }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
+import { default as bookmarksJson } from '../../public/bookmarks-empty.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search'
 import './NewTab.css'
@@ -19,6 +19,7 @@ import { checkPromptOpen } from './util'
 import CommandLine, { Command } from './CommandLine'
 import RemoveCircle from '../components/Icons/RemoveCircle'
 import Edit from '../components/Icons/Edit'
+import SelectedBookmark from './SelectedBookmark'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -139,43 +140,13 @@ export default function NewTab() {
 
   return (
     <div className="NewTab">
-      <div className="selected-bookmark" style={{ display: 'none' }}>
-        {JSON.stringify(selectedBk)}
-      </div>
       <TopContextRow>
-        <button
-          onClick={() => {
-            reset()
-            updateRecentLinks('', '', true)
-          }}
-        >
-          reset
-        </button>
-        <button onClick={focusPreviousElement}>focus previous</button>
         <div>
           <button>mod</button> + <button>k</button> to search
         </div>
         <div>
           <button>.</button> for command line
         </div>
-        <button
-          onClick={() => {
-            setBookmarkPromptType('new-bookmark')
-            setSelectedBk({ ...EMPTY_BOOKMARK })
-            setShowBkPrompt(true)
-          }}
-        >
-          add bookmark
-        </button>
-        <button
-          onClick={() => {
-            setBookmarkPromptType('new-group')
-            setSelectedBk({ ...EMPTY_BOOKMARK })
-            setShowBkPrompt(true)
-          }}
-        >
-          add group
-        </button>
       </TopContextRow>
 
       {showSearch ? (
@@ -328,6 +299,7 @@ export default function NewTab() {
           </div>
         ))}
       </div>
+      <SelectedBookmark selectedBookmark={selectedBk} render={false} />
     </div>
   )
 }

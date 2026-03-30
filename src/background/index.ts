@@ -1,5 +1,4 @@
-import { count } from 'console'
-import bookmarks from '../../public/bookmarks-backup.json'
+import bookmarks from '../../public/bookmarks-empty.json'
 import { EMPTY_BOOKMARK } from '../new-tab/NewTab'
 
 export type BookmarksBackup = typeof bookmarks
@@ -339,4 +338,41 @@ export async function updateGroupOrder(
   await storeBookmarks(updatedBookmarks)
 
   return { data: 'updated bookmark order for: ' + groupName, error: null }
+}
+
+function findHighestGroupIndex(bookmarks: Bookmarks, groupName: string) {
+  let highestIndex = 0
+  const targetGroup = bookmarks.filter((bk) => bk.group === groupName)
+  for (const bk of targetGroup) {
+    const { groupIndex } = bk
+    if (groupIndex > highestIndex) {
+      highestIndex = groupIndex
+    }
+  }
+  return highestIndex
+}
+
+export async function moveGroupToNewColumn(
+  groupName: string,
+  targetColumn: number,
+) {
+  const { data: bookmarks } = await getStoredBookmarks()
+  if (bookmarks) {
+    const targetGroup = bookmarks.filter((bk) => bk.group === groupName)
+    const bkWithoutTargetGroup = bookmarks.filter(
+      (bk) => bk.group !== groupName,
+    )
+
+    const targetColMaxIndex = findHighestGroupIndex(bookmarks, groupName)
+    const nextIndex = targetColMaxIndex + 1
+    const updatedGroup = targetGroup.map((bk) => ({
+      ...bk,
+      groupIndex: nextIndex,
+      col: targetColumn,
+    }))
+    const updatedBookmarks = [...bookmarks, ...updatedGroup]
+    await storeBookmarks(updatedBookmarks)
+    return { data: 'stored updated group column', error: null }
+  }
+  return { data: null, error: 'failed to pull in existing bookmarks' }
 }

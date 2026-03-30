@@ -2,6 +2,7 @@ import {
   ChangeEvent,
   ChangeEventHandler,
   PropsWithChildren,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -32,6 +33,12 @@ function BookmarkPromptGroup({
     }
     if (promptType === 'update-bookmark') {
       return 'update bookmark'
+    }
+    if (promptType === 'update-group') {
+      return 'update group'
+    }
+    if (promptType === 'remove-group') {
+      return 'remove group'
     }
   }
   return (
@@ -124,6 +131,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     removeBookmark,
     removeGroup,
     updateGroupName,
+    moveGroupToColumn,
   } = props
 
   const contentRef = useRef<HTMLInputElement>(null)
@@ -143,32 +151,54 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     isCreateNewGroup,
     isUpdateBookmark,
     isRemoveGroup,
+    needsHrefInput,
+    needsTextInput,
+    needsGroupInput,
+    needsGroupSelect,
+    needsColSelect,
   } = useMemo(() => {
+    const hasNoGroup = Boolean(bookmark.group)
     let confirmButtonText = ''
     let isCreateNewBk = false
     let isCreateNewGroup = false
     let isUpdateBookmark = false
     let isUpdateGroup = false
     let isRemoveGroup = false
+    let needsHrefInput = false
+    let needsTextInput = false
+    let needsGroupInput = false
+    let needsColSelect = false
+    let needsGroupSelect = false
     if (type === 'new-bookmark') {
       confirmButtonText = 'create bookmark'
       isCreateNewBk = true
+      needsHrefInput = true
+      needsTextInput = true
+      needsGroupSelect = true
     }
     if (type === 'new-group') {
       confirmButtonText = 'create group'
       isCreateNewGroup = true
+      needsGroupInput = true
+      needsColSelect = true
     }
     if (type === 'update-bookmark') {
       confirmButtonText = 'update'
       isUpdateBookmark = true
+      needsHrefInput = true
+      needsTextInput = true
+      needsGroupSelect = true
     }
     if (type === 'remove-group') {
       confirmButtonText = 'remove'
       isRemoveGroup = true
+      needsGroupSelect = true
     }
     if (type === 'update-group') {
       confirmButtonText = 'update'
       isUpdateGroup = true
+      needsColSelect = true
+      needsGroupSelect = true
     }
     return {
       confirmButtonText,
@@ -177,8 +207,13 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
       isUpdateBookmark,
       isUpdateGroup,
       isRemoveGroup,
+      needsHrefInput,
+      needsTextInput,
+      needsGroupInput,
+      needsGroupSelect,
+      needsColSelect,
     }
-  }, [type])
+  }, [type, bookmark])
 
   const hadNeededNewBookmarkProps =
     Boolean(href) && Boolean(text) && Boolean(group)
@@ -190,33 +225,51 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     }, 85)
   }
 
+  const hasNeededProps = useCallback(() => {
+    const hasGroup = Boolean(bookmark.group)
+    const typeRequiresGroup =
+      type === 'new-bookmark' ||
+      type === 'remove-group' ||
+      type === 'update-group' ||
+      type === 'update-bookmark' ||
+      type === 'new-group'
+    if (type === 'new-bookmark') {
+      return bookmark.text && bookmark.href && bookmark.group
+    }
+    if (typeRequiresGroup) {
+      return hasGroup
+    }
+
+    return false
+  }, [bookmark])
+
   const { selectedBkHasGroup } = useMemo(() => {
     const selectedBkHasGroup = Boolean(bookmark.group)
     if (shouldExecute) {
-      if (type === 'new-bookmark') {
-        const newBk = { ...bookmark }
-        const hasNeededProps = newBk.text && newBk.href && newBk.group
-        if (hasNeededProps) {
+      if (hasNeededProps()) {
+        if (type === 'new-bookmark') {
+          const newBk = { ...bookmark }
           addBookmark(newBk)
           setIsShown(false)
         }
-      }
-      if (type === 'update-bookmark') {
-        updateBookmark({ ...bookmark })
-      }
-      if (type === 'new-group') {
-        const { next } = getColumnGroupIndex(bookmark.col)
-        addGroup(bookmark.group, next, bookmark.col)
-      }
-      if (type === 'remove-group') {
-        if (bookmark.group) {
-          console.log('tried to remove group: ', bookmark.group)
-          removeGroup(bookmark.group)
+        if (type === 'update-bookmark') {
+          updateBookmark({ ...bookmark })
         }
-      }
-      if (type === 'update-group') {
-        // TODO: track initial group name
-        // updateGroupName(bookmark.group, )
+        if (type === 'new-group') {
+          const { next } = getColumnGroupIndex(bookmark.col)
+          addGroup(bookmark.group, next, bookmark.col)
+        }
+        if (type === 'remove-group') {
+          if (bookmark.group) {
+            console.log('tried to remove group: ', bookmark.group)
+            removeGroup(bookmark.group)
+          }
+        }
+        if (type === 'update-group') {
+          // TODO: track initial group name
+          // updateGroupName(bookmark.group, bookmark.group)
+          moveGroupToColumn(bookmark.group, bookmark.col)
+        }
       }
     }
     if (shouldExit) {
@@ -300,7 +353,77 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         data-action-type={type}
       >
         <BookmarkPromptGroup groupName={group} promptType={type} />
-        {isCreateNewBk ||
+        {needsHrefInput && (
+          <BookmarkInputGroup
+            label="href"
+            value={href}
+            onChange={(event) => {
+              const value = event.target.value
+              setBookmark((prev) => ({ ...prev, href: value }))
+            }}
+          />
+        )}
+        {needsTextInput && (
+          <BookmarkInputGroup
+            label="text"
+            value={text}
+            onChange={(event) => {
+              const value = event.target.value
+              setBookmark((prev) => ({ ...prev, text: value }))
+            }}
+          />
+        )}
+        {needsGroupSelect && (
+          <SelectGroup
+            label="group"
+            name="group-name"
+            options={groupNames}
+            initialValue=""
+            setBookmark={setBookmark}
+            selectedBookmark={bookmark}
+            firstOptionEmpty={selectedBkHasGroup ? false : true}
+            onChange={(e) => {
+              console.log(e.target.value)
+              const value = e.target.value
+              console.log('group name: ', value, 'group')
+              setBookmark((prev) => {
+                const { col, groupIndex } = findGroupProperties(value)
+                return {
+                  ...prev,
+                  group: value,
+                  col,
+                  groupIndex,
+                }
+              })
+            }}
+          />
+        )}
+        {needsGroupInput && (
+          <BookmarkInputGroup
+            label="group"
+            value={group}
+            onChange={(event) => {
+              const value = event.target.value
+              setBookmark((prev) => ({ ...prev, group: value }))
+            }}
+          />
+        )}
+        {needsColSelect && (
+          <SelectGroup
+            name="column-number"
+            label="col"
+            options={['1', '2', '3', '4']}
+            initialValue={`${bookmark.col}`}
+            setBookmark={setBookmark}
+            selectedBookmark={bookmark}
+            firstOptionEmpty={false}
+            onChange={(event) => {
+              const value = Number(event.target.value)
+              setBookmark((prev) => ({ ...prev, col: value }))
+            }}
+          />
+        )}
+        {/* {isCreateNewBk ||
           (isRemoveGroup && (
             <SelectGroup
               label="group"
@@ -325,9 +448,9 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
                 })
               }}
             />
-          ))}
+          ))} */}
 
-        {isCreateNewBk || isUpdateBookmark ? (
+        {/* {isCreateNewBk || isUpdateBookmark ? (
           <>
             <BookmarkInputGroup
               label="href"
@@ -343,6 +466,29 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               onChange={(event) => {
                 const value = event.target.value
                 setBookmark((prev) => ({ ...prev, text: value }))
+              }}
+            />
+            <SelectGroup
+              label="group"
+              name="group-name"
+              options={groupNames}
+              initialValue=""
+              setBookmark={setBookmark}
+              selectedBookmark={bookmark}
+              firstOptionEmpty={selectedBkHasGroup ? false : true}
+              onChange={(e) => {
+                console.log(e.target.value)
+                const value = e.target.value
+                console.log('group name: ', value, 'group')
+                setBookmark((prev) => {
+                  const { col, groupIndex } = findGroupProperties(value)
+                  return {
+                    ...prev,
+                    group: value,
+                    col,
+                    groupIndex,
+                  }
+                })
               }}
             />
           </>
@@ -372,7 +518,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               }}
             />
           </>
-        )}
+        )} */}
         <div
           style={{
             display: 'flex',
@@ -400,7 +546,9 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
             data-prompt-create
             onClick={() => {
               setShouldExecute(true)
-              setShouldExit(true)
+              if (hasNeededProps()) {
+                setShouldExit(true)
+              }
             }}
           >
             {confirmButtonText}
