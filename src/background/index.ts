@@ -370,7 +370,7 @@ export async function moveGroupToNewColumn(
       groupIndex: nextIndex,
       col: targetColumn,
     }))
-    const updatedBookmarks = [...bookmarks, ...updatedGroup]
+    const updatedBookmarks = [...bkWithoutTargetGroup, ...updatedGroup]
     await storeBookmarks(updatedBookmarks)
     return { data: 'stored updated group column', error: null }
   }

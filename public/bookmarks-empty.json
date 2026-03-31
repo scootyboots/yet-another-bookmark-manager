@@ -1,9 +1,30 @@
 [
   {
-    "group": "my group name",
+    "group": "my group name 1",
     "groupIndex": 0,
     "href": "https://example.com/",
     "text": "example bookmark",
     "col": 1
+  },
+  {
+    "group": "my group name 2",
+    "groupIndex": 0,
+    "href": "https://example.com/",
+    "text": "example bookmark",
+    "col": 2
+  },
+  {
+    "group": "my group name 3",
+    "groupIndex": 0,
+    "href": "https://example.com/",
+    "text": "example bookmark",
+    "col": 3
+  },
+  {
+    "group": "my group name 4",
+    "groupIndex": 0,
+    "href": "https://example.com/",
+    "text": "example bookmark",
+    "col": 4
   }
 ]
