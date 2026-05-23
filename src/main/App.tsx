@@ -1,12 +1,14 @@
 import NewTab from '../new-tab/NewTab'
 import { TrackFocusProvider } from '../new-tab/useTrackFocus'
-// import './App.css'
+import './App.css'
 
 const App = ({ page }: { page: 'new-tab' | 'other' }) => {
   if (page === 'new-tab') {
     return (
       <TrackFocusProvider>
-        <NewTab />
+        <div className="dark-w-p bg-background text-foreground">
+          <NewTab />
+        </div>
       </TrackFocusProvider>
     )
   }

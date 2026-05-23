@@ -157,16 +157,46 @@ export default function NewTab() {
       >
         shad button
       </Button>
+      <Button
+        variant="outline"
+        onClick={() => {
+          console.log('button')
+        }}
+      >
+        shad button
+      </Button>
+      <Button
+        variant="ghost"
+        onClick={() => {
+          console.log('button')
+        }}
+      >
+        shad button
+      </Button>
+      <Button
+        variant="secondary"
+        onClick={() => {
+          console.log('button')
+        }}
+      >
+        shad button
+      </Button>
       <Select>
-        <SelectTrigger className="w-full max-w-48">
+        <SelectTrigger className="w-full max-w-48 bg-background">
           <SelectValue placeholder="holding the place" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
+        <SelectContent className="bg-background">
+          <SelectGroup className="bg-background">
             <SelectLabel>items</SelectLabel>
-            <SelectItem value="1">item 1</SelectItem>
-            <SelectItem value="2">item 2</SelectItem>
-            <SelectItem value="3">item 3</SelectItem>
+            <SelectItem className="bg-background" value="1">
+              item 1
+            </SelectItem>
+            <SelectItem className="bg-background" value="2">
+              item 2
+            </SelectItem>
+            <SelectItem className="bg-background" value="3">
+              item 3
+            </SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>
