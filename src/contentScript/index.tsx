@@ -1,6 +1,5 @@
 import { ReactNode, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import Button from '../components/Button'
 
 // document.addEventListener('DOMContentLoaded', () => {
 //   const container = appendComponent(document.body, <Root />)
@@ -14,7 +13,7 @@ import Button from '../components/Button'
 
 function appendComponent(
   parent: HTMLElement,
-  component: ReactNode
+  component: ReactNode,
 ): HTMLElement {
   const container = document.createElement('div')
   const shadowRoot = container.attachShadow({ mode: 'open' })
@@ -32,13 +31,13 @@ function appendComponent(
   return container
 }
 
-function Root() {
-  const [count, setCount] = useState(0)
-  return (
-    <Button
-      data-thing="boots"
-      count={count}
-      onClick={() => setCount(count + 1)}
-    />
-  )
-}
+// function Root() {
+//   const [count, setCount] = useState(0)
+//   return (
+//     <Button
+//       data-thing="boots"
+//       count={count}
+//       onClick={() => setCount(count + 1)}
+//     />
+//   )
+// }

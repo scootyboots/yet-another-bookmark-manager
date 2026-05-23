@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search'
-import './NewTab.css'
 import useBookmarkController from './useBookmarkController'
 import BookmarkPrompt, { BookmarkPromptType } from './BookmarkPrompt'
 import { Bookmark } from '../background'
@@ -19,6 +18,17 @@ import { checkPromptOpen } from './util'
 import CommandLine, { Command } from './CommandLine'
 import RemoveCircle from '../components/Icons/RemoveCircle'
 import Edit from '../components/Icons/Edit'
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import './NewTab.css'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -140,6 +150,27 @@ export default function NewTab() {
   return (
     <div className="NewTab">
       <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <Button
+        onClick={() => {
+          console.log('button')
+        }}
+      >
+        shad button
+      </Button>
+      <Select>
+        <SelectTrigger className="w-full max-w-48">
+          <SelectValue placeholder="holding the place" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>items</SelectLabel>
+            <SelectItem value="1">item 1</SelectItem>
+            <SelectItem value="2">item 2</SelectItem>
+            <SelectItem value="3">item 3</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
       <div className="selected-bookmark" style={{ display: 'none' }}>
         {JSON.stringify(selectedBk)}
       </div>
