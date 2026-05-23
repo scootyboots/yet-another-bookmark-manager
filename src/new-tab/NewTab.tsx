@@ -139,6 +139,7 @@ export default function NewTab() {
 
   return (
     <div className="NewTab">
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
       <div className="selected-bookmark" style={{ display: 'none' }}>
         {JSON.stringify(selectedBk)}
       </div>

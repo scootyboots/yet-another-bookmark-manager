@@ -1,4 +1,3 @@
-import { count } from 'console'
 import bookmarks from '../../public/bookmarks-backup.json'
 import { EMPTY_BOOKMARK } from '../new-tab/NewTab'
 
