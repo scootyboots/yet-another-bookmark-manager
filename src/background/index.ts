@@ -7,7 +7,7 @@ export type NewBookmark = Omit<Bookmark, 'id'>
 export type Bookmarks = Array<Bookmark>
 
 chrome.action.onClicked.addListener(() => {
-  chrome.tabs.create({ url: 'main.html' })
+  chrome.tabs.create({ url: 'main-2.html' })
 })
 
 function addIdsToBookmarks(bookmarks: BookmarksBackup) {

@@ -9,6 +9,8 @@ import {
 import Prompt from './Prompt'
 import { search, type MatchData } from 'fast-fuzzy'
 import { type Bookmark, RecentLinks } from '../background'
+import { cn } from '@/lib/utils'
+import clsx from 'clsx'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
@@ -169,6 +171,29 @@ export default function Search({
     return null
   }
 
+  //   .Prompt input {
+  //   /* width: 100%; */
+  //   /* border: '1px solid black'; */
+  //   border-width: 0px;
+  //   padding: 6px;
+  //   /* border-radius: 0.25rem; */
+  //   border-bottom-width: 2px;
+  //   border-bottom-color: var(--primary);
+  //   /* border-bottom-width: 2px;
+  //   border-bottom-color: 'red';
+  //   border-bottom-style: 'solid'; */
+  //   background-color: rgba(0, 0, 0, 0);
+  //   color: white;
+  //   font-size: 18px;
+  //   font-family: monospace;
+  //   margin-inline: 8rem;
+  //   margin-block-end: 0.75rem;
+  // }
+
+  // .Prompt input:focus {
+  //   outline: none;
+  // }
+
   return (
     <Prompt
       isShown={showSearch}
@@ -176,6 +201,7 @@ export default function Search({
       setIsShown={setShowSearch}
     >
       <input
+        className="border-0 p-1.5 border-b-2 border-b-primary bg-transparent text-white text-lg font-mono mx-32 mb-3 focus:outline-none"
         onChange={(e) => setInputText(e.target.value)}
         name="bookmark search"
         type="text"
@@ -402,16 +428,17 @@ function HighlightedMatch({
     toMatch,
     query,
   })
+
   return (
     <>
       {beforeMatch}
       <mark
-        style={{
-          transitionDuration: '0.1s',
-          backgroundColor: focused
-            ? 'var(--primary)'
-            : 'var(--background-accent)',
-        }}
+        className={cn(
+          clsx(
+            'bg-primary text-white duration-100',
+            focused ? 'bg-primary' : 'bg-accent',
+          ),
+        )}
       >
         {matched}
       </mark>

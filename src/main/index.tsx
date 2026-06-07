@@ -8,7 +8,7 @@ if (rootEl) {
   const root = ReactDOM.createRoot(rootEl)
   root.render(
     <React.StrictMode>
-      <NewTab />
+      {/* <NewTab /> */}
       {/* <App page="new-tab" /> */}
     </React.StrictMode>,
   )
