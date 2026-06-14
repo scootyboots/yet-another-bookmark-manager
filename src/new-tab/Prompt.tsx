@@ -83,10 +83,7 @@ export default function Prompt({
               'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary px-8 py-8 rounded-sm shadow-glow-primary',
             )}
             ref={contentRef}
-            style={{
-              ...contentStyles,
-              // boxShadow: '0px 0px 25px 0px rgba(230, 60, 159, 0.25)',
-            }}
+            style={contentStyles}
           >
             {children}
           </div>

@@ -282,27 +282,16 @@ function SearchResultsOverview({
 }) {
   return (
     <div
-      className="matches-number-display"
-      style={{
-        position: 'absolute',
-        bottom: '0.55rem',
-        width: 'calc(100% - 4rem)',
-      }}
+      className={cn(
+        'matches-number-display absolute bottom-2 w-[calc(100%-4rem)] text-primary font-bold text-lg',
+      )}
     >
-      <div style={{ width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className="w-full">
+        <div className="flex justify-center">
           <div
-            style={{
-              zIndex: '100',
-              background: 'var(--background)',
-              borderRadius: '0.5rem',
-              paddingInline: '0.6rem',
-              paddingBlock: '0.2rem',
-              boxShadow: 'var(--box-shadow-primary)',
-              borderStyle: 'solid',
-              borderWidth: '1px',
-              borderColor: 'var(--primary-weak)',
-            }}
+            className={cn(
+              'z-40 bg-background rounded-sm px-2.5 py-1 shadow-glow-primary border border-primary',
+            )}
           >
             {matches.length > MAX_DISPLAYED_RESULTS
               ? `${MAX_DISPLAYED_RESULTS} / ${matches.length}`
@@ -314,6 +303,18 @@ function SearchResultsOverview({
   )
 }
 
+// .Search-result {
+//   font-weight: 700;
+//   font-size: 16px;
+//   display: flex;
+//   gap: 0.5rem;
+//   max-width: 95vw;
+//   border: 2px solid;
+//   border-radius: 0.25rem;
+//   padding-inline: 0.5rem;
+//   padding-block: 0.5rem;
+// }
+
 type SearchResultProps = {
   isFocused: boolean
   resultIndex: number
@@ -324,11 +325,17 @@ function SearchResult(props: SearchResultProps) {
 
   return (
     <div
-      className="Search-result"
-      style={{
-        borderColor: isFocused ? 'rgb(230, 60, 159)' : 'rgb(255 0 0 / 0%)',
-        position: 'relative',
-      }}
+      className={cn(
+        'relative font-bold text-[16px] flex gap-2 max-w-[95vw] px-2 py-2',
+        {
+          'border-rgb(255 0 0 / 0%)': isFocused,
+          'border-primary': !isFocused,
+        },
+      )}
+      // style={{
+      //   borderColor: isFocused ? 'rgb(230, 60, 159)' : 'rgb(255 0 0 / 0%)',
+      //   position: 'relative',
+      // }}
       data-is-match
       key={'matching-bookmark-' + resultIndex}
     >
@@ -336,6 +343,20 @@ function SearchResult(props: SearchResultProps) {
     </div>
   )
 }
+
+// .Search-result-text {
+//   text-wrap: nowrap;
+// }
+
+// .Search-result-divider {
+//   color: var(--primary);
+// }
+
+// .Search-result-link {
+//   text-overflow: ellipsis;
+//   text-wrap: nowrap;
+//   overflow: hidden;
+// }
 
 type BookmarkProps = {
   text: string
@@ -347,11 +368,15 @@ function Bookmark(props: BookmarkProps) {
   const { text, href, query = '', isFocused = false } = props
   return (
     <>
-      <div className="Search-result-text">
+      <div className="Search-result-text text-nowrap">
         <HighlightedMatch toMatch={text} query={query} focused={isFocused} />
       </div>
-      <div className="Search-result-divider"> : </div>
-      <div className="Search-result-link" style={{ opacity: '0.45' }}>
+      <div className="Search-result-divider text-primary"> : </div>
+      <div
+        className={cn(
+          'Search-result-link opacity-45 text-ellipsis text-nowrap overflow-hidden',
+        )}
+      >
         {href}
       </div>
     </>
@@ -364,20 +389,26 @@ function SearchResultGroup({
 }: { isFocused: boolean } & PropsWithChildren) {
   return (
     <div
-      className="Search-result-group"
-      style={{
-        position: 'absolute',
-        transitionDuration: '0.125s',
-        paddingInline: '0.5rem',
-        borderTopRightRadius: '0.2rem',
-        borderTopLeftRadius: '0.2rem',
-        zIndex: '100',
-        top: isFocused ? '-1.433rem' : '0rem',
-        right: '0.5rem',
-        backgroundColor: 'var(--primary)',
-        color: 'var(--background)',
-        opacity: isFocused ? '1' : '0',
-      }}
+      className={cn(
+        'Search-result-group z-50 absolute right-2 duration-150 px-2 rounded-tr-sm rounded-tl-sm bg-primary text-backgrounds',
+        {
+          'top-[-1.433rem] opacity-100': isFocused,
+          'top-0 opacity-0': !isFocused,
+        },
+      )}
+      // style={{
+      //   position: 'absolute',
+      //   transitionDuration: '0.125s',
+      //   paddingInline: '0.5rem',
+      //   borderTopRightRadius: '0.2rem',
+      //   borderTopLeftRadius: '0.2rem',
+      //   zIndex: '100',
+      //   top: isFocused ? '-1.433rem' : '0rem',
+      //   right: '0.5rem',
+      //   backgroundColor: 'var(--primary)',
+      //   color: 'var(--background)',
+      //   opacity: isFocused ? '1' : '0',
+      // }}
     >
       {groupName}
     </div>

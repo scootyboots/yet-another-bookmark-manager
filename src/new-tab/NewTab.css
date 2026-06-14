@@ -45,7 +45,8 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --shadow-glow-primary: 0px 0px 25px 0px rgba(230, 60, 159, 0.25);
+  --shadow-glow-primary: 0px 0px 25px 0px
+    color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 :root {
