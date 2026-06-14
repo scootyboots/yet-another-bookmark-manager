@@ -47,6 +47,8 @@
 
   --shadow-glow-primary: 0px 0px 25px 0px
     color-mix(in srgb, var(--primary) 25%, transparent);
+  --radius-xsm: calc(var(--radius) * 0.4);
+  --duration-125: transition-duration: 125ms;
 }
 
 :root {

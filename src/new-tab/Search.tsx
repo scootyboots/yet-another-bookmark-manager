@@ -326,10 +326,10 @@ function SearchResult(props: SearchResultProps) {
   return (
     <div
       className={cn(
-        'relative font-bold text-[16px] flex gap-2 max-w-[95vw] px-2 py-2',
+        'relative font-bold text-[16px] flex gap-2 max-w-[95vw] px-2 py-2 border-2',
         {
-          'border-rgb(255 0 0 / 0%)': isFocused,
-          'border-primary': !isFocused,
+          'border-primary border-2 rounded-xsm': isFocused,
+          'border-transparent': !isFocused,
         },
       )}
       // style={{
@@ -390,9 +390,9 @@ function SearchResultGroup({
   return (
     <div
       className={cn(
-        'Search-result-group z-50 absolute right-2 duration-150 px-2 rounded-tr-sm rounded-tl-sm bg-primary text-backgrounds',
+        'Search-result-group z-50 absolute right-2 duration-150 px-2 rounded-tr-xsm rounded-tl-xsm bg-primary text-backgrounds text-background',
         {
-          'top-[-1.433rem] opacity-100': isFocused,
+          'top-[-1.633rem] opacity-100': isFocused,
           'top-0 opacity-0': !isFocused,
         },
       )}
@@ -422,23 +422,29 @@ function SearchResultEdit({
 }: { isFocused: boolean; onClick: () => void } & PropsWithChildren) {
   return (
     <div
-      className="Search-result-edit"
-      style={{
-        position: 'absolute',
-        transitionDuration: '0.125s',
-        paddingInline: '0.5rem',
-        borderBottomRightRadius: '0.2rem',
-        borderBottomLeftRadius: '0.2rem',
-        zIndex: '100',
-        bottom: isFocused ? '-1.49rem' : '0rem',
-        left: 'calc(50% - 70px)',
-        backgroundColor: 'var(--primary-weak)',
-        color: 'var(--background)',
-        opacity: isFocused ? '1' : '0',
-        widows: '140px',
-        cursor: 'pointer',
-        fontSize: '0.8rems',
-      }}
+      className={cn(
+        'Search-result-edit absolute duration-125 px-2 rounded-br-xsm rounded-bl-xsm z-50 left-[calc(50%-70px)] bg-primary text-background cursor-pointer text-sm',
+        {
+          'bottom-[-1.4rem] opacity-100': isFocused,
+          'bottom-0 opacity-0': !isFocused,
+        },
+      )}
+      // style={{
+      //   position: 'absolute',
+      //   transitionDuration: '0.125s',
+      //   paddingInline: '0.5rem',
+      //   borderBottomRightRadius: '0.2rem',
+      //   borderBottomLeftRadius: '0.2rem',
+      //   zIndex: '100',
+      //   bottom: isFocused ? '-1.49rem' : '0rem',
+      //   left: 'calc(50% - 70px)',
+      //   backgroundColor: 'var(--primary-weak)',
+      //   color: 'var(--background)',
+      //   opacity: isFocused ? '1' : '0',
+      //   widows: '140px',
+      //   cursor: 'pointer',
+      //   fontSize: '0.8rems',
+      // }}
       onClick={onClick}
     >
       <div>edit: mod + enter</div>
@@ -465,10 +471,8 @@ function HighlightedMatch({
       {beforeMatch}
       <mark
         className={cn(
-          clsx(
-            'bg-primary text-white duration-100',
-            focused ? 'bg-primary' : 'bg-accent',
-          ),
+          'bg-primary text-white duration-100',
+          focused ? 'bg-accent' : 'bg-primary',
         )}
       >
         {matched}
