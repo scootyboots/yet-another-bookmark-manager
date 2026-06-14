@@ -11,25 +11,25 @@ import { createRoot } from 'react-dom/client'
 //   } as CSSStyleDeclaration)
 // })
 
-function appendComponent(
-  parent: HTMLElement,
-  component: ReactNode,
-): HTMLElement {
-  const container = document.createElement('div')
-  const shadowRoot = container.attachShadow({ mode: 'open' })
-  parent.appendChild(container)
+// function appendComponent(
+//   parent: HTMLElement,
+//   component: ReactNode,
+// ): HTMLElement {
+//   const container = document.createElement('div')
+//   const shadowRoot = container.attachShadow({ mode: 'open' })
+//   parent.appendChild(container)
 
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = chrome.runtime.getURL('static/css/components.css')
-  shadowRoot.appendChild(link)
+//   const link = document.createElement('link')
+//   link.rel = 'stylesheet'
+//   link.href = chrome.runtime.getURL('static/css/components.css')
+//   shadowRoot.appendChild(link)
 
-  const componentRoot = document.createElement('div')
-  shadowRoot.appendChild(componentRoot)
-  createRoot(componentRoot).render(component)
+//   const componentRoot = document.createElement('div')
+//   shadowRoot.appendChild(componentRoot)
+//   createRoot(componentRoot).render(component)
 
-  return container
-}
+//   return container
+// }
 
 // function Root() {
 //   const [count, setCount] = useState(0)
@@ -41,3 +41,5 @@ function appendComponent(
 //     />
 //   )
 // }
+
+console.log('content script')

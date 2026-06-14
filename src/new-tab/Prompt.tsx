@@ -8,7 +8,6 @@ import {
 } from 'react'
 import { useTrackFocus } from './useTrackFocus'
 import { useClickOutside } from './PopOutMenu'
-import { twMerge } from 'tailwind-merge'
 import { cn } from '@/lib/utils'
 
 type PromptProps = PropsWithChildren<{
@@ -66,7 +65,7 @@ export default function Prompt({
     <>
       <div
         className={cn(
-          'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background shadow-background z-30',
+          'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background z-30 opacity-95',
         )}
       />
       <FocusTrap>
@@ -81,10 +80,13 @@ export default function Prompt({
         >
           <div
             className={cn(
-              'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary px-8 py-8 rounded-sm shadow-primary',
+              'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary px-8 py-8 rounded-sm shadow-glow-primary',
             )}
             ref={contentRef}
-            style={contentStyles}
+            style={{
+              ...contentStyles,
+              // boxShadow: '0px 0px 25px 0px rgba(230, 60, 159, 0.25)',
+            }}
           >
             {children}
           </div>
