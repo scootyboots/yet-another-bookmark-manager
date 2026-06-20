@@ -62,10 +62,12 @@ export default function Search({
   const [urlToOpen, setUrlToOpen] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
-  const [isInputIdle, setIsInputIdle] = useState({ isIdle: true, lastInput: 0 })
-  const isIdle = useMemo(() => {
-    if (inputText === '') return true
-  }, [inputText])
+  const [isInputIdle, setIsInputIdle] = useState(true)
+
+  useEffect(() => {
+    const msg = isInputIdle ? 'input idle!' : 'input active'
+    console.log(msg)
+  }, [isInputIdle])
 
   const { matches, hasMatches, groupMatches } = useMemo(() => {
     const matches = search(inputText, bookmarks, {
@@ -199,29 +201,36 @@ export default function Search({
       setIsShown={setShowSearch}
     >
       <div className="search-input-area flex content-center justify-center">
-        <div className={cn('relative p-1.5 mx-16 mb-3')}>
+        <div className={cn('relative p-1.5 mx-16')}>
           <input
             className={cn(
               'border-0 bg-transparent text-white text-lg font-mono focus:outline-none w-full caret-transparent placeholder-primary-low',
             )}
             placeholder="type to search..."
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={(e) => {
+              setInputText(e.target.value)
+              if (isInputIdle) {
+                setIsInputIdle(false)
+              }
+              setTimeout(() => {
+                setIsInputIdle(true)
+              }, 1250)
+            }}
             name="bookmark search"
             type="text"
             value={inputText}
             ref={inputRef}
             tabIndex={0}
           />
-          <div className={cn('carrot flex flex-nowrap absolute bottom-0')}>
-            {inputText.length === 0 && (
-              <div className="w-2.75 h-1 bg-primary" />
-            )}
+          <div className={cn('carrot flex flex-nowrap absolute bottom-1')}>
+            <div className={cn('w-2.75 h-1', { 'bg-primary': !inputText })} />
+
             {inputText.split('').map((_, i) => {
               const isLast = i + 1 === inputText.length
               const isTooMany = i > 19
 
               return !isTooMany ? (
-                <div
+                <motion.div
                   className={cn('w-2.75 h-1', {
                     'bg-primary': isLast || isTooMany,
                   })}
@@ -438,10 +447,10 @@ function HighlightedMatch({
     <>
       {beforeMatch}
       <mark
-        className={cn(
-          'bg-primary text-white duration-100',
-          focused ? 'bg-accent' : 'bg-primary-low',
-        )}
+        className={cn('bg-primary text-white transition duration-150', {
+          'bg-accent': focused,
+          'bg-primary-low': !focused,
+        })}
       >
         {matched}
       </mark>
