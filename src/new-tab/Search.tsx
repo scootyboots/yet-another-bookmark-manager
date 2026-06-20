@@ -10,7 +10,6 @@ import Prompt from './Prompt'
 import { search, type MatchData } from 'fast-fuzzy'
 import { type Bookmark, RecentLinks } from '../background'
 import { cn } from '@/lib/utils'
-import clsx from 'clsx'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
@@ -85,7 +84,6 @@ export default function Search({
 
   const matchesToRender = useMemo(
     () => (hasMatches ? matches : []),
-    // () => (hasMatches ? matches : lastMatches),
     [hasMatches, matches, lastMatches, recentLinks],
   )
 
@@ -170,29 +168,6 @@ export default function Search({
   if (!showSearch) {
     return null
   }
-
-  //   .Prompt input {
-  //   /* width: 100%; */
-  //   /* border: '1px solid black'; */
-  //   border-width: 0px;
-  //   padding: 6px;
-  //   /* border-radius: 0.25rem; */
-  //   border-bottom-width: 2px;
-  //   border-bottom-color: var(--primary);
-  //   /* border-bottom-width: 2px;
-  //   border-bottom-color: 'red';
-  //   border-bottom-style: 'solid'; */
-  //   background-color: rgba(0, 0, 0, 0);
-  //   color: white;
-  //   font-size: 18px;
-  //   font-family: monospace;
-  //   margin-inline: 8rem;
-  //   margin-block-end: 0.75rem;
-  // }
-
-  // .Prompt input:focus {
-  //   outline: none;
-  // }
 
   return (
     <Prompt
@@ -283,14 +258,14 @@ function SearchResultsOverview({
   return (
     <div
       className={cn(
-        'matches-number-display absolute bottom-2 w-[calc(100%-4rem)] text-primary font-bold text-lg',
+        'matches-number-display absolute bottom-4 w-[calc(100%-4rem)] text-primary font-bold text-sm',
       )}
     >
       <div className="w-full">
         <div className="flex justify-center">
           <div
             className={cn(
-              'z-40 bg-background rounded-sm px-2.5 py-1 shadow-glow-primary border border-primary',
+              'z-50 bg-background rounded-sm px-2.5 py-1 shadow-glow-primary border border-primary',
             )}
           >
             {matches.length > MAX_DISPLAYED_RESULTS
@@ -302,18 +277,6 @@ function SearchResultsOverview({
     </div>
   )
 }
-
-// .Search-result {
-//   font-weight: 700;
-//   font-size: 16px;
-//   display: flex;
-//   gap: 0.5rem;
-//   max-width: 95vw;
-//   border: 2px solid;
-//   border-radius: 0.25rem;
-//   padding-inline: 0.5rem;
-//   padding-block: 0.5rem;
-// }
 
 type SearchResultProps = {
   isFocused: boolean
@@ -332,10 +295,6 @@ function SearchResult(props: SearchResultProps) {
           'border-transparent': !isFocused,
         },
       )}
-      // style={{
-      //   borderColor: isFocused ? 'rgb(230, 60, 159)' : 'rgb(255 0 0 / 0%)',
-      //   position: 'relative',
-      // }}
       data-is-match
       key={'matching-bookmark-' + resultIndex}
     >
@@ -344,26 +303,13 @@ function SearchResult(props: SearchResultProps) {
   )
 }
 
-// .Search-result-text {
-//   text-wrap: nowrap;
-// }
-
-// .Search-result-divider {
-//   color: var(--primary);
-// }
-
-// .Search-result-link {
-//   text-overflow: ellipsis;
-//   text-wrap: nowrap;
-//   overflow: hidden;
-// }
-
 type BookmarkProps = {
   text: string
   href: string
   query?: string
   isFocused?: boolean
 }
+
 function Bookmark(props: BookmarkProps) {
   const { text, href, query = '', isFocused = false } = props
   return (
@@ -396,19 +342,6 @@ function SearchResultGroup({
           'top-0 opacity-0': !isFocused,
         },
       )}
-      // style={{
-      //   position: 'absolute',
-      //   transitionDuration: '0.125s',
-      //   paddingInline: '0.5rem',
-      //   borderTopRightRadius: '0.2rem',
-      //   borderTopLeftRadius: '0.2rem',
-      //   zIndex: '100',
-      //   top: isFocused ? '-1.433rem' : '0rem',
-      //   right: '0.5rem',
-      //   backgroundColor: 'var(--primary)',
-      //   color: 'var(--background)',
-      //   opacity: isFocused ? '1' : '0',
-      // }}
     >
       {groupName}
     </div>
@@ -420,36 +353,19 @@ function SearchResultEdit({
   children: groupName,
   onClick,
 }: { isFocused: boolean; onClick: () => void } & PropsWithChildren) {
-  return (
+  return isFocused ? (
     <div
       className={cn(
         'Search-result-edit absolute duration-125 px-2 rounded-br-xsm rounded-bl-xsm z-50 left-[calc(50%-70px)] bg-primary text-background cursor-pointer text-sm',
         {
-          'bottom-[-1.4rem] opacity-100': isFocused,
-          'bottom-0 opacity-0': !isFocused,
+          'bottom-[-1.35rem] opacity-100': isFocused,
         },
       )}
-      // style={{
-      //   position: 'absolute',
-      //   transitionDuration: '0.125s',
-      //   paddingInline: '0.5rem',
-      //   borderBottomRightRadius: '0.2rem',
-      //   borderBottomLeftRadius: '0.2rem',
-      //   zIndex: '100',
-      //   bottom: isFocused ? '-1.49rem' : '0rem',
-      //   left: 'calc(50% - 70px)',
-      //   backgroundColor: 'var(--primary-weak)',
-      //   color: 'var(--background)',
-      //   opacity: isFocused ? '1' : '0',
-      //   widows: '140px',
-      //   cursor: 'pointer',
-      //   fontSize: '0.8rems',
-      // }}
       onClick={onClick}
     >
       <div>edit: mod + enter</div>
     </div>
-  )
+  ) : null
 }
 
 function HighlightedMatch({
@@ -524,10 +440,6 @@ function highlightedRegexMatch({
         store = store + char
         storeWithRegex = storeWithRegex + charWithRegex
         try {
-          // chunks.push({
-          //   original: store,
-          //   regex: new RegExp(storeWithRegex, 'i'),
-          // })
           chunks.push(new RegExp(storeWithRegex, 'i'))
         } catch {
           console.log('failed to parse to regex: \n\n', storeWithRegex)
