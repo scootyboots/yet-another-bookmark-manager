@@ -62,6 +62,10 @@ export default function Search({
   const [urlToOpen, setUrlToOpen] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
+  const [isInputIdle, setIsInputIdle] = useState({ isIdle: true, lastInput: 0 })
+  const isIdle = useMemo(() => {
+    if (inputText === '') return true
+  }, [inputText])
 
   const { matches, hasMatches, groupMatches } = useMemo(() => {
     const matches = search(inputText, bookmarks, {
@@ -195,17 +199,38 @@ export default function Search({
       setIsShown={setShowSearch}
     >
       <div className="search-input-area flex content-center justify-center">
-        <input
-          className={cn(
-            'border-0 p-1.5 bg-transparent text-white text-lg font-mono mx-16 mb-3 focus:outline-none border-b-2 border-b-primary',
-          )}
-          onChange={(e) => setInputText(e.target.value)}
-          name="bookmark search"
-          type="text"
-          value={inputText}
-          ref={inputRef}
-          tabIndex={0}
-        />
+        <div className={cn('relative p-1.5 mx-16 mb-3')}>
+          <input
+            className={cn(
+              'border-0 bg-transparent text-white text-lg font-mono focus:outline-none w-full caret-transparent placeholder-primary-low',
+            )}
+            placeholder="type to search..."
+            onChange={(e) => setInputText(e.target.value)}
+            name="bookmark search"
+            type="text"
+            value={inputText}
+            ref={inputRef}
+            tabIndex={0}
+          />
+          <div className={cn('carrot flex flex-nowrap absolute bottom-0')}>
+            {inputText.length === 0 && (
+              <div className="w-2.75 h-1 bg-primary" />
+            )}
+            {inputText.split('').map((_, i) => {
+              const isLast = i + 1 === inputText.length
+              const isTooMany = i > 19
+
+              return !isTooMany ? (
+                <div
+                  className={cn('w-2.75 h-1', {
+                    'bg-primary': isLast || isTooMany,
+                  })}
+                />
+              ) : null
+            })}
+            {inputText.length > 20 && <div className="w-2.75 h-1 bg-primary" />}
+          </div>
+        </div>
       </div>
 
       <div className="search-results text-sm pbs-4 relative">
