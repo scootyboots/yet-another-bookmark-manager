@@ -10,11 +10,34 @@ import Prompt from './Prompt'
 import { search, type MatchData } from 'fast-fuzzy'
 import { type Bookmark, RecentLinks } from '../background'
 import { cn } from '@/lib/utils'
+import { motion } from 'motion/react'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
 export const SEARCH_INPUT_SELECTOR = '.Search input'
-export const MAX_DISPLAYED_RESULTS = 16
+export const MAX_DISPLAYED_RESULTS = 13
+
+function SearchInput({
+  inputText,
+  inputRef,
+  setInputText,
+}: {
+  setInputText: React.Dispatch<React.SetStateAction<string>>
+  inputText: string
+  inputRef: React.RefObject<HTMLInputElement | null>
+}) {
+  return (
+    <input
+      className="border-0 p-1.5 border-b-2 border-b-primary bg-transparent text-white text-lg font-mono mx-32 mb-3 focus:outline-none"
+      onChange={(e) => setInputText(e.target.value)}
+      name="bookmark search"
+      type="text"
+      value={inputText}
+      ref={inputRef}
+      tabIndex={0}
+    />
+  )
+}
 
 type SearchProps = {
   bookmarks: Array<Bookmark>
@@ -165,26 +188,27 @@ export default function Search({
     }
   }, [keydownHandler])
 
-  if (!showSearch) {
-    return null
-  }
-
-  return (
+  return showSearch ? (
     <Prompt
       isShown={showSearch}
       className={`${shakeX ? ' shakeX' : ''}`}
       setIsShown={setShowSearch}
     >
-      <input
-        className="border-0 p-1.5 border-b-2 border-b-primary bg-transparent text-white text-lg font-mono mx-32 mb-3 focus:outline-none"
-        onChange={(e) => setInputText(e.target.value)}
-        name="bookmark search"
-        type="text"
-        value={inputText}
-        ref={inputRef}
-        tabIndex={0}
-      />
-      <div style={{ paddingBlockStart: '1rem', position: 'relative' }}>
+      <div className="search-input-area flex content-center justify-center">
+        <input
+          className={cn(
+            'border-0 p-1.5 bg-transparent text-white text-lg font-mono mx-16 mb-3 focus:outline-none border-b-2 border-b-primary',
+          )}
+          onChange={(e) => setInputText(e.target.value)}
+          name="bookmark search"
+          type="text"
+          value={inputText}
+          ref={inputRef}
+          tabIndex={0}
+        />
+      </div>
+
+      <div className="search-results text-sm pbs-4 relative">
         {matchesToRender.length === 0
           ? recentLinks.map((link, index) => {
               const isFocused = index === focusIndex
@@ -229,7 +253,7 @@ export default function Search({
       {inputText && <SearchResultsOverview matches={matches} />}
       <SelectedLink matchLink={matchLink} matchLinkText={matchLinkText} />
     </Prompt>
-  )
+  ) : null
 }
 
 function SelectedLink({
@@ -257,6 +281,9 @@ function SearchResultsOverview({
 }) {
   return (
     <div
+      // animate={{ rotate: 360 }}
+      // whileTap={{ scale: 0.88 }}
+      // key={`${matches}`}
       className={cn(
         'matches-number-display absolute bottom-4 w-[calc(100%-4rem)] text-primary font-bold text-sm',
       )}
@@ -289,7 +316,7 @@ function SearchResult(props: SearchResultProps) {
   return (
     <div
       className={cn(
-        'relative font-bold text-[16px] flex gap-2 max-w-[95vw] px-2 py-2 border-2',
+        'relative font-bold flex gap-2 max-w-[95vw] px-2 py-2 border-2',
         {
           'border-primary border-2 rounded-xsm': isFocused,
           'border-transparent': !isFocused,
@@ -336,9 +363,9 @@ function SearchResultGroup({
   return (
     <div
       className={cn(
-        'Search-result-group z-50 absolute right-2 duration-150 px-2 rounded-tr-xsm rounded-tl-xsm bg-primary text-backgrounds text-background',
+        'Search-result-group text-sm z-50 absolute right-2 duration-150 px-2 rounded-tr-xsm rounded-tl-xsm bg-primary text-backgrounds text-background',
         {
-          'top-[-1.633rem] opacity-100': isFocused,
+          'top-[-1.39rem] opacity-100': isFocused,
           'top-0 opacity-0': !isFocused,
         },
       )}
@@ -356,7 +383,7 @@ function SearchResultEdit({
   return isFocused ? (
     <div
       className={cn(
-        'Search-result-edit absolute duration-125 px-2 rounded-br-xsm rounded-bl-xsm z-50 left-[calc(50%-70px)] bg-primary text-background cursor-pointer text-sm',
+        'Search-result-edit absolute duration-125 px-2 rounded-br-xsm rounded-bl-xsm z-50 left-[calc(50%-70px)] bg-primary text-background cursor-pointer text-sm pb-px',
         {
           'bottom-[-1.35rem] opacity-100': isFocused,
         },
@@ -388,7 +415,7 @@ function HighlightedMatch({
       <mark
         className={cn(
           'bg-primary text-white duration-100',
-          focused ? 'bg-accent' : 'bg-primary',
+          focused ? 'bg-accent' : 'bg-primary-low',
         )}
       >
         {matched}

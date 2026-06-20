@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { PropsWithChildren, Ref, useEffect, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search'
@@ -28,7 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import './NewTab.css'
+import { motion } from 'motion/react'
+// import './NewTab.css'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -40,6 +41,23 @@ export const EMPTY_BOOKMARK: Bookmark = {
   href: '',
   text: '',
 }
+
+const ButtonWithRef = ({
+  ref,
+  children,
+}: { ref: Ref<HTMLButtonElement> } & PropsWithChildren) => (
+  <Button
+    ref={ref}
+    variant="outline"
+    onClick={() => {
+      console.log('button')
+    }}
+  >
+    {children}
+  </Button>
+)
+
+const ShadMotionButton = motion.create(ButtonWithRef)
 
 export default function NewTab() {
   const [showSearch, setShowSearch] = useState(true)
@@ -200,6 +218,10 @@ export default function NewTab() {
           </SelectGroup>
         </SelectContent>
       </Select>
+
+      <ShadMotionButton whileTap={{ scale: '0.88' }}>
+        motion button
+      </ShadMotionButton>
 
       <div className="selected-bookmark" style={{ display: 'none' }}>
         {JSON.stringify(selectedBk)}

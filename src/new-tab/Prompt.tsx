@@ -19,6 +19,10 @@ type PromptProps = PropsWithChildren<{
   ref?: React.RefObject<null | HTMLDivElement>
 }>
 
+function scrollControl(lock?: 'hidden') {
+  document.body.style.overflow = lock ?? ''
+}
+
 export default function Prompt({
   isShown,
   className = '',
@@ -34,6 +38,7 @@ export default function Prompt({
     setIsShown?.(false)
   })
   useEffect(() => {
+    scrollControl('hidden')
     function keydownHandler(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setIsShown?.(false)
@@ -41,26 +46,12 @@ export default function Prompt({
     }
     document.addEventListener('keydown', keydownHandler)
     return () => {
+      scrollControl()
       focusPreviousElement()
       document.removeEventListener('keydown', keydownHandler)
     }
   }, [])
 
-  //   position: relative;
-  // display: flex;
-  // flex-direction: column;
-  // width: 55vw;
-  // max-width: 615px;
-  // max-height: 80vh;
-  // overflow: hidden;
-  // background-color: var(--background-weak);
-  // border-width: 1px;
-  // border-style: solid;
-  // border-color: var(--primary-weak);
-  // padding-inline: 2rem;
-  // padding-block: 2rem;
-  // border-radius: 0.5rem;
-  // box-shadow: var(--box-shadow-primary);
   return (
     <>
       <div
@@ -80,7 +71,7 @@ export default function Prompt({
         >
           <div
             className={cn(
-              'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary px-8 py-8 rounded-sm shadow-glow-primary',
+              'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary p-5 rounded-lg shadow-glow-primary',
             )}
             ref={contentRef}
             style={contentStyles}
