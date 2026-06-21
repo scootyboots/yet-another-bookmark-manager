@@ -27,6 +27,6 @@
     }
   ],
   "chrome_url_overrides": {
-    "newtab": "main-2.html"
+    "newtab": "newTab.html"
   }
 }

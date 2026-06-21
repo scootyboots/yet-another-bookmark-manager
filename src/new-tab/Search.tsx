@@ -10,7 +10,7 @@ import Prompt from './Prompt'
 import { search, type MatchData } from 'fast-fuzzy'
 import { type Bookmark, RecentLinks } from '../background'
 import { cn } from '@/lib/utils'
-import { motion, useAnimation } from 'motion/react'
+import { motion, useAnimate } from 'motion/react'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
@@ -64,11 +64,6 @@ export default function Search({
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
   const [isInputIdle, setIsInputIdle] = useState(true)
 
-  useEffect(() => {
-    const msg = isInputIdle ? 'input idle!' : 'input active'
-    console.log(msg)
-  }, [isInputIdle])
-
   const { matches, hasMatches, groupMatches } = useMemo(() => {
     const matches = search(inputText, bookmarks, {
       keySelector: (bk) => bk.text,
@@ -92,10 +87,23 @@ export default function Search({
     return { matches, hasMatches, groupMatches: uniqueGroups }
   }, [inputText])
 
+  const [scope, animate] = useAnimate()
+
   const shakeX = useMemo(() => {
-    if (!hasMatches && lastMatches.length !== 0) return true
+    const shouldShake = !hasMatches && lastMatches.length !== 0
+    if (shouldShake) return true
     return false
   }, [hasMatches, lastMatches])
+
+  useEffect(() => {
+    if (shakeX) {
+      animate(
+        scope.current,
+        { x: ['0px', '4px', '-4px', '0px'] },
+        { duration: 0.1, ease: 'easeInOut' },
+      )
+    }
+  }, [shakeX])
 
   const { matchLink, matchLinkText } = useMemo(() => {
     const hasMatches = Boolean(matches.length)
@@ -143,9 +151,9 @@ export default function Search({
       }
 
       if (key === 'Enter') {
-        const matchLinkEl = document.querySelector(
+        const matchLinkEl = document.querySelector<HTMLDivElement>(
           LINK_TO_OPEN_SELECTOR,
-        ) as HTMLDivElement
+        )
         if (matchLinkEl) {
           const href = matchLinkEl?.textContent ?? ''
           const text = matchLinkEl.getAttribute('data-link-text') ?? ''
@@ -196,8 +204,9 @@ export default function Search({
 
   return showSearch ? (
     <Prompt
+      ref={scope}
       isShown={showSearch}
-      className={`${shakeX ? ' shakeX' : ''}`}
+      className="Search"
       setIsShown={setShowSearch}
     >
       <div className="search-input-area flex content-center justify-center">
@@ -206,9 +215,13 @@ export default function Search({
             className={cn(
               'border-0 bg-transparent text-white text-lg font-mono focus:outline-none w-full caret-transparent placeholder-neutral-600',
             )}
-            placeholder="type to search..."
+            placeholder=" type to search..."
             onChange={(e) => {
               setInputText(e.target.value)
+              if (e.target.value === '') {
+                setIsInputIdle(true)
+                return
+              }
               if (isInputIdle) {
                 setIsInputIdle(false)
               }
@@ -292,31 +305,24 @@ function Carrot({
   isIdle: boolean
   isVisible: boolean
 }) {
-  const controls = useAnimation()
-  const startAnimation = () => {
-    controls.start({
-      opacity: [1, 0, 1],
-      transition: {
-        duration: 1.05,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      },
-    })
-  }
-  const cancelAnimation = () => {
-    controls.stop()
-    controls.set({ opacity: 1 })
-  }
+  const [scope, animate] = useAnimate()
+
   useEffect(() => {
     if (isVisible && isIdle) {
-      startAnimation()
-    } else {
-      cancelAnimation()
+      animate(
+        scope.current,
+        { opacity: [1, 0, 1] },
+        {
+          duration: 0.95,
+          ease: 'linear',
+          repeat: Infinity,
+        },
+      )
     }
   }, [isIdle, isVisible])
   return (
-    <motion.div
-      animate={controls}
+    <div
+      ref={scope}
       className={cn('w-2.75 h-1', {
         'bg-primary': isVisible,
       })}
