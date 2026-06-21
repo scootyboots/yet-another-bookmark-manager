@@ -56,7 +56,7 @@ export default function Prompt({
     <>
       <div
         className={cn(
-          'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background z-30 opacity-95',
+          'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background z-30 opacity-95 shadow-glow-primary-inset',
         )}
       />
       <FocusTrap>
@@ -71,7 +71,7 @@ export default function Prompt({
         >
           <div
             className={cn(
-              'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary p-5 rounded-lg shadow-glow-primary',
+              'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary p-5.75 rounded-lg shadow-glow-primary',
             )}
             ref={contentRef}
             style={contentStyles}

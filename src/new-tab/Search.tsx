@@ -10,7 +10,7 @@ import Prompt from './Prompt'
 import { search, type MatchData } from 'fast-fuzzy'
 import { type Bookmark, RecentLinks } from '../background'
 import { cn } from '@/lib/utils'
-import { motion } from 'motion/react'
+import { motion, useAnimation } from 'motion/react'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
@@ -204,7 +204,7 @@ export default function Search({
         <div className={cn('relative p-1.5 mx-16')}>
           <input
             className={cn(
-              'border-0 bg-transparent text-white text-lg font-mono focus:outline-none w-full caret-transparent placeholder-primary-low',
+              'border-0 bg-transparent text-white text-lg font-mono focus:outline-none w-full caret-transparent placeholder-neutral-600',
             )}
             placeholder="type to search..."
             onChange={(e) => {
@@ -222,22 +222,17 @@ export default function Search({
             ref={inputRef}
             tabIndex={0}
           />
-          <div className={cn('carrot flex flex-nowrap absolute bottom-1')}>
-            <div className={cn('w-2.75 h-1', { 'bg-primary': !inputText })} />
-
+          <div className={cn('carrot flex flex-nowrap absolute bottom-1.5')}>
+            <Carrot isIdle={isInputIdle} isVisible={inputText === ''} />
             {inputText.split('').map((_, i) => {
               const isLast = i + 1 === inputText.length
               const isTooMany = i > 19
 
               return !isTooMany ? (
-                <motion.div
-                  className={cn('w-2.75 h-1', {
-                    'bg-primary': isLast || isTooMany,
-                  })}
-                />
+                <Carrot isIdle={isInputIdle} isVisible={isLast || isTooMany} />
               ) : null
             })}
-            {inputText.length > 20 && <div className="w-2.75 h-1 bg-primary" />}
+            <Carrot isVisible={inputText.length > 20} isIdle={isInputIdle} />
           </div>
         </div>
       </div>
@@ -288,6 +283,45 @@ export default function Search({
       <SelectedLink matchLink={matchLink} matchLinkText={matchLinkText} />
     </Prompt>
   ) : null
+}
+
+function Carrot({
+  isIdle,
+  isVisible,
+}: {
+  isIdle: boolean
+  isVisible: boolean
+}) {
+  const controls = useAnimation()
+  const startAnimation = () => {
+    controls.start({
+      opacity: [1, 0, 1],
+      transition: {
+        duration: 1.05,
+        repeat: Infinity,
+        ease: 'easeInOut',
+      },
+    })
+  }
+  const cancelAnimation = () => {
+    controls.stop()
+    controls.set({ opacity: 1 })
+  }
+  useEffect(() => {
+    if (isVisible && isIdle) {
+      startAnimation()
+    } else {
+      cancelAnimation()
+    }
+  }, [isIdle, isVisible])
+  return (
+    <motion.div
+      animate={controls}
+      className={cn('w-2.75 h-1', {
+        'bg-primary': isVisible,
+      })}
+    />
+  )
 }
 
 function SelectedLink({
@@ -350,9 +384,9 @@ function SearchResult(props: SearchResultProps) {
   return (
     <div
       className={cn(
-        'relative font-bold flex gap-2 max-w-[95vw] px-2 py-2 border-2',
+        'search-result-entry relative font-bold flex gap-2 max-w-[95vw] px-2 py-2 border-2',
         {
-          'border-primary border-2 rounded-xsm': isFocused,
+          'border-primary-low rounded-xsm': isFocused,
           'border-transparent': !isFocused,
         },
       )}
@@ -397,10 +431,10 @@ function SearchResultGroup({
   return (
     <div
       className={cn(
-        'Search-result-group text-sm z-50 absolute right-2 duration-150 px-2 rounded-tr-xsm rounded-tl-xsm bg-primary text-backgrounds text-background',
+        'Search-result-group text-sm z-50 absolute right-2 px-2 rounded-tr-xsm rounded-tl-xsm bg-primary-low text-background top-[-1.39rem]',
         {
-          'top-[-1.39rem] opacity-100': isFocused,
-          'top-0 opacity-0': !isFocused,
+          'opacity-100': isFocused,
+          'opacity-0': !isFocused,
         },
       )}
     >
@@ -417,7 +451,7 @@ function SearchResultEdit({
   return isFocused ? (
     <div
       className={cn(
-        'Search-result-edit absolute duration-125 px-2 rounded-br-xsm rounded-bl-xsm z-50 left-[calc(50%-70px)] bg-primary text-background cursor-pointer text-sm pb-px',
+        'Search-result-edit absolute duration-125 px-2 rounded-br-xsm rounded-bl-xsm z-50 left-[calc(50%-70px)] bg-primary-low text-background cursor-pointer text-sm pb-px',
         {
           'bottom-[-1.35rem] opacity-100': isFocused,
         },
