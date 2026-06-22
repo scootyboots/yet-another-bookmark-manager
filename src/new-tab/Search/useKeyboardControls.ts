@@ -1,0 +1,98 @@
+import { useEffect, useMemo, useCallback } from 'react'
+import { type Bookmark } from '@/background'
+import { type MatchData } from 'fast-fuzzy'
+
+export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
+export const IS_MATCH_SELECTOR = '[data-is-match]'
+
+export default function useKeyboardControls(
+  matches: MatchData<Bookmark>[],
+  hasMatches: boolean,
+  focusIndex: number,
+  setFocusIndex: React.Dispatch<React.SetStateAction<number>>,
+  promptUpdateBookmark: (bk: Bookmark) => void,
+  setShowSearch: React.Dispatch<React.SetStateAction<boolean>>,
+  updateRecentLinks: (url: string, text: string) => void,
+  setInputText: React.Dispatch<React.SetStateAction<string>>,
+  setUrlToOpen: React.Dispatch<React.SetStateAction<string>>,
+  inputRef: React.RefObject<HTMLInputElement | null>,
+) {
+  const keydownHandler = useCallback(
+    (event: KeyboardEvent) => {
+      const { key, shiftKey, metaKey } = event
+      function preventDefaultIfOpen() {
+        const searchElement =
+          document.querySelector<HTMLDivElement>('[data-search-open]')
+        if (!searchElement) return
+        let isOpen = searchElement.getAttribute('data-search-open')
+        isOpen === 'true' && event.preventDefault()
+      }
+
+      if (key === 'Enter' && metaKey) {
+        const focusedMatch = matches?.[focusIndex]?.item
+        if (focusedMatch) {
+          promptUpdateBookmark(focusedMatch)
+          setShowSearch(false)
+        }
+        return
+      }
+
+      if (key === 'Enter') {
+        const matchLinkEl = document.querySelector<HTMLDivElement>(
+          LINK_TO_OPEN_SELECTOR,
+        )
+        if (matchLinkEl) {
+          const href = matchLinkEl?.textContent ?? ''
+          const text = matchLinkEl.getAttribute('data-link-text') ?? ''
+          // TODO: have this be an option to open in same tab or new tab
+          window.location.href = href
+          updateRecentLinks(href, text)
+          setInputText('')
+          setUrlToOpen('')
+          setFocusIndex(0)
+        }
+        return
+      }
+
+      const matchesInDom = document.querySelectorAll(IS_MATCH_SELECTOR)
+      const isTab = key === 'Tab'
+      if (isTab) {
+        const inputSearchElement = document.querySelector<HTMLInputElement>(
+          'input[name="bookmark search"]',
+        )
+        setTimeout(() => {
+          inputSearchElement?.focus()
+        }, 50)
+      }
+      const isTabUp = shiftKey && isTab
+      const isTabDown = !shiftKey && isTab
+      if (key === 'ArrowDown' || isTabDown) {
+        preventDefaultIfOpen()
+        setFocusIndex((prev) => {
+          const next = prev + 1
+          return matchesInDom?.[next] ? next : 0
+        })
+      }
+      if (key === 'ArrowUp' || isTabUp) {
+        preventDefaultIfOpen()
+        setFocusIndex((prev) => {
+          const next = prev - 1
+          return matchesInDom?.[next] ? next : matchesInDom.length - 1
+        })
+      }
+    },
+    [matches, focusIndex, inputRef],
+  )
+
+  useEffect(() => {
+    if (inputRef.current) {
+      setTimeout(() => {
+        inputRef?.current?.focus()
+      }, 50)
+    }
+    document.addEventListener('keydown', keydownHandler)
+    return () => {
+      document.removeEventListener('keydown', keydownHandler)
+    }
+  }, [keydownHandler])
+}

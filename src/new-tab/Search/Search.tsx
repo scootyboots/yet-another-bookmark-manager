@@ -1,43 +1,17 @@
-import {
-  useState,
-  useMemo,
-  useEffect,
-  useRef,
-  useCallback,
-  PropsWithChildren,
-} from 'react'
-import Prompt from './Prompt'
-import { search, type MatchData } from 'fast-fuzzy'
-import { type Bookmark, RecentLinks } from '../background'
+import { useState, useMemo, useEffect, useRef, PropsWithChildren } from 'react'
+import Prompt from '../Prompt'
+import { search as fuzzySearch, type MatchData } from 'fast-fuzzy'
+import { type Bookmark, RecentLinks } from '../../background'
 import { cn } from '@/lib/utils'
 import { motion, useAnimate } from 'motion/react'
+import useMatches from './useMatches'
+import useKeyboardControls from './useKeyboardControls'
+import useShakeX from './useShakeX'
+import useLinkToOpen from './useLinkToOpen'
+export { LINK_TO_OPEN_SELECTOR, IS_MATCH_SELECTOR } from './useKeyboardControls'
 
-export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
-export const IS_MATCH_SELECTOR = '[data-is-match]'
 export const SEARCH_INPUT_SELECTOR = '.Search input'
 export const MAX_DISPLAYED_RESULTS = 13
-
-function SearchInput({
-  inputText,
-  inputRef,
-  setInputText,
-}: {
-  setInputText: React.Dispatch<React.SetStateAction<string>>
-  inputText: string
-  inputRef: React.RefObject<HTMLInputElement | null>
-}) {
-  return (
-    <input
-      className="border-0 p-1.5 border-b-2 border-b-primary bg-transparent text-white text-lg font-mono mx-32 mb-3 focus:outline-none"
-      onChange={(e) => setInputText(e.target.value)}
-      name="bookmark search"
-      type="text"
-      value={inputText}
-      ref={inputRef}
-      tabIndex={0}
-    />
-  )
-}
 
 type SearchProps = {
   bookmarks: Array<Bookmark>
@@ -64,147 +38,40 @@ export default function Search({
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
   const [isInputIdle, setIsInputIdle] = useState(true)
 
-  const { matches, hasMatches, groupMatches } = useMemo(() => {
-    const matches = search(inputText, bookmarks, {
-      keySelector: (bk) => bk.text,
-      returnMatchData: true,
-    })
-    const groupMatches = search(inputText, bookmarks, {
-      keySelector: (bk) => bk.group,
-      returnMatchData: true,
-    }).map((match) => match.item.group)
-    const uniqueGroups = [...new Set([...groupMatches])]
-
-    if (!inputText) {
-      setUrlToOpen('')
-      setLastMatches([])
-      return { matches: [], hasMatches: false }
-    }
-
-    const hasMatches = Array.isArray(matches) && matches.length > 0
-    if (hasMatches) setLastMatches(matches)
-    setUrlToOpen(matches?.[0]?.item.href ?? '')
-    return { matches, hasMatches, groupMatches: uniqueGroups }
-  }, [inputText])
-
-  const [scope, animate] = useAnimate()
-
-  const shakeX = useMemo(() => {
-    const shouldShake = !hasMatches && lastMatches.length !== 0
-    if (shouldShake) return true
-    return false
-  }, [hasMatches, lastMatches])
-
-  useEffect(() => {
-    if (shakeX) {
-      animate(
-        scope.current,
-        { x: ['0px', '4px', '-4px', '0px'] },
-        { duration: 0.1, ease: 'easeInOut' },
-      )
-    }
-  }, [shakeX])
-
-  const { matchLink, matchLinkText } = useMemo(() => {
-    const hasMatches = Boolean(matches.length)
-    const href = hasMatches
-      ? matches?.[focusIndex]?.item.href
-      : recentLinks?.[focusIndex]?.url
-    const text = hasMatches
-      ? matches?.[focusIndex]?.item.text
-      : recentLinks?.[focusIndex]?.text
-    return {
-      matchLink: href ?? '',
-      matchLinkText: text ?? '',
-    }
-  }, [matches, focusIndex, recentLinks])
-
-  const matchesToRender = useMemo(
-    () => (hasMatches ? matches : []),
-    [hasMatches, matches, lastMatches, recentLinks],
+  const { matches, hasMatches, groupMatches, matchesToRender } = useMatches(
+    inputText,
+    bookmarks,
+    setUrlToOpen,
+    setLastMatches,
   )
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const keydownHandler = useCallback(
-    (event: KeyboardEvent) => {
-      console.log(
-        "if you're seeing this message too much you have not properly removed the event listener",
-      )
-      const { key, shiftKey, metaKey } = event
-      console.log(key, event)
-      function preventDefaultIfOpen() {
-        const searchElement =
-          document.querySelector<HTMLDivElement>('[data-search-open]')
-        if (!searchElement) return
-        let isOpen = searchElement.getAttribute('data-search-open')
-        isOpen === 'true' && event.preventDefault()
-      }
-
-      if (key === 'Enter' && metaKey) {
-        const focusedMatch = matches?.[focusIndex]?.item
-        if (focusedMatch) {
-          promptUpdateBookmark(focusedMatch)
-          setShowSearch(false)
-        }
-        return
-      }
-
-      if (key === 'Enter') {
-        const matchLinkEl = document.querySelector<HTMLDivElement>(
-          LINK_TO_OPEN_SELECTOR,
-        )
-        if (matchLinkEl) {
-          const href = matchLinkEl?.textContent ?? ''
-          const text = matchLinkEl.getAttribute('data-link-text') ?? ''
-          // TODO: store recently opened / most opened
-          chrome.tabs.create({ url: href })
-          updateRecentLinks(href, text)
-          setInputText('')
-          setUrlToOpen('')
-          setFocusIndex(0)
-        }
-        return
-      }
-
-      const matchesInDom = document.querySelectorAll(IS_MATCH_SELECTOR)
-      const isTabUp = shiftKey && key === 'Tab'
-      const isTabDown = !shiftKey && key === 'Tab'
-      if (key === 'ArrowDown' || isTabDown) {
-        preventDefaultIfOpen()
-        setFocusIndex((prev) => {
-          const next = prev + 1
-          return matchesInDom?.[next] ? next : 0
-        })
-      }
-      if (key === 'ArrowUp' || isTabUp) {
-        preventDefaultIfOpen()
-        setFocusIndex((prev) => {
-          const next = prev - 1
-          return matchesInDom?.[next] ? next : matchesInDom.length - 1
-        })
-      }
-    },
-    [urlToOpen, hasMatches, matches, focusIndex],
+  useKeyboardControls(
+    matches,
+    hasMatches,
+    focusIndex,
+    setFocusIndex,
+    promptUpdateBookmark,
+    setShowSearch,
+    updateRecentLinks,
+    setInputText,
+    setUrlToOpen,
+    inputRef,
   )
 
+  const linkToOpen = useLinkToOpen(matches, recentLinks, focusIndex)
+
+  const shakeRef = useShakeX(hasMatches, lastMatches)
+
   useMemo(() => {
+    // reset focus back to top on new matches
     setFocusIndex(0)
   }, [matches])
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus()
-    }
-    document.addEventListener('keydown', keydownHandler)
-    return () => {
-      document.removeEventListener('keydown', keydownHandler)
-    }
-  }, [keydownHandler])
-
   return showSearch ? (
     <Prompt
-      ref={scope}
+      ref={shakeRef}
       isShown={showSearch}
       className="Search"
       setIsShown={setShowSearch}
@@ -251,16 +118,20 @@ export default function Search({
       </div>
 
       <div className="search-results text-sm pbs-4 relative">
-        {matchesToRender.length === 0
-          ? recentLinks.map((link, index) => {
-              const isFocused = index === focusIndex
-              return (
-                <SearchResult isFocused={isFocused} resultIndex={index}>
-                  <Bookmark text={link.text} href={link.url} />
-                </SearchResult>
-              )
-            })
-          : null}
+        {!hasMatches &&
+          recentLinks.slice(0, MAX_DISPLAYED_RESULTS).map((link, index) => {
+            const isFocused = index === focusIndex
+            return (
+              <SearchResult
+                isFocused={isFocused}
+                resultIndex={index}
+                href={link.url}
+              >
+                <Bookmark text={link.text} href={link.url} />
+              </SearchResult>
+            )
+          })}
+
         {matchesToRender.map((match, index) => {
           const moreThan18 = index + 1 > MAX_DISPLAYED_RESULTS
 
@@ -271,7 +142,7 @@ export default function Search({
           }
           const { group, href, text } = match.item
           return (
-            <SearchResult isFocused={isFocused} resultIndex={index}>
+            <SearchResult isFocused={isFocused} resultIndex={index} href={href}>
               <SearchResultGroup isFocused={isFocused}>
                 {group}
               </SearchResultGroup>
@@ -293,7 +164,10 @@ export default function Search({
         })}
       </div>
       {inputText && <SearchResultsOverview matches={matches} />}
-      <SelectedLink matchLink={matchLink} matchLinkText={matchLinkText} />
+      <SelectedLink
+        matchLink={linkToOpen.href}
+        matchLinkText={linkToOpen.text}
+      />
     </Prompt>
   ) : null
 }
@@ -382,15 +256,17 @@ function SearchResultsOverview({
 type SearchResultProps = {
   isFocused: boolean
   resultIndex: number
+  href: string
 } & PropsWithChildren
 
 function SearchResult(props: SearchResultProps) {
-  const { isFocused, resultIndex, children } = props
-
+  const { isFocused, resultIndex, children, href } = props
+  // TODO: better handle this
   return (
-    <div
+    <a
+      href={href}
       className={cn(
-        'search-result-entry relative font-bold flex gap-2 max-w-[95vw] px-2 py-2 border-2',
+        'search-result-entry relative font-bold flex gap-2 max-w-[95vw] px-2 py-2 border-2 focus:ring-0 focus:outline-none',
         {
           'border-primary-low rounded-xsm': isFocused,
           'border-transparent': !isFocused,
@@ -400,7 +276,7 @@ function SearchResult(props: SearchResultProps) {
       key={'matching-bookmark-' + resultIndex}
     >
       {children}
-    </div>
+    </a>
   )
 }
 

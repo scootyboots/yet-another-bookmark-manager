@@ -1,7 +1,7 @@
 import { PropsWithChildren, Ref, useEffect, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
-import Search from './Search'
+import Search from './Search/Search'
 import useBookmarkController from './useBookmarkController'
 import BookmarkPrompt, { BookmarkPromptType } from './BookmarkPrompt'
 import { Bookmark } from '../background'
