@@ -4,7 +4,6 @@ import App from '../main/App'
 
 const rootEl = document.getElementById('root')
 if (rootEl) {
-  rootEl.classList.add('dark')
   const root = ReactDOM.createRoot(rootEl)
   root.render(
     <React.StrictMode>

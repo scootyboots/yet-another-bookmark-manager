@@ -34,7 +34,12 @@ export default defineConfig({
         },
       },
       html: {
-        title: '',
+        title: 'Yet Another Bookmark Manager',
+        template: './src/html-template.html',
+        mountId: 'root',
+        templateParameters: {
+          bodyClass: 'dark',
+        },
       },
       output: {
         target: 'web',
