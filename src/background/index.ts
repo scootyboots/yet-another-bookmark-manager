@@ -162,6 +162,7 @@ export async function updateGroupName(groupName: string, next: string) {
         return bk
       }),
     )
+    // return {data: 'update', error: 'null'}
   }
   return { data: null, error: 'failed to pull in existing group bookmarks' }
 }

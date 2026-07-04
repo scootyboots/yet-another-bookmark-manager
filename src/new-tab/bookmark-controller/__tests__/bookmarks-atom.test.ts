@@ -1,7 +1,7 @@
 import { Bookmark } from '@/background'
 import { createStore } from 'jotai'
-import { beforeEach, vi, describe, it } from 'vitest'
-import { bookmarksAtom } from '../bookmarks-atom'
+import { beforeEach, vi, describe, it, expect } from 'vitest'
+import { bookmarksAtom } from '../bookmark-atoms'
 
 vi.mock('@/background', () => ({
   getStoredBookmarks: vi.fn(),
@@ -32,6 +32,9 @@ describe('addBookmarkAtom', () => {
   it('adds bookmark', async () => {
     console.log('RAN TEST')
     const store = createStore()
+    store.set(bookmarksAtom, [])
+    expect(store.get(bookmarksAtom).length).toEqual(0)
     store.set(bookmarksAtom, [testBookmark])
+    expect(store.get(bookmarksAtom).length).toEqual(1)
   })
 })

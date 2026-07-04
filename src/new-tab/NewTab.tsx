@@ -29,11 +29,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { motion } from 'motion/react'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 import {
   bookmarksAtom,
   useInitializeBookmarks,
-} from './bookmark-controller/bookmarks-atom'
+} from './bookmark-controller/bookmark-atoms'
 // import './NewTab.css'
 
 type Bookmarks = typeof bookmarksJson
@@ -90,7 +90,7 @@ export default function NewTab() {
   } = controller
 
   // TESTING ATOMS START
-  const [bks] = useAtom(bookmarksAtom)
+  const bks = useAtomValue(bookmarksAtom)
   useInitializeBookmarks()
   useEffect(() => {
     console.log('BOOKMARKS FROM ATOM ----')

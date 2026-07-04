@@ -13,7 +13,7 @@ import { EMPTY_BOOKMARK } from './NewTab'
 import { BookmarkSorter } from './useBookmarkSorter'
 import { BookmarkController } from './useBookmarkController'
 import { useAtom, useSetAtom } from 'jotai'
-import { addBookmarkAtom } from './bookmark-controller/bookmarks-atom'
+import { addBookmarkAtom } from './bookmark-controller/bookmark-atoms'
 
 function BookmarkPromptGroup({
   groupName,
