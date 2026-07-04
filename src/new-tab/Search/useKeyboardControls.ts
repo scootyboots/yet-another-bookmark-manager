@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from 'react'
+import { useEffect, useMemo, useCallback, captureOwnerStack } from 'react'
 import { type Bookmark } from '@/background'
 import { type MatchData } from 'fast-fuzzy'
 
@@ -44,8 +44,26 @@ export default function useKeyboardControls(
         if (matchLinkEl) {
           const href = matchLinkEl?.textContent ?? ''
           const text = matchLinkEl.getAttribute('data-link-text') ?? ''
-          // TODO: have this be an option to open in same tab or new tab
-          window.location.href = href
+          // TODO: have an option to leave the bookmark search open
+          const currentTabQuery = chrome.tabs.query({
+            active: true,
+            lastFocusedWindow: true,
+          })
+          currentTabQuery.then((tabs) => {
+            const activeTabId = tabs?.[0]?.id
+            chrome.tabs.create({ url: href })
+            if (activeTabId) {
+              chrome.tabs
+                .remove(activeTabId)
+                .then((resp) => {
+                  console.log(resp)
+                })
+                .catch((error) => {
+                  console.log('TAB REMOVE ERROR', error)
+                })
+            }
+          })
+
           updateRecentLinks(href, text)
           setInputText('')
           setUrlToOpen('')
