@@ -29,6 +29,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { motion } from 'motion/react'
+import { useAtom } from 'jotai'
+import {
+  bookmarksAtom,
+  useInitializeBookmarks,
+} from './bookmark-controller/bookmarks-atom'
 // import './NewTab.css'
 
 type Bookmarks = typeof bookmarksJson
@@ -68,7 +73,7 @@ export default function NewTab() {
     useState<BookmarkPromptType>('new-bookmark')
 
   const controller = useBookmarkController()
-  const sorter = useBookmarkSorter(controller.bookmarks)
+  // const sorter = useBookmarkSorter(controller.bookmarks)
   const { focusPreviousElement } = useTrackFocus()
 
   const {
@@ -83,6 +88,17 @@ export default function NewTab() {
     removeGroup,
     reset,
   } = controller
+
+  // TESTING ATOMS START
+  const [bks] = useAtom(bookmarksAtom)
+  useInitializeBookmarks()
+  useEffect(() => {
+    console.log('BOOKMARKS FROM ATOM ----')
+    console.log(bks)
+  }, [bks])
+
+  const sorter = useBookmarkSorter(bks)
+  // TESTING ATOMS END
 
   function promptUpdateBookmark(bk: Bookmark) {
     setBookmarkPromptType('update-bookmark')
@@ -264,7 +280,7 @@ export default function NewTab() {
 
       {showSearch ? (
         <Search
-          bookmarks={bookmarks}
+          bookmarks={bks}
           recentLinks={recentLinks}
           updateRecentLinks={updateRecentLinks}
           showSearch={showSearch}

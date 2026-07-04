@@ -12,6 +12,8 @@ import { Bookmark } from '../background'
 import { EMPTY_BOOKMARK } from './NewTab'
 import { BookmarkSorter } from './useBookmarkSorter'
 import { BookmarkController } from './useBookmarkController'
+import { useAtom, useSetAtom } from 'jotai'
+import { addBookmarkAtom } from './bookmark-controller/bookmarks-atom'
 
 function BookmarkPromptGroup({
   groupName,
@@ -131,6 +133,8 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
   const [shouldExecute, setShouldExecute] = useState(false)
   const [shakeX, setShakeX] = useState(false)
   const promptRef = useRef<HTMLDivElement>(null)
+
+  const setAddNewBk = useSetAtom(addBookmarkAtom)
 
   const { href, text, group } = useMemo(
     () => ({ href: bookmark.href, text: bookmark.text, group: bookmark.group }),
@@ -396,6 +400,13 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               remove
             </button>
           )}
+          <button
+            onClick={() =>
+              setAddNewBk({ ...bookmark, group: 'design at indeed' })
+            }
+          >
+            add from atom
+          </button>
           <button
             data-prompt-create
             onClick={() => {

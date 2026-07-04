@@ -80,7 +80,7 @@ export async function getStoredRecentLinks() {
     recentLinks: Array<RecentLinks>
   }>('recentLinks')
   const { recentLinks } = stored
-  console.log('STORED LINKS', recentLinks)
+  // console.log('STORED LINKS', recentLinks)
   if (recentLinks) return { data: recentLinks, error: null }
   await chrome.storage.local.set({ recentLinks: [] })
   return { data: null, error: 'did not find stored recent links' }
