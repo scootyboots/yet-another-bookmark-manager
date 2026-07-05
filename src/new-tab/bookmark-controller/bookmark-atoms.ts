@@ -11,6 +11,7 @@ import {
   updateBookmark,
   updateGroupName,
   updateGroupOrder,
+  updateRecentLinks,
 } from '@/background'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
@@ -49,6 +50,14 @@ export function useInitializeBookmarks() {
     init()
   }, [])
 }
+
+export const updateRecentLinksAtom = atom(
+  null,
+  async (_get, set, url: string, text: string, clear: boolean) => {
+    await updateRecentLinks(url, text, clear)
+    await set(refreshRecentLinksFromStorageAtom)
+  },
+)
 
 export const addBookmarkAtom = atom(
   null,
@@ -146,4 +155,5 @@ export const bookmarkMutationAtoms = {
   removeGroupAtom,
   updateGroupNameAtom,
   clearBookmarksAtom,
+  updateRecentLinksAtom,
 }

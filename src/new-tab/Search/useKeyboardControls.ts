@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useCallback, captureOwnerStack } from 'react'
 import { type Bookmark } from '@/background'
 import { type MatchData } from 'fast-fuzzy'
+import { useSetAtom } from 'jotai'
+import { bookmarkMutationAtoms } from '../bookmark-controller/bookmark-atoms'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
@@ -16,6 +18,9 @@ export default function useKeyboardControls(
   setUrlToOpen: React.Dispatch<React.SetStateAction<string>>,
   inputRef: React.RefObject<HTMLInputElement | null>,
 ) {
+  const updateRecentLinks = useSetAtom(
+    bookmarkMutationAtoms.updateRecentLinksAtom,
+  )
   const keydownHandler = useCallback(
     (event: KeyboardEvent) => {
       const { key, shiftKey, metaKey } = event
@@ -63,7 +68,7 @@ export default function useKeyboardControls(
             }
           })
 
-          // updateRecentLinks(href, text)
+          updateRecentLinks(href, text, false)
           setInputText('')
           setUrlToOpen('')
           setFocusIndex(0)
