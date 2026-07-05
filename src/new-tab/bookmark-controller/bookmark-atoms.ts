@@ -7,6 +7,7 @@ import {
   RecentLinks,
   removeBookmark,
   removeGroup,
+  resetBookmarks,
   updateBookmark,
   updateGroupName,
   updateGroupOrder,
@@ -20,6 +21,11 @@ export const recentLinksAtom = atom<RecentLinks[]>([])
 export const refreshBookmarksFromStorageAtom = atom(null, async (_get, set) => {
   const { data: bookmarks } = await getStoredBookmarks()
   set(bookmarksAtom, bookmarks ?? [])
+})
+
+export const clearBookmarksAtom = atom(null, async (_get, set) => {
+  await resetBookmarks()
+  set(bookmarksAtom, [])
 })
 
 export const refreshRecentLinksFromStorageAtom = atom(
@@ -131,7 +137,7 @@ export const updateGroupNameAtom = atom(
   },
 )
 
-export const bookmarkMutations = {
+export const bookmarkMutationAtoms = {
   addBookmarkAtom,
   removeBookmarkAtom,
   updateBookmarkAtom,
@@ -139,4 +145,5 @@ export const bookmarkMutations = {
   addGroupAtom,
   removeGroupAtom,
   updateGroupNameAtom,
+  clearBookmarksAtom,
 }

@@ -225,7 +225,7 @@ export async function removeBookmark(existingBookmark: Bookmark) {
 
   const removedExisting = bookmarks.filter((bk) => bk.id !== id)
   await storeBookmarks(removedExisting)
-  return { data: makeAddRemoveMessage('remove', existingBookmark) }
+  return { data: makeAddRemoveMessage('remove', existingBookmark), error: null }
 }
 
 export async function updateBookmark(bookmarkToUpdate: Bookmark) {

@@ -8,15 +8,17 @@ import useMatches from './useMatches'
 import useKeyboardControls from './useKeyboardControls'
 import useShakeX from './useShakeX'
 import useLinkToOpen from './useLinkToOpen'
+import { useAtomValue } from 'jotai'
+import {
+  bookmarksAtom,
+  recentLinksAtom,
+} from '../bookmark-controller/bookmark-atoms'
 export { LINK_TO_OPEN_SELECTOR, IS_MATCH_SELECTOR } from './useKeyboardControls'
 
 export const SEARCH_INPUT_SELECTOR = '.Search input'
 export const MAX_DISPLAYED_RESULTS = 13
 
 type SearchProps = {
-  bookmarks: Array<Bookmark>
-  recentLinks: Array<RecentLinks>
-  updateRecentLinks: (url: string, text: string) => void
   showSearch: boolean
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
   promptUpdateBookmark: (bk: Bookmark) => void
@@ -24,14 +26,13 @@ type SearchProps = {
 }
 
 export default function Search({
-  bookmarks,
-  recentLinks,
-  updateRecentLinks,
   showSearch,
   setShowSearch,
   promptUpdateBookmark,
   setSelectedBk,
 }: SearchProps) {
+  const bookmarks = useAtomValue(bookmarksAtom)
+  const recentLinks = useAtomValue(recentLinksAtom)
   const [inputText, setInputText] = useState('')
   const [urlToOpen, setUrlToOpen] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
@@ -54,7 +55,6 @@ export default function Search({
     setFocusIndex,
     promptUpdateBookmark,
     setShowSearch,
-    updateRecentLinks,
     setInputText,
     setUrlToOpen,
     inputRef,

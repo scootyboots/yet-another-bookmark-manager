@@ -12,7 +12,6 @@ export default function useKeyboardControls(
   setFocusIndex: React.Dispatch<React.SetStateAction<number>>,
   promptUpdateBookmark: (bk: Bookmark) => void,
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>,
-  updateRecentLinks: (url: string, text: string) => void,
   setInputText: React.Dispatch<React.SetStateAction<string>>,
   setUrlToOpen: React.Dispatch<React.SetStateAction<string>>,
   inputRef: React.RefObject<HTMLInputElement | null>,
@@ -64,7 +63,7 @@ export default function useKeyboardControls(
             }
           })
 
-          updateRecentLinks(href, text)
+          // updateRecentLinks(href, text)
           setInputText('')
           setUrlToOpen('')
           setFocusIndex(0)

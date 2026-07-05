@@ -29,9 +29,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { motion } from 'motion/react'
-import { useAtom, useAtomValue } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
+  bookmarkMutationAtoms,
   bookmarksAtom,
+  recentLinksAtom,
   useInitializeBookmarks,
 } from './bookmark-controller/bookmark-atoms'
 // import './NewTab.css'
@@ -72,22 +74,23 @@ export default function NewTab() {
   const [bookmarkPromptType, setBookmarkPromptType] =
     useState<BookmarkPromptType>('new-bookmark')
 
-  const controller = useBookmarkController()
+  // const controller = useBookmarkController()
+
   // const sorter = useBookmarkSorter(controller.bookmarks)
   const { focusPreviousElement } = useTrackFocus()
 
-  const {
-    bookmarks,
-    recentLinks,
-    addBookmark,
-    removeBookmark,
-    updateBookmark,
-    updateGroupOrder,
-    updateRecentLinks,
-    addGroup,
-    removeGroup,
-    reset,
-  } = controller
+  // const {
+  //   bookmarks,
+  //   recentLinks,
+  //   addBookmark,
+  //   removeBookmark,
+  //   updateBookmark,
+  //   updateGroupOrder,
+  //   updateRecentLinks,
+  //   addGroup,
+  //   removeGroup,
+  //   reset,
+  // } = controller
 
   // TESTING ATOMS START
   const bks = useAtomValue(bookmarksAtom)
@@ -98,6 +101,18 @@ export default function NewTab() {
   }, [bks])
 
   const sorter = useBookmarkSorter(bks)
+
+  // needed mutations
+  // reset,
+  const reset = useSetAtom(bookmarkMutationAtoms.clearBookmarksAtom)
+  // updateRecentLinks?
+  // updateGroupOrder
+  const updateGroupOrder = useSetAtom(
+    bookmarkMutationAtoms.updateGroupOrderAtom,
+  )
+  // remove bookmark
+  const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
+  //
   // TESTING ATOMS END
 
   function promptUpdateBookmark(bk: Bookmark) {
@@ -246,7 +261,7 @@ export default function NewTab() {
         <button
           onClick={() => {
             reset()
-            updateRecentLinks('', '', true)
+            // updateRecentLinks('', '', true)
           }}
         >
           reset
@@ -280,9 +295,6 @@ export default function NewTab() {
 
       {showSearch ? (
         <Search
-          bookmarks={bks}
-          recentLinks={recentLinks}
-          updateRecentLinks={updateRecentLinks}
           showSearch={showSearch}
           setShowSearch={setShowSearch}
           promptUpdateBookmark={promptUpdateBookmark}
@@ -297,7 +309,6 @@ export default function NewTab() {
           setIsShown={setShowBkPrompt}
           bookmark={selectedBk}
           setBookmark={setSelectedBk}
-          {...controller}
           {...sorter}
         />
       ) : null}

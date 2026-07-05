@@ -13,7 +13,10 @@ import { EMPTY_BOOKMARK } from './NewTab'
 import { BookmarkSorter } from './useBookmarkSorter'
 import { BookmarkController } from './useBookmarkController'
 import { useAtom, useSetAtom } from 'jotai'
-import { addBookmarkAtom } from './bookmark-controller/bookmark-atoms'
+import {
+  addBookmarkAtom,
+  bookmarkMutationAtoms,
+} from './bookmark-controller/bookmark-atoms'
 
 function BookmarkPromptGroup({
   groupName,
@@ -107,8 +110,7 @@ export type BookmarkPromptProps = {
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
   bookmark: Bookmark
   setBookmark: React.Dispatch<React.SetStateAction<Bookmark>>
-} & BookmarkSorter &
-  BookmarkController
+} & BookmarkSorter
 
 export default function BookmarkPrompt(props: BookmarkPromptProps) {
   const {
@@ -117,15 +119,9 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     setIsShown,
     bookmark,
     setBookmark,
-    addBookmark,
-    updateBookmark,
-    addGroup,
     groupNames,
     getColumnGroupIndex,
     findGroupProperties,
-    removeBookmark,
-    removeGroup,
-    updateGroupName,
   } = props
 
   const contentRef = useRef<HTMLInputElement>(null)
@@ -133,6 +129,13 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
   const [shouldExecute, setShouldExecute] = useState(false)
   const [shakeX, setShakeX] = useState(false)
   const promptRef = useRef<HTMLDivElement>(null)
+
+  const addBookmark = useSetAtom(bookmarkMutationAtoms.addBookmarkAtom)
+  const updateBookmark = useSetAtom(bookmarkMutationAtoms.updateBookmarkAtom)
+  const addGroup = useSetAtom(bookmarkMutationAtoms.addGroupAtom)
+  const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
+  const removeGroup = useSetAtom(bookmarkMutationAtoms.removeGroupAtom)
+  // const updateGroupName = useSetAtom(bookmarkMutationAtoms.updateGroupNameAtom)
 
   const setAddNewBk = useSetAtom(addBookmarkAtom)
 
