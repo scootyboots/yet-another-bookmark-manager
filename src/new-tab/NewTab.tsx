@@ -29,14 +29,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { motion } from 'motion/react'
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import {
   bookmarkMutationAtoms,
   bookmarksAtom,
-  recentLinksAtom,
   useInitializeBookmarks,
 } from './bookmark-controller/bookmark-atoms'
-// import './NewTab.css'
+import { cn } from '@/lib/utils'
+import { GenericHeader } from './GenericHeader'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -319,7 +319,7 @@ export default function NewTab() {
           setIsShown={setShowCommandLine}
         />
       ) : null}
-      <div className="bookmark-groups">
+      <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid')}>
         {sorter.sortedColumns.map((col, index) => (
           <div key={'col-' + index}>
             <div>
@@ -340,8 +340,13 @@ export default function NewTab() {
                   <div key={`${groupName}-${index}-${i}`}>
                     {!sameAsLast || isFirst ? (
                       <div>
-                        <div className="bookmark-group">
-                          <h2>{groupName}</h2>
+                        <div
+                          className={cn(
+                            'bookmark-group',
+                            'flex gap-1 items-center',
+                          )}
+                        >
+                          <GenericHeader text={groupName} />
                           <PopOutMenu
                             focusOnMount={isEmptyGroup}
                             menuStyles={{

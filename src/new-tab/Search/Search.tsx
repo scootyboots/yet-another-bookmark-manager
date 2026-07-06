@@ -8,11 +8,13 @@ import useMatches from './useMatches'
 import useKeyboardControls from './useKeyboardControls'
 import useShakeX from './useShakeX'
 import useLinkToOpen from './useLinkToOpen'
+import { Carrot } from './Carrot'
 import { useAtomValue } from 'jotai'
 import {
   bookmarksAtom,
   recentLinksAtom,
 } from '../bookmark-controller/bookmark-atoms'
+import { BookmarkListItem } from './BookmarkListItem'
 export { LINK_TO_OPEN_SELECTOR, IS_MATCH_SELECTOR } from './useKeyboardControls'
 
 export const SEARCH_INPUT_SELECTOR = '.Search input'
@@ -127,7 +129,7 @@ export default function Search({
                 resultIndex={index}
                 href={link.url}
               >
-                <Bookmark text={link.text} href={link.url} />
+                <BookmarkListItem text={link.text} href={link.url} />
               </SearchResult>
             )
           })}
@@ -146,7 +148,7 @@ export default function Search({
               <SearchResultGroup isFocused={isFocused}>
                 {group}
               </SearchResultGroup>
-              <Bookmark
+              <BookmarkListItem
                 text={text}
                 href={href}
                 query={inputText}
@@ -170,38 +172,6 @@ export default function Search({
       />
     </Prompt>
   ) : null
-}
-
-function Carrot({
-  isIdle,
-  isVisible,
-}: {
-  isIdle: boolean
-  isVisible: boolean
-}) {
-  const [scope, animate] = useAnimate()
-
-  useEffect(() => {
-    if (isVisible && isIdle) {
-      animate(
-        scope.current,
-        { opacity: [1, 0, 1] },
-        {
-          duration: 0.95,
-          ease: 'linear',
-          repeat: Infinity,
-        },
-      )
-    }
-  }, [isIdle, isVisible])
-  return (
-    <div
-      ref={scope}
-      className={cn('w-2.75 h-1', {
-        'bg-primary': isVisible,
-      })}
-    />
-  )
 }
 
 function SelectedLink({
@@ -280,32 +250,6 @@ function SearchResult(props: SearchResultProps) {
   )
 }
 
-type BookmarkProps = {
-  text: string
-  href: string
-  query?: string
-  isFocused?: boolean
-}
-
-function Bookmark(props: BookmarkProps) {
-  const { text, href, query = '', isFocused = false } = props
-  return (
-    <>
-      <div className="Search-result-text text-nowrap">
-        <HighlightedMatch toMatch={text} query={query} focused={isFocused} />
-      </div>
-      <div className="Search-result-divider text-primary"> : </div>
-      <div
-        className={cn(
-          'Search-result-link opacity-45 text-ellipsis text-nowrap overflow-hidden',
-        )}
-      >
-        {href}
-      </div>
-    </>
-  )
-}
-
 function SearchResultGroup({
   isFocused,
   children: groupName,
@@ -345,197 +289,103 @@ function SearchResultEdit({
   ) : null
 }
 
-function HighlightedMatch({
-  toMatch,
-  query,
-  focused,
-}: {
-  toMatch: string
-  query: string
-  focused: boolean
-}) {
-  const { beforeMatch, matched, afterMatched } = highlightedRegexMatch({
-    toMatch,
-    query,
-  })
+/**
+ * decided to go away from this kind of approach in favor of highlightedRegexMatch
+ * should probably just delete this
+ */
+// function highlightedMatch({ match, input }: { match: string; input: string }) {
+//   const bookmarkLabel = match.split('')
+//   const searchInput = input.split('')
 
-  return (
-    <>
-      {beforeMatch}
-      <mark
-        className={cn('bg-primary text-white transition duration-150', {
-          'bg-accent': focused,
-          'bg-primary-low': !focused,
-        })}
-      >
-        {matched}
-      </mark>
-      {afterMatched}
-    </>
-  )
-}
+//   const bestMatches = []
+//   const query = searchInput
+//   const ignoreCharacters = /[\s;:\.\?\!\,'"\|]/
+//   for (let queryIndex = 0; queryIndex < query.length; queryIndex++) {
+//     const queryCar = query[queryIndex].toLowerCase()
 
-function highlightedRegexMatch({
-  toMatch,
-  query,
-}: {
-  toMatch: string
-  query: string
-}) {
-  function splitQueryToRegexChunks(query: string) {
-    // TODO: replace with RegExp.escape() https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/escape
-    // ... or pull in package
-    const replacedQuery = query.replace(
-      /([\^\$\.\*\+\?\\(\\)\[\]\{\}\|])/g,
-      '\\$1',
-    )
-    const chunks: RegExp[] = []
-    const queryChars = replacedQuery.split('')
-    const regexString = '[\\s:\\[\\];:"\'-=+_]*'
-    let store = ''
-    let storeWithRegex = ''
-    let lap = 0
-    for (let j = 0; j < queryChars.length; j++) {
-      for (let i = 0 + lap; i < queryChars.length; i++) {
-        const char = queryChars[i]
-        let charWithRegex = char + regexString
-        if (char === ' ') {
-          charWithRegex = ''
-        }
-        const isFirst = i - lap === 0
-        const isLast = i === queryChars.length - 1
-        if (isLast) {
-          charWithRegex = char
-        }
-        if (isFirst) {
-          store = ''
-          storeWithRegex = ''
-        }
-        if (isLast) {
-          lap++
-        }
-        store = store + char
-        storeWithRegex = storeWithRegex + charWithRegex
-        try {
-          chunks.push(new RegExp(storeWithRegex, 'i'))
-        } catch {
-          console.log('failed to parse to regex: \n\n', storeWithRegex)
-        }
-      }
-    }
-    return [...new Set([...chunks])]
-  }
-  const emptyMatch = { beforeMatch: 0, matched: 0, afterMatched: 0 }
-  const regexChunks = splitQueryToRegexChunks(query)
-  const matchingRegex = regexChunks.filter((reg) => reg.test(toMatch))
-  const [longestMatch] = matchingRegex.sort(
-    (a, b) => `${b}`.length - `${a}`.length,
-  )
-  const matchGroup = toMatch.match(longestMatch)
-  if (!matchGroup) return emptyMatch
+//     let matchLength = 0
+//     let bestLength = 0
+//     let bestMatch = {
+//       start: queryCar,
+//       car: '',
+//       labelCar: '',
+//       internalLabelIndex: 0,
+//       labelIndex: 0,
+//       length: 0,
+//     }
 
-  const [matchedText] = matchGroup
-  const matchIndex = matchGroup.index ?? 0
-  const splitMatch = toMatch.split('')
-  const start = splitMatch.slice(0, matchIndex)
-  const matched = splitMatch.slice(matchIndex, matchIndex + matchedText.length)
-  const remaining = splitMatch.slice(matchIndex + matchedText.length)
-  return { beforeMatch: start, matched, afterMatched: remaining }
-}
+//     for (let labelIndex = 0; labelIndex < bookmarkLabel.length; labelIndex++) {
+//       const labelCar = bookmarkLabel[labelIndex].toLowerCase()
+//       // TODO: expand match logic
+//       const isCurrentMatch = queryCar === labelCar
 
-function highlightedMatch({ match, input }: { match: string; input: string }) {
-  const bookmarkLabel = match.split('')
-  const searchInput = input.split('')
+//       if (isCurrentMatch) {
+//         matchLength = 1
 
-  const bestMatches = []
-  const query = searchInput
-  const ignoreCharacters = /[\s;:\.\?\!\,'"\|]/
-  for (let queryIndex = 0; queryIndex < query.length; queryIndex++) {
-    const queryCar = query[queryIndex].toLowerCase()
+//         for (
+//           let nextLabelIndex = 1 + labelIndex;
+//           nextLabelIndex < bookmarkLabel.length;
+//           nextLabelIndex++
+//         ) {
+//           let nextQueryIndex = matchLength + queryIndex
+//           const nextQueryCar = query[nextQueryIndex]?.toLowerCase()
+//           const nextLabelCar = bookmarkLabel[nextLabelIndex]?.toLowerCase()
 
-    let matchLength = 0
-    let bestLength = 0
-    let bestMatch = {
-      start: queryCar,
-      car: '',
-      labelCar: '',
-      internalLabelIndex: 0,
-      labelIndex: 0,
-      length: 0,
-    }
+//           const isContinueCarLabel = ignoreCharacters.test(nextLabelCar)
+//           const isContinueCarQuery = ignoreCharacters.test(nextQueryCar)
 
-    for (let labelIndex = 0; labelIndex < bookmarkLabel.length; labelIndex++) {
-      const labelCar = bookmarkLabel[labelIndex].toLowerCase()
-      // TODO: expand match logic
-      const isCurrentMatch = queryCar === labelCar
+//           // if (isContinueCarLabel && !isContinueCarQuery) {
+//           //   console.log('skipping: ' + nextLabelCar)
+//           //   // matchLength++
+//           //   continue;
+//           // }
 
-      if (isCurrentMatch) {
-        matchLength = 1
+//           if (!nextQueryCar) {
+//             if (matchLength > bestLength) {
+//               bestLength = matchLength
+//               bestMatch.car = queryCar
+//               bestMatch.labelCar = nextLabelCar
+//               bestMatch.internalLabelIndex = nextLabelIndex
+//               bestMatch.labelIndex = nextLabelIndex + 1 - bestLength
+//               bestMatch.length = bestLength
+//             }
+//             // matchLength = 0
+//             break
+//           }
+//           // console.log(queryCar, nextQueryCar)
 
-        for (
-          let nextLabelIndex = 1 + labelIndex;
-          nextLabelIndex < bookmarkLabel.length;
-          nextLabelIndex++
-        ) {
-          let nextQueryIndex = matchLength + queryIndex
-          const nextQueryCar = query[nextQueryIndex]?.toLowerCase()
-          const nextLabelCar = bookmarkLabel[nextLabelIndex]?.toLowerCase()
+//           const isNextMatch = nextQueryCar === nextLabelCar
+//           if (isNextMatch) {
+//             matchLength++
+//             nextQueryIndex++
+//             // console.log(nextQueryCar, nextLabelCar)
+//             if (matchLength > bestLength) {
+//               bestLength = matchLength
+//               bestMatch.car = queryCar
+//               bestMatch.labelCar = nextLabelCar
+//               bestMatch.internalLabelIndex = nextLabelIndex
+//               bestMatch.labelIndex = nextLabelIndex + 1 - bestLength
+//               bestMatch.length = bestLength
+//             }
+//           }
+//         }
+//       }
+//     }
+//     if (bestMatch.length) {
+//       bestMatches.push(bestMatch)
+//     }
+//   }
 
-          const isContinueCarLabel = ignoreCharacters.test(nextLabelCar)
-          const isContinueCarQuery = ignoreCharacters.test(nextQueryCar)
-
-          // if (isContinueCarLabel && !isContinueCarQuery) {
-          //   console.log('skipping: ' + nextLabelCar)
-          //   // matchLength++
-          //   continue;
-          // }
-
-          if (!nextQueryCar) {
-            if (matchLength > bestLength) {
-              bestLength = matchLength
-              bestMatch.car = queryCar
-              bestMatch.labelCar = nextLabelCar
-              bestMatch.internalLabelIndex = nextLabelIndex
-              bestMatch.labelIndex = nextLabelIndex + 1 - bestLength
-              bestMatch.length = bestLength
-            }
-            // matchLength = 0
-            break
-          }
-          // console.log(queryCar, nextQueryCar)
-
-          const isNextMatch = nextQueryCar === nextLabelCar
-          if (isNextMatch) {
-            matchLength++
-            nextQueryIndex++
-            // console.log(nextQueryCar, nextLabelCar)
-            if (matchLength > bestLength) {
-              bestLength = matchLength
-              bestMatch.car = queryCar
-              bestMatch.labelCar = nextLabelCar
-              bestMatch.internalLabelIndex = nextLabelIndex
-              bestMatch.labelIndex = nextLabelIndex + 1 - bestLength
-              bestMatch.length = bestLength
-            }
-          }
-        }
-      }
-    }
-    if (bestMatch.length) {
-      bestMatches.push(bestMatch)
-    }
-  }
-
-  const longestMatch = bestMatches.sort((a, b) => b.length - a.length)[0]
-  const longestMatchIndex = longestMatch?.labelIndex ?? 0
-  const longestMatchLength = longestMatch?.length ?? 0
-  const beforeMatch = bookmarkLabel.slice(0, longestMatchIndex)
-  const matched = bookmarkLabel.slice(
-    longestMatchIndex,
-    longestMatchIndex + longestMatchLength,
-  )
-  const afterMatched = bookmarkLabel.slice(
-    longestMatchIndex + longestMatchLength,
-  )
-  return { beforeMatch, matched, afterMatched }
-}
+//   const longestMatch = bestMatches.sort((a, b) => b.length - a.length)[0]
+//   const longestMatchIndex = longestMatch?.labelIndex ?? 0
+//   const longestMatchLength = longestMatch?.length ?? 0
+//   const beforeMatch = bookmarkLabel.slice(0, longestMatchIndex)
+//   const matched = bookmarkLabel.slice(
+//     longestMatchIndex,
+//     longestMatchIndex + longestMatchLength,
+//   )
+//   const afterMatched = bookmarkLabel.slice(
+//     longestMatchIndex + longestMatchLength,
+//   )
+//   return { beforeMatch, matched, afterMatched }
+// }
