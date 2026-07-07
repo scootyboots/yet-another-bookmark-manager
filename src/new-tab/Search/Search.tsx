@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect, useRef, PropsWithChildren } from 'react'
+import { useState, useMemo, useRef, PropsWithChildren } from 'react'
 import Prompt from '../Prompt'
 import { search as fuzzySearch, type MatchData } from 'fast-fuzzy'
-import { type Bookmark, RecentLinks } from '../../background'
+import { type Bookmark } from '../../background'
 import { cn } from '@/lib/utils'
 import { motion, useAnimate } from 'motion/react'
 import useMatches from './useMatches'
@@ -9,10 +9,11 @@ import useKeyboardControls from './useKeyboardControls'
 import useShakeX from './useShakeX'
 import useLinkToOpen from './useLinkToOpen'
 import { Carrot } from './Carrot'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import {
   bookmarksAtom,
   recentLinksAtom,
+  selectedBookmarkAtom,
 } from '../bookmark-controller/bookmark-atoms'
 import { BookmarkListItem } from './BookmarkListItem'
 export { LINK_TO_OPEN_SELECTOR, IS_MATCH_SELECTOR } from './useKeyboardControls'
@@ -24,14 +25,12 @@ type SearchProps = {
   showSearch: boolean
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
   promptUpdateBookmark: (bk: Bookmark) => void
-  setSelectedBk: React.Dispatch<React.SetStateAction<Bookmark>>
 }
 
 export default function Search({
   showSearch,
   setShowSearch,
   promptUpdateBookmark,
-  setSelectedBk,
 }: SearchProps) {
   const bookmarks = useAtomValue(bookmarksAtom)
   const recentLinks = useAtomValue(recentLinksAtom)
@@ -40,6 +39,7 @@ export default function Search({
   const [focusIndex, setFocusIndex] = useState(0)
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
   const [isInputIdle, setIsInputIdle] = useState(true)
+  const setSelectedBookmark = useSetAtom(selectedBookmarkAtom)
 
   const { matches, hasMatches, groupMatches, matchesToRender } = useMatches(
     inputText,
@@ -140,7 +140,7 @@ export default function Search({
           if (moreThan18) return null
           const isFocused = index === focusIndex
           if (isFocused) {
-            setSelectedBk(match.item)
+            setSelectedBookmark(match.item)
           }
           const { group, href, text } = match.item
           return (

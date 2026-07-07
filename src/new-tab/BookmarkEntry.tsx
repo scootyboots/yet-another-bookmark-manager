@@ -4,6 +4,8 @@ import { BookmarkPromptType } from './BookmarkPrompt'
 import Refresh from '../components/Icons/Refresh'
 import CloseCircle from '../components/Icons/CloseCircle'
 import IconButton from './IconButton'
+import { selectedBookmarkAtom } from './bookmark-controller/bookmark-atoms'
+import { useAtom } from 'jotai'
 
 function useHasFocus<T>(ref: React.RefObject<T | null>) {
   const [isFocused, setIsFocused] = useState(false)
@@ -35,7 +37,6 @@ function useHasFocus<T>(ref: React.RefObject<T | null>) {
 
 export type BookmarkEntryProps = {
   bookmark: Bookmark
-  selectBookmark: (bk: Bookmark) => void
   showBookmarkPrompt: (show: boolean) => void
   removeBookmark: (bk: Bookmark) => void
   setBookmarkPromptType: React.Dispatch<
@@ -79,7 +80,7 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
 
 type BookmarkControlProps = Pick<
   BookmarkEntryProps,
-  'bookmark' | 'selectBookmark' | 'showBookmarkPrompt' | 'removeBookmark'
+  'bookmark' | 'showBookmarkPrompt' | 'removeBookmark'
 > & {
   isLinkFocused: boolean
   setMountControls: React.Dispatch<React.SetStateAction<boolean>>
@@ -89,7 +90,6 @@ type BookmarkControlProps = Pick<
 }
 function BookmarkControls({
   bookmark,
-  selectBookmark,
   showBookmarkPrompt,
   removeBookmark,
   isLinkFocused,
@@ -102,6 +102,7 @@ function BookmarkControls({
   const isUpdateFocused = useHasFocus(updateRef)
   const isRemoveFocused = useHasFocus(removeRef)
   const isControlsFocused = useHasFocus(controlsRef)
+  const [_, selectBookmark] = useAtom(selectedBookmarkAtom)
 
   const isVisible = useMemo(
     () => isLinkFocused || isUpdateFocused || isRemoveFocused,

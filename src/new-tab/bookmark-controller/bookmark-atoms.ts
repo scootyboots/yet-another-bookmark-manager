@@ -15,9 +15,15 @@ import {
 } from '@/background'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
+import { EMPTY_BOOKMARK } from '../NewTab'
 
 export const bookmarksAtom = atom<Bookmark[]>([])
 export const recentLinksAtom = atom<RecentLinks[]>([])
+
+export const selectedBookmarkAtom = atom<Bookmark>({ ...EMPTY_BOOKMARK })
+export const clearSelectedBookmarkAtom = atom(null, (_get, set) => {
+  set(selectedBookmarkAtom, { ...EMPTY_BOOKMARK })
+})
 
 export const refreshBookmarksFromStorageAtom = atom(null, async (_get, set) => {
   const { data: bookmarks } = await getStoredBookmarks()

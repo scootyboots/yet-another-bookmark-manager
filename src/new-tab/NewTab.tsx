@@ -2,7 +2,6 @@ import { PropsWithChildren, Ref, useEffect, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search/Search'
-import useBookmarkController from './useBookmarkController'
 import BookmarkPrompt, { BookmarkPromptType } from './BookmarkPrompt'
 import { Bookmark } from '../background'
 import useBookmarkSorter from './useBookmarkSorter'
@@ -18,21 +17,13 @@ import { checkPromptOpen } from './util'
 import CommandLine, { Command } from './CommandLine'
 import RemoveCircle from '../components/Icons/RemoveCircle'
 import Edit from '../components/Icons/Edit'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { motion } from 'motion/react'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   bookmarkMutationAtoms,
   bookmarksAtom,
+  clearSelectedBookmarkAtom,
+  selectedBookmarkAtom,
   useInitializeBookmarks,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
@@ -49,87 +40,49 @@ export const EMPTY_BOOKMARK: Bookmark = {
   text: '',
 }
 
-const ButtonWithRef = ({
-  ref,
-  children,
-}: { ref: Ref<HTMLButtonElement> } & PropsWithChildren) => (
-  <Button
-    ref={ref}
-    variant="outline"
-    onClick={() => {
-      console.log('button')
-    }}
-  >
-    {children}
-  </Button>
-)
-
-const ShadMotionButton = motion.create(ButtonWithRef)
-
 export default function NewTab() {
   const [showSearch, setShowSearch] = useState(true)
   const [showBkPrompt, setShowBkPrompt] = useState(false)
   const [showCommandLine, setShowCommandLine] = useState(false)
-  const [selectedBk, setSelectedBk] = useState<Bookmark>({ ...EMPTY_BOOKMARK })
+  // const [selectedBk, setSelectedBk] = useState<Bookmark>({ ...EMPTY_BOOKMARK })
   const [bookmarkPromptType, setBookmarkPromptType] =
     useState<BookmarkPromptType>('new-bookmark')
 
-  // const controller = useBookmarkController()
-
-  // const sorter = useBookmarkSorter(controller.bookmarks)
   const { focusPreviousElement } = useTrackFocus()
 
-  // const {
-  //   bookmarks,
-  //   recentLinks,
-  //   addBookmark,
-  //   removeBookmark,
-  //   updateBookmark,
-  //   updateGroupOrder,
-  //   updateRecentLinks,
-  //   addGroup,
-  //   removeGroup,
-  //   reset,
-  // } = controller
-
-  // TESTING ATOMS START
-  const bks = useAtomValue(bookmarksAtom)
+  const bookmarks = useAtomValue(bookmarksAtom)
   useInitializeBookmarks()
   useEffect(() => {
     console.log('BOOKMARKS FROM ATOM ----')
-    console.log(bks)
-  }, [bks])
+    console.log(bookmarks)
+  }, [bookmarks])
 
-  const sorter = useBookmarkSorter(bks)
+  const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
+  const clearSelectedBookmark = useSetAtom(clearSelectedBookmarkAtom)
 
-  // needed mutations
-  // reset,
+  const sorter = useBookmarkSorter(bookmarks)
+
   const reset = useSetAtom(bookmarkMutationAtoms.clearBookmarksAtom)
-  // updateRecentLinks?
-  // updateGroupOrder
   const updateGroupOrder = useSetAtom(
     bookmarkMutationAtoms.updateGroupOrderAtom,
   )
-  // remove bookmark
   const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
-  //
-  // TESTING ATOMS END
 
   function promptUpdateBookmark(bk: Bookmark) {
     setBookmarkPromptType('update-bookmark')
-    setSelectedBk(bk)
+    setSelectedBookmark(bk)
     setShowBkPrompt(true)
   }
 
   function promptNewBookmark() {
     setBookmarkPromptType('new-bookmark')
-    setSelectedBk({ ...EMPTY_BOOKMARK })
+    clearSelectedBookmark()
     setShowBkPrompt(true)
   }
 
   function promptNewGroup() {
     setBookmarkPromptType('new-group')
-    setSelectedBk({ ...EMPTY_BOOKMARK })
+    clearSelectedBookmark()
     setShowBkPrompt(true)
   }
 
@@ -198,64 +151,8 @@ export default function NewTab() {
 
   return (
     <div className="NewTab">
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Button
-        onClick={() => {
-          console.log('button')
-        }}
-      >
-        shad button
-      </Button>
-      <Button
-        variant="outline"
-        onClick={() => {
-          console.log('button')
-        }}
-      >
-        shad button
-      </Button>
-      <Button
-        variant="ghost"
-        onClick={() => {
-          console.log('button')
-        }}
-      >
-        shad button
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => {
-          console.log('button')
-        }}
-      >
-        shad button
-      </Button>
-      <Select>
-        <SelectTrigger className="w-full max-w-48 bg-background">
-          <SelectValue placeholder="holding the place" />
-        </SelectTrigger>
-        <SelectContent className="bg-background">
-          <SelectGroup className="bg-background">
-            <SelectLabel>items</SelectLabel>
-            <SelectItem className="bg-background" value="1">
-              item 1
-            </SelectItem>
-            <SelectItem className="bg-background" value="2">
-              item 2
-            </SelectItem>
-            <SelectItem className="bg-background" value="3">
-              item 3
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-
-      <ShadMotionButton whileTap={{ scale: '0.88' }}>
-        motion button
-      </ShadMotionButton>
-
       <div className="selected-bookmark" style={{ display: 'none' }}>
-        {JSON.stringify(selectedBk)}
+        {JSON.stringify(selectedBookmark)}
       </div>
       <TopContextRow>
         <button
@@ -276,7 +173,7 @@ export default function NewTab() {
         <button
           onClick={() => {
             setBookmarkPromptType('new-bookmark')
-            setSelectedBk({ ...EMPTY_BOOKMARK })
+            clearSelectedBookmark()
             setShowBkPrompt(true)
           }}
         >
@@ -285,7 +182,7 @@ export default function NewTab() {
         <button
           onClick={() => {
             setBookmarkPromptType('new-group')
-            setSelectedBk({ ...EMPTY_BOOKMARK })
+            clearSelectedBookmark()
             setShowBkPrompt(true)
           }}
         >
@@ -298,7 +195,6 @@ export default function NewTab() {
           showSearch={showSearch}
           setShowSearch={setShowSearch}
           promptUpdateBookmark={promptUpdateBookmark}
-          setSelectedBk={setSelectedBk}
         />
       ) : null}
 
@@ -307,8 +203,6 @@ export default function NewTab() {
           type={bookmarkPromptType}
           isShown={showBkPrompt}
           setIsShown={setShowBkPrompt}
-          bookmark={selectedBk}
-          setBookmark={setSelectedBk}
           {...sorter}
         />
       ) : null}
@@ -364,7 +258,7 @@ export default function NewTab() {
                                   href: '',
                                 }
                                 console.log('set selected', holding)
-                                setSelectedBk(holding)
+                                setSelectedBookmark(holding)
                                 setBookmarkPromptType('new-bookmark')
                                 setShowBkPrompt(true)
                               }}
@@ -376,7 +270,7 @@ export default function NewTab() {
                               clickHandler={() => {
                                 setBookmarkPromptType('new-group')
                                 setShowBkPrompt(true)
-                                setSelectedBk({
+                                setSelectedBookmark({
                                   ...EMPTY_BOOKMARK,
                                   col: entry.col,
                                 })
@@ -387,7 +281,7 @@ export default function NewTab() {
                             <IconButton
                               icon={<Edit />}
                               clickHandler={() => {
-                                setSelectedBk({ ...entry })
+                                setSelectedBookmark({ ...entry })
                                 promptUpdateGroup()
                               }}
                             >
@@ -396,7 +290,7 @@ export default function NewTab() {
                             <IconButton
                               icon={<RemoveCircle />}
                               clickHandler={() => {
-                                setSelectedBk({
+                                setSelectedBookmark({
                                   ...EMPTY_BOOKMARK,
                                   col: entry.col,
                                   group: entry.group,
@@ -430,7 +324,6 @@ export default function NewTab() {
                     {!isEmptyBookmark(entry) && (
                       <BookmarkEntry
                         bookmark={entry}
-                        selectBookmark={setSelectedBk}
                         showBookmarkPrompt={setShowBkPrompt}
                         removeBookmark={removeBookmark}
                         setBookmarkPromptType={setBookmarkPromptType}

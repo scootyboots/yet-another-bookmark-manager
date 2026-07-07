@@ -12,10 +12,11 @@ import { Bookmark } from '../background'
 import { EMPTY_BOOKMARK } from './NewTab'
 import { BookmarkSorter } from './useBookmarkSorter'
 import { BookmarkController } from './useBookmarkController'
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   addBookmarkAtom,
   bookmarkMutationAtoms,
+  selectedBookmarkAtom,
 } from './bookmark-controller/bookmark-atoms'
 
 function BookmarkPromptGroup({
@@ -108,8 +109,7 @@ export type BookmarkPromptProps = {
   type: BookmarkPromptType
   isShown: boolean
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
-  bookmark: Bookmark
-  setBookmark: React.Dispatch<React.SetStateAction<Bookmark>>
+  // bookmark: Bookmark
 } & BookmarkSorter
 
 export default function BookmarkPrompt(props: BookmarkPromptProps) {
@@ -117,8 +117,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     type,
     isShown,
     setIsShown,
-    bookmark,
-    setBookmark,
+    // bookmark,
     groupNames,
     getColumnGroupIndex,
     findGroupProperties,
@@ -130,6 +129,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
   const [shakeX, setShakeX] = useState(false)
   const promptRef = useRef<HTMLDivElement>(null)
 
+  const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
   const addBookmark = useSetAtom(bookmarkMutationAtoms.addBookmarkAtom)
   const updateBookmark = useSetAtom(bookmarkMutationAtoms.updateBookmarkAtom)
   const addGroup = useSetAtom(bookmarkMutationAtoms.addGroupAtom)
@@ -140,8 +140,12 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
   const setAddNewBk = useSetAtom(addBookmarkAtom)
 
   const { href, text, group } = useMemo(
-    () => ({ href: bookmark.href, text: bookmark.text, group: bookmark.group }),
-    [bookmark],
+    () => ({
+      href: selectedBookmark.href,
+      text: selectedBookmark.text,
+      group: selectedBookmark.group,
+    }),
+    [selectedBookmark],
   )
 
   const {
@@ -198,10 +202,10 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
   }
 
   const { selectedBkHasGroup } = useMemo(() => {
-    const selectedBkHasGroup = Boolean(bookmark.group)
+    const selectedBkHasGroup = Boolean(selectedBookmark.group)
     if (shouldExecute) {
       if (type === 'new-bookmark') {
-        const newBk = { ...bookmark }
+        const newBk = { ...selectedBookmark }
         const hasNeededProps = newBk.text && newBk.href && newBk.group
         if (hasNeededProps) {
           addBookmark(newBk)
@@ -209,16 +213,16 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
         }
       }
       if (type === 'update-bookmark') {
-        updateBookmark({ ...bookmark })
+        updateBookmark({ ...selectedBookmark })
       }
       if (type === 'new-group') {
-        const { next } = getColumnGroupIndex(bookmark.col)
-        addGroup(bookmark.group, next, bookmark.col)
+        const { next } = getColumnGroupIndex(selectedBookmark.col)
+        addGroup(selectedBookmark.group, next, selectedBookmark.col)
       }
       if (type === 'remove-group') {
-        if (bookmark.group) {
-          console.log('tried to remove group: ', bookmark.group)
-          removeGroup(bookmark.group)
+        if (selectedBookmark.group) {
+          console.log('tried to remove group: ', selectedBookmark.group)
+          removeGroup(selectedBookmark.group)
         }
       }
       if (type === 'update-group') {
@@ -230,7 +234,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
       setIsShown(false)
     }
     return { selectedBkHasGroup }
-  }, [bookmark, shouldExecute, shouldExit, type])
+  }, [selectedBookmark, shouldExecute, shouldExit, type])
 
   useEffect(() => {
     function keydownPromptHandler(event: KeyboardEvent) {
@@ -275,7 +279,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
     document.addEventListener('keydown', keydownPromptHandler)
     return () => {
       document.removeEventListener('keydown', keydownPromptHandler)
-      setBookmark({ ...EMPTY_BOOKMARK })
+      setSelectedBookmark({ ...EMPTY_BOOKMARK })
     }
   }, [])
 
@@ -288,7 +292,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
       firstInteractiveEl?.focus()
     }
     return () => {
-      setBookmark({ ...EMPTY_BOOKMARK })
+      setSelectedBookmark({ ...EMPTY_BOOKMARK })
     }
   }, [isShown])
 
@@ -314,14 +318,14 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               name="group-name"
               options={groupNames}
               initialValue=""
-              setBookmark={setBookmark}
-              selectedBookmark={bookmark}
+              setBookmark={setSelectedBookmark}
+              selectedBookmark={selectedBookmark}
               firstOptionEmpty={selectedBkHasGroup ? false : true}
               onChange={(e) => {
                 console.log(e.target.value)
                 const value = e.target.value
                 console.log('group name: ', value, 'group')
-                setBookmark((prev) => {
+                setSelectedBookmark((prev) => {
                   const { col, groupIndex } = findGroupProperties(value)
                   return {
                     ...prev,
@@ -341,7 +345,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               value={href}
               onChange={(event) => {
                 const value = event.target.value
-                setBookmark((prev) => ({ ...prev, href: value }))
+                setSelectedBookmark((prev) => ({ ...prev, href: value }))
               }}
             />
             <BookmarkInputGroup
@@ -349,7 +353,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               value={text}
               onChange={(event) => {
                 const value = event.target.value
-                setBookmark((prev) => ({ ...prev, text: value }))
+                setSelectedBookmark((prev) => ({ ...prev, text: value }))
               }}
             />
           </>
@@ -362,20 +366,20 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               value={group}
               onChange={(event) => {
                 const value = event.target.value
-                setBookmark((prev) => ({ ...prev, group: value }))
+                setSelectedBookmark((prev) => ({ ...prev, group: value }))
               }}
             />
             <SelectGroup
               name="column-number"
               label="col"
               options={['1', '2', '3', '4']}
-              initialValue={`${bookmark.col}`}
-              setBookmark={setBookmark}
-              selectedBookmark={bookmark}
+              initialValue={`${selectedBookmark.col}`}
+              setBookmark={setSelectedBookmark}
+              selectedBookmark={selectedBookmark}
               firstOptionEmpty={false}
               onChange={(event) => {
                 const value = Number(event.target.value)
-                setBookmark((prev) => ({ ...prev, col: value }))
+                setSelectedBookmark((prev) => ({ ...prev, col: value }))
               }}
             />
           </>
@@ -395,7 +399,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
               data-prompt-remove
               onClick={() => {
                 if (isUpdateBookmark) {
-                  removeBookmark(bookmark)
+                  removeBookmark(selectedBookmark)
                 }
                 setIsShown(false)
               }}
@@ -405,7 +409,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
           )}
           <button
             onClick={() =>
-              setAddNewBk({ ...bookmark, group: 'design at indeed' })
+              setAddNewBk({ ...selectedBookmark, group: 'design at indeed' })
             }
           >
             add from atom
