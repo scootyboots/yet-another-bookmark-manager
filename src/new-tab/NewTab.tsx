@@ -200,7 +200,7 @@ export default function NewTab() {
           setIsShown={setShowCommandLine}
         />
       ) : null}
-      <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid')}>
+      <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid p-4')}>
         {sorter.sortedColumns.map((col, index) => (
           <div key={'col-' + index}>
             <div>

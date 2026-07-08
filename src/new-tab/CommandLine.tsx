@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import Prompt from './Prompt'
+import { cn } from '@/lib/utils'
 
 export type Command = { action: () => void; name: string; hotKey: string }
 
@@ -35,6 +36,7 @@ export default function CommandLine(props: CommandLineProps) {
       }}
     >
       <input
+        className={cn('focus-visible:ring-accent')}
         onChange={(e) => {
           const value = e.target.value
           const trimmed = value.toLowerCase().trim()
