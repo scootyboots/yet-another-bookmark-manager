@@ -15,7 +15,15 @@ import {
 } from '@/background'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
-import { EMPTY_BOOKMARK } from '../NewTab'
+
+export const EMPTY_BOOKMARK: Bookmark = {
+  id: 0,
+  group: '',
+  groupIndex: 0,
+  col: 1,
+  href: '',
+  text: '',
+}
 
 export const bookmarksAtom = atom<Bookmark[]>([])
 export const recentLinksAtom = atom<RecentLinks[]>([])

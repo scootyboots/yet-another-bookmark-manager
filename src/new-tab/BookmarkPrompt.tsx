@@ -9,10 +9,9 @@ import {
 } from 'react'
 import Prompt from './Prompt'
 import { Bookmark } from '../background'
-import { EMPTY_BOOKMARK } from './NewTab'
+import { EMPTY_BOOKMARK } from './bookmark-controller/bookmark-atoms'
 import { BookmarkSorter } from './useBookmarkSorter'
-import { BookmarkController } from './useBookmarkController'
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import {
   addBookmarkAtom,
   bookmarkMutationAtoms,

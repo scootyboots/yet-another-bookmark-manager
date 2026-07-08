@@ -1,5 +1,5 @@
 import bookmarks from '../../public/bookmarks-backup.json'
-import { EMPTY_BOOKMARK } from '../new-tab/NewTab'
+import { EMPTY_BOOKMARK } from '../new-tab/bookmark-controller/bookmark-atoms'
 
 export type BookmarksBackup = typeof bookmarks
 export type Bookmark = BookmarksBackup[number] & { id: number }

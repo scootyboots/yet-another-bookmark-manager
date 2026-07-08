@@ -13,7 +13,7 @@ import PopOutMenu from './PopOutMenu'
 import { useTrackFocus } from './useTrackFocus'
 import IconButton from './IconButton'
 import TopContextRow from './TopContextRow'
-import { checkPromptOpen } from './util'
+import { checkPromptOpen, isEmptyBookmark } from './util'
 import CommandLine, { Command } from './CommandLine'
 import RemoveCircle from '../components/Icons/RemoveCircle'
 import Edit from '../components/Icons/Edit'
@@ -25,37 +25,23 @@ import {
   clearSelectedBookmarkAtom,
   selectedBookmarkAtom,
   useInitializeBookmarks,
+  EMPTY_BOOKMARK,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
 
 type Bookmarks = typeof bookmarksJson
 
-export const EMPTY_BOOKMARK: Bookmark = {
-  id: 0,
-  group: '',
-  groupIndex: 0,
-  col: 1,
-  href: '',
-  text: '',
-}
-
 export default function NewTab() {
+  useInitializeBookmarks()
   const [showSearch, setShowSearch] = useState(true)
   const [showBkPrompt, setShowBkPrompt] = useState(false)
   const [showCommandLine, setShowCommandLine] = useState(false)
-  // const [selectedBk, setSelectedBk] = useState<Bookmark>({ ...EMPTY_BOOKMARK })
   const [bookmarkPromptType, setBookmarkPromptType] =
     useState<BookmarkPromptType>('new-bookmark')
 
   const { focusPreviousElement } = useTrackFocus()
-
   const bookmarks = useAtomValue(bookmarksAtom)
-  useInitializeBookmarks()
-  useEffect(() => {
-    console.log('BOOKMARKS FROM ATOM ----')
-    console.log(bookmarks)
-  }, [bookmarks])
 
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
   const clearSelectedBookmark = useSetAtom(clearSelectedBookmarkAtom)
@@ -131,10 +117,6 @@ export default function NewTab() {
     // TODO: rename group
   ]
 
-  function isEmptyBookmark(bookmark: Bookmark) {
-    return !Boolean(bookmark.href) && !Boolean(bookmark.text)
-  }
-
   useEffect(() => {
     function keydownHandler(event: KeyboardEvent) {
       const isPromptOpen = checkPromptOpen()
@@ -148,6 +130,11 @@ export default function NewTab() {
     }
     document.addEventListener('keydown', keydownHandler)
   }, [])
+
+  useEffect(() => {
+    console.log('BOOKMARKS FROM ATOM ----')
+    console.log(bookmarks)
+  }, [bookmarks])
 
   return (
     <div className="NewTab">
