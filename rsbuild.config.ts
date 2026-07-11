@@ -28,7 +28,6 @@ export default defineConfig({
       plugins: [pluginReact()],
       source: {
         entry: {
-          main: './src/main/index.tsx',
           components: './src/components/index.tsx',
           newTab: './src/new-tab/index.tsx',
         },
