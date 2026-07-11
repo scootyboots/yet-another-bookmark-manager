@@ -127,6 +127,10 @@
   --sidebar-ring: oklch(0.556 0 0);
 
   --primary-low: rgb(107, 28, 72);
+
+  --gradient: linear-gradient(
+    linear-gradient(233deg, rgba(20, 7, 14, 1) 0%, rgba(46, 4, 32, 1) 100%) ;
+  );
 }
 
 @layer base {

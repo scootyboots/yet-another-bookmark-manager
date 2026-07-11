@@ -1,9 +1,11 @@
+import { cn } from '@/lib/utils'
+
 export default function ArrowUpCircle() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="">
-      <circle cx="12" cy="12" r="10" className="primary"></circle>
+      <circle cx="12" cy="12" r="10" className={cn('fill-primary')}></circle>
       <path
-        className="secondary"
+        className={cn('fill-primary-low')}
         d="M13 9.41V17a1 1 0 0 1-2 0V9.41l-2.3 2.3a1 1 0 1 1-1.4-1.42l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1-1.4 1.42L13 9.4z"
       ></path>
     </svg>

@@ -1,8 +1,10 @@
+import { cn } from '@/lib/utils'
+
 export default function Edit() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="">
       <path
-        className="primary"
+        className={cn('fill-primary')}
         d="M4 14a1 1 0 0 1 .3-.7l11-11a1 1 0 0 1 1.4 0l3 3a1 1 0 0 1 0 1.4l-11 11a1 1 0 0 1-.7.3H5a1 1 0 0 1-1-1v-3z"
       ></path>
       <rect
@@ -10,7 +12,7 @@ export default function Edit() {
         height="2"
         x="2"
         y="20"
-        className="secondary"
+        className={cn('fill-primary-low')}
         rx="1"
       ></rect>
     </svg>

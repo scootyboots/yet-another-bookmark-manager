@@ -8,6 +8,8 @@ import {
 } from 'react'
 import DotsHorizontal from '../components/Icons/DotsHorizontal'
 import Dot from '../components/Icons/Dot'
+import { cn } from '@/lib/utils'
+import { ClassValue } from 'clsx'
 
 const POP_OUT_TRANSITION_MS = 150
 const POP_OUT_MENU_CLASS_NAME = 'pop-out-menu-menu'
@@ -94,15 +96,13 @@ export default function PopOutMenu({
   children,
   focusOnMount,
   icon,
-  iconStyles = {
-    width: '24px',
-  },
-  menuStyles,
+  iconClasses,
+  menuClasses,
 }: {
   focusOnMount?: boolean
   icon?: React.ReactNode
-  iconStyles?: React.CSSProperties
-  menuStyles?: React.CSSProperties
+  iconClasses?: ClassValue
+  menuClasses?: ClassValue
 } & PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
@@ -225,24 +225,38 @@ export default function PopOutMenu({
   }, [])
 
   return (
-    <div style={{ position: 'relative', width: '24px', height: '24px' }}>
+    <div className={cn('relative w-6 h-6')}>
       <button
-        className="pop-out-menu-button"
+        className={cn(
+          'pop-out-menu-button absolute bottom-[-4.5px] left-6 z-40 duration-150 p-3.5 rounded-full shadow-primary bg-background',
+        )}
         onClick={handleClick}
         ref={menuTriggerRef}
       >
-        <div className="pop-out-menu-button-icon-wrapper" style={iconStyles}>
+        <div
+          className={cn(
+            'pop-out-menu-button-icon-wrapper flex items-center content-center w-6',
+            iconClasses,
+          )}
+        >
           <IconToUse isVis={isVisible} icon={icon} />
         </div>
       </button>
       {isOpen && (
         <div
-          className={POP_OUT_MENU_CLASS_NAME}
-          style={{
-            opacity: isVisible ? '1' : '0',
-            transform: isVisible ? 'translateY(1rem)' : 'translateY(0px)',
-            ...menuStyles,
-          }}
+          className={cn(
+            POP_OUT_MENU_CLASS_NAME,
+            {
+              'opacity-100 translate-y-4': isVisible,
+              'opacity-0 translate-y-0': !isVisible,
+            },
+            menuClasses,
+          )}
+          // style={{
+          // opacity: isVisible ? '1' : '0',
+          // transform: isVisible ? 'translateY(1rem)' : 'translateY(0px)',
+          // ...menuStyles,
+          // }}
           ref={menuRef}
           onClick={menuClickHandler}
         >
