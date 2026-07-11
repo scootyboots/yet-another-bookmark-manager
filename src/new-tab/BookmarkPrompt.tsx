@@ -17,6 +17,7 @@ import {
   bookmarkMutationAtoms,
   selectedBookmarkAtom,
 } from './bookmark-controller/bookmark-atoms'
+import { cn } from '@/lib/utils'
 
 function BookmarkPromptGroup({
   groupName,
@@ -303,7 +304,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
       ref={promptRef}
     >
       <div
-        className="BookmarkPrompt-content"
+        className={cn('BookmarkPrompt-content flex flex-col gap-4')}
         ref={contentRef}
         data-has-new-bookmark-data={hadNeededNewBookmarkProps}
         data-has-group={Boolean(group)}
@@ -469,13 +470,24 @@ function SelectGroup({
   }, [])
 
   return (
-    <div className="Bookmark-input-group">
-      <label htmlFor={name}>
+    <div
+      className={cn(
+        'Bookmark-input-group grid grid-cols-[75px_1fr] align-baseline gap-2',
+      )}
+    >
+      <label
+        className={cn(
+          'text-lg font-bold text-white flex flex-nowrap justify-around gap-2.5',
+        )}
+        htmlFor={name}
+      >
         <div>{label}</div>
-        <div className="Search-result-divider">:</div>
+        <div className={cn('Search-result-divider text-primary')}>:</div>
       </label>
       {hasGroup && !isColSelect ? (
-        <div className="text">{selectedBookmark.group}</div>
+        <div className={cn('text text-lg font-bold text-white')}>
+          {selectedBookmark.group}
+        </div>
       ) : (
         <Select
           name={name}

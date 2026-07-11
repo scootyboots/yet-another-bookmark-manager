@@ -2,7 +2,11 @@ import { cn } from '@/lib/utils'
 
 export default function DotsHorizontal() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className={cn('w-6')}
+    >
       <path
         className={cn('fill-primary-low')}
         fill-rule="evenodd"

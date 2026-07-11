@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import { type PropsWithChildren } from 'react'
 
 export type IconButtonProps = PropsWithChildren<{
@@ -11,7 +12,12 @@ export default function IconButton({
   clickHandler,
 }: IconButtonProps) {
   return (
-    <button className="icon-button" onClick={clickHandler}>
+    <button
+      className={cn(
+        'icon-button flex gap-1.5 items-center cursor-pointer focus:outline-solid focus:outline-2 outline-primary',
+      )}
+      onClick={clickHandler}
+    >
       {icon}
       {children}
     </button>

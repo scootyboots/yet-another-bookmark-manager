@@ -26,28 +26,20 @@ const IconToUse = ({
   if (icon) return icon
 
   return (
-    <div style={{ width: '24px', height: '24px', position: 'relative' }}>
+    <div className={cn('relative w-6 h-6')}>
       <div
-        style={{
-          position: 'absolute',
-          top: '0',
-          left: '2px',
-          transform: isVis
-            ? 'scale(1.66) translateY(2px)'
-            : 'scale(1) translateY(0)',
-          transitionDuration: '0.25s',
-        }}
+        className={cn('absolute top-0 left-0.5 duration-200', {
+          'scale-150 translate-y-0.5': isVis,
+          'scale-1 translate-y-0': !isVis,
+        })}
       >
         <Dot />
       </div>
       <div
-        style={{
-          position: 'absolute',
-          top: '0',
-          left: '2px',
-          opacity: isVis ? 0 : 1,
-          transitionDuration: '0.25s',
-        }}
+        className={cn('absolute top-0 left-0.5 duration-200', {
+          'opacity-0': isVis,
+          'opacity-100': !isVis,
+        })}
       >
         <DotsHorizontal />
       </div>
@@ -225,10 +217,15 @@ export default function PopOutMenu({
   }, [])
 
   return (
-    <div className={cn('relative w-6 h-6')}>
+    <div className={cn('pop-out-menu relative w-6 h-6')}>
       <button
         className={cn(
-          'pop-out-menu-button absolute bottom-[-4.5px] left-6 z-40 duration-150 p-3.5 rounded-full shadow-primary bg-background',
+          'pop-out-menu-button absolute duration-150 shadow-primary cursor-pointer',
+          'p-1',
+          'bottom-0 -left-1.5',
+          'rounded-sm',
+          { 'border-0 px-0 py-0': icon },
+          'focus:outline-solid focus:outline-2 outline-primary',
         )}
         onClick={handleClick}
         ref={menuTriggerRef}
@@ -246,17 +243,14 @@ export default function PopOutMenu({
         <div
           className={cn(
             POP_OUT_MENU_CLASS_NAME,
+            'absolute z-50 duration-150 p-3 rounded-sm bg-background shadow-glow-primary',
+            '-bottom-30 left-6',
             {
               'opacity-100 translate-y-4': isVisible,
               'opacity-0 translate-y-0': !isVisible,
             },
             menuClasses,
           )}
-          // style={{
-          // opacity: isVisible ? '1' : '0',
-          // transform: isVisible ? 'translateY(1rem)' : 'translateY(0px)',
-          // ...menuStyles,
-          // }}
           ref={menuRef}
           onClick={menuClickHandler}
         >

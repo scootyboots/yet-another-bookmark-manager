@@ -138,7 +138,7 @@ export default function NewTab() {
 
   return (
     <div className={cn('NewTab z-10 absolute')}>
-      <div className="selected-bookmark" style={{ display: 'none' }}>
+      <div className={cn('selected-bookmark hidden')}>
         {JSON.stringify(selectedBookmark)}
       </div>
       <TopContextRow>
@@ -230,9 +230,9 @@ export default function NewTab() {
                           <GenericHeader text={groupName} />
                           <PopOutMenu
                             focusOnMount={isEmptyGroup}
-                            menuClasses={cn('w-34', {
-                              '-bottom-18': isFirst,
-                              'bottom-[-3.15rem]': !isFirst,
+                            menuClasses={cn('w-38.75', {
+                              // '-bottom-18': isFirst,
+                              // 'bottom-[-3.15rem]': !isFirst,
                             })}
                             // menuClasses={
                             //   isFirst
