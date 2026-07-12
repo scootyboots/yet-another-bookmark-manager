@@ -9,7 +9,7 @@ export default function ArrowDownCircle() {
     >
       <circle cx="12" cy="12" r="10" className={cn('fill-primary')}></circle>
       <path
-        className={cn('fill-primary-low')}
+        className={cn('fill-background-high')}
         d="M11 14.59V7a1 1 0 0 1 2 0v7.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 0 1 1.4-1.42l2.3 2.3z"
       ></path>
     </svg>

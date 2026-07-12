@@ -7,7 +7,7 @@ export default function Dot() {
       viewBox="0 0 24 24"
       className={cn('w-6')}
     >
-      <circle className={cn('fill-primary-low')} cx="12" cy="12" r="2" />
+      <circle className={cn('fill-primary')} cx="12" cy="12" r="2" />
     </svg>
   )
 }

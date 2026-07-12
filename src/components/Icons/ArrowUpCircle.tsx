@@ -9,7 +9,7 @@ export default function ArrowUpCircle() {
     >
       <circle cx="12" cy="12" r="10" className={cn('fill-primary')}></circle>
       <path
-        className={cn('fill-primary-low')}
+        className={cn('fill-background-high')}
         d="M13 9.41V17a1 1 0 0 1-2 0V9.41l-2.3 2.3a1 1 0 1 1-1.4-1.42l4-4a1 1 0 0 1 1.4 0l4 4a1 1 0 0 1-1.4 1.42L13 9.4z"
       ></path>
     </svg>

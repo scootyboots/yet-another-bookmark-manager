@@ -13,7 +13,7 @@ export default function RemoveCircle() {
         height="2"
         x="6"
         y="11"
-        className={cn('fill-primary-low')}
+        className={cn('fill-background-high')}
         rx="1"
       ></rect>
     </svg>

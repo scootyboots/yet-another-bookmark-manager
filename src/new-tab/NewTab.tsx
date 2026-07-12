@@ -1,36 +1,38 @@
-import { PropsWithChildren, Ref, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './BookmarkEntry'
 import Search from './Search/Search'
 import BookmarkPrompt, { BookmarkPromptType } from './BookmarkPrompt'
-import { Bookmark } from '../background'
 import useBookmarkSorter from './useBookmarkSorter'
-import ArrowDownCircle from '../components/Icons/ArrowDownCircle'
-import Add from '../components/Icons/Add'
-import AddCircle from '../components/Icons/AddCircle'
-import ArrowUpCircle from '../components/Icons/ArrowUpCircle'
-import PopOutMenu from './PopOutMenu'
 import { useTrackFocus } from './useTrackFocus'
-import IconButton from './IconButton'
 import TopContextRow from './TopContextRow'
 import { checkPromptOpen, isEmptyBookmark } from './util'
 import CommandLine, { Command } from './CommandLine'
-import RemoveCircle from '../components/Icons/RemoveCircle'
-import Edit from '../components/Icons/Edit'
-import { motion } from 'motion/react'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   bookmarkMutationAtoms,
   bookmarksAtom,
-  clearSelectedBookmarkAtom,
   selectedBookmarkAtom,
   useInitializeBookmarks,
   EMPTY_BOOKMARK,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
+import GroupControls from './GroupControls'
+import { ShadTesting } from './ShadTesting'
 
 type Bookmarks = typeof bookmarksJson
+
+export type InitPrompt = {
+  newBookmark: (groupName?: string | undefined) => void
+  updateBookmark: (
+    groupName?: string | undefined,
+    col?: number | undefined,
+  ) => void
+  newGroup: (colIndex?: number | undefined) => void
+  removeGroup: (groupName?: string | undefined) => void
+  updateGroup: (groupName?: string | undefined) => void
+}
 
 export default function NewTab() {
   useInitializeBookmarks()
@@ -39,13 +41,8 @@ export default function NewTab() {
   const [showCommandLine, setShowCommandLine] = useState(false)
   const [bookmarkPromptType, setBookmarkPromptType] =
     useState<BookmarkPromptType>('new-bookmark')
-
-  const { focusPreviousElement } = useTrackFocus()
   const bookmarks = useAtomValue(bookmarksAtom)
-
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
-  const clearSelectedBookmark = useSetAtom(clearSelectedBookmarkAtom)
-
   const sorter = useBookmarkSorter(bookmarks)
 
   const reset = useSetAtom(bookmarkMutationAtoms.clearBookmarksAtom)
@@ -54,38 +51,47 @@ export default function NewTab() {
   )
   const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
 
-  function promptUpdateBookmark(bk: Bookmark) {
-    setBookmarkPromptType('update-bookmark')
-    setSelectedBookmark(bk)
-    setShowBkPrompt(true)
-  }
-
-  function promptNewBookmark() {
-    setBookmarkPromptType('new-bookmark')
-    clearSelectedBookmark()
-    setShowBkPrompt(true)
-  }
-
-  function promptNewGroup() {
-    setBookmarkPromptType('new-group')
-    clearSelectedBookmark()
-    setShowBkPrompt(true)
-  }
-
-  function promptRemoveGroup() {
-    setBookmarkPromptType('remove-group')
-    setShowBkPrompt(true)
-  }
-
-  function promptUpdateGroup() {
-    setBookmarkPromptType('update-group')
-    setShowBkPrompt(true)
+  const initPrompt = {
+    newBookmark: (groupName?: string) => {
+      const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
+      setBookmarkPromptType('new-bookmark')
+      setSelectedBookmark(bk)
+      setShowBkPrompt(true)
+    },
+    updateBookmark: (groupName?: string, col?: number) => {
+      const bk = {
+        ...EMPTY_BOOKMARK,
+        groupName: groupName ?? '',
+        col: col ?? 0,
+      }
+      setBookmarkPromptType('update-bookmark')
+      setSelectedBookmark(bk)
+      setShowBkPrompt(true)
+    },
+    newGroup: (colIndex?: number) => {
+      const bk = { ...EMPTY_BOOKMARK, col: colIndex ?? 0 }
+      setBookmarkPromptType('new-group')
+      setSelectedBookmark(bk)
+      setShowBkPrompt(true)
+    },
+    removeGroup: (groupName?: string) => {
+      const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
+      setBookmarkPromptType('remove-group')
+      setSelectedBookmark(bk)
+      setShowBkPrompt(true)
+    },
+    updateGroup: (groupName?: string) => {
+      const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
+      setBookmarkPromptType('update-group')
+      setSelectedBookmark(bk)
+      setShowBkPrompt(true)
+    },
   }
 
   const commands: Command[] = [
     {
       action: () => {
-        promptNewBookmark()
+        initPrompt.newBookmark()
       },
       name: 'add bookmark',
       hotKey: 'ff',
@@ -95,27 +101,29 @@ export default function NewTab() {
     // { action: updateBookmark, name: 'update bookmark' },
     {
       action: () => {
-        promptNewGroup()
+        initPrompt.newGroup()
       },
       name: 'add group',
       hotKey: 'jj',
     },
     {
       action: () => {
-        promptRemoveGroup()
+        initPrompt.removeGroup()
       },
       name: 'remove group',
       hotKey: 'dd',
     },
     {
       action: () => {
-        promptUpdateGroup()
+        initPrompt.updateGroup()
       },
       name: 'update group',
       hotKey: 'uu',
     },
     // TODO: rename group
   ]
+
+  const { focusPreviousElement } = useTrackFocus()
 
   useEffect(() => {
     function keydownHandler(event: KeyboardEvent) {
@@ -159,18 +167,14 @@ export default function NewTab() {
         </div>
         <button
           onClick={() => {
-            setBookmarkPromptType('new-bookmark')
-            clearSelectedBookmark()
-            setShowBkPrompt(true)
+            initPrompt.newBookmark()
           }}
         >
           add bookmark
         </button>
         <button
           onClick={() => {
-            setBookmarkPromptType('new-group')
-            clearSelectedBookmark()
-            setShowBkPrompt(true)
+            initPrompt.newGroup()
           }}
         >
           add group
@@ -181,7 +185,7 @@ export default function NewTab() {
         <Search
           showSearch={showSearch}
           setShowSearch={setShowSearch}
-          promptUpdateBookmark={promptUpdateBookmark}
+          promptUpdateBookmark={initPrompt.updateBookmark}
         />
       ) : null}
 
@@ -200,6 +204,9 @@ export default function NewTab() {
           setIsShown={setShowCommandLine}
         />
       ) : null}
+
+      {/* <ShadTesting /> */}
+
       <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid p-4')}>
         {sorter.sortedColumns.map((col, index) => (
           <div key={'col-' + index}>
@@ -217,107 +224,23 @@ export default function NewTab() {
                   return firstEntry.href === '' && entriesInGroup.length === 1
                 }
                 const isEmptyGroup = checkEmptyGroup()
+                const isEmptyBookmarkEntry = isEmptyBookmark(entry)
                 return (
                   <div key={`${groupName}-${index}-${i}`}>
                     {!sameAsLast || isFirst ? (
-                      <div>
-                        <div
-                          className={cn(
-                            'bookmark-group',
-                            'flex gap-1 items-center',
-                          )}
-                        >
-                          <GenericHeader text={groupName} />
-                          <PopOutMenu
-                            focusOnMount={isEmptyGroup}
-                            menuClasses={cn('w-38.75', {
-                              // '-bottom-18': isFirst,
-                              // 'bottom-[-3.15rem]': !isFirst,
-                            })}
-                            // menuClasses={
-                            //   isFirst
-                            //     ? 'bottom-[-4.5rem] w-[8.5rem]'
-                            //     : 'bottom-[-3.15rem] w-[8.5rem]'
-                            // }
-                            // menuStyles={{
-                            //   bottom: isFirst ? '-4.5rem' : '-3.15rem',
-                            //   width: '8.5rem',
-                            // }}
-                          >
-                            <IconButton
-                              icon={<Add />}
-                              clickHandler={() => {
-                                const holding = {
-                                  ...entry,
-                                  id: 0,
-                                  text: '',
-                                  href: '',
-                                }
-                                console.log('set selected', holding)
-                                setSelectedBookmark(holding)
-                                setBookmarkPromptType('new-bookmark')
-                                setShowBkPrompt(true)
-                              }}
-                            >
-                              add bookmark
-                            </IconButton>
-                            <IconButton
-                              icon={<AddCircle />}
-                              clickHandler={() => {
-                                setBookmarkPromptType('new-group')
-                                setShowBkPrompt(true)
-                                setSelectedBookmark({
-                                  ...EMPTY_BOOKMARK,
-                                  col: entry.col,
-                                })
-                              }}
-                            >
-                              add group
-                            </IconButton>
-                            <IconButton
-                              icon={<Edit />}
-                              clickHandler={() => {
-                                setSelectedBookmark({ ...entry })
-                                promptUpdateGroup()
-                              }}
-                            >
-                              update group
-                            </IconButton>
-                            <IconButton
-                              icon={<RemoveCircle />}
-                              clickHandler={() => {
-                                setSelectedBookmark({
-                                  ...EMPTY_BOOKMARK,
-                                  col: entry.col,
-                                  group: entry.group,
-                                })
-                                promptRemoveGroup()
-                              }}
-                            >
-                              remove group
-                            </IconButton>
-
-                            <IconButton
-                              icon={<ArrowDownCircle />}
-                              clickHandler={() =>
-                                updateGroupOrder(groupName, index + 1, 'lower')
-                              }
-                            >
-                              move group down
-                            </IconButton>
-                            <IconButton
-                              icon={<ArrowUpCircle />}
-                              clickHandler={() =>
-                                updateGroupOrder(groupName, index + 1, 'raise')
-                              }
-                            >
-                              move group up
-                            </IconButton>
-                          </PopOutMenu>
-                        </div>
-                      </div>
+                      <GroupControls
+                        groupName={groupName}
+                        colIndex={entry.col}
+                        groupIndex={entry.groupIndex}
+                        isEmptyGroup={isEmptyGroup}
+                        setBookmarkPromptType={setBookmarkPromptType}
+                        setShowBkPrompt={setShowBkPrompt}
+                        initPrompt={initPrompt}
+                      >
+                        <GenericHeader>{groupName}</GenericHeader>
+                      </GroupControls>
                     ) : null}
-                    {!isEmptyBookmark(entry) && (
+                    {!isEmptyBookmarkEntry && (
                       <BookmarkEntry
                         bookmark={entry}
                         showBookmarkPrompt={setShowBkPrompt}

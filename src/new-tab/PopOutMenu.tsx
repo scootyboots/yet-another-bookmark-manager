@@ -28,7 +28,7 @@ const IconToUse = ({
   return (
     <div className={cn('relative w-6 h-6')}>
       <div
-        className={cn('absolute top-0 left-0.5 duration-200', {
+        className={cn('absolute top-0 left-0 duration-200', {
           'scale-150 translate-y-0.5': isVis,
           'scale-1 translate-y-0': !isVis,
         })}
@@ -36,7 +36,7 @@ const IconToUse = ({
         <Dot />
       </div>
       <div
-        className={cn('absolute top-0 left-0.5 duration-200', {
+        className={cn('absolute top-0 left-0 duration-200', {
           'opacity-0': isVis,
           'opacity-100': !isVis,
         })}
@@ -222,10 +222,10 @@ export default function PopOutMenu({
         className={cn(
           'pop-out-menu-button absolute duration-150 shadow-primary cursor-pointer',
           'p-1',
-          'bottom-0 -left-1.5',
+          'bottom-0 left-0',
           'rounded-sm',
           { 'border-0 px-0 py-0': icon },
-          'focus:outline-solid focus:outline-2 outline-primary',
+          'focus:outline-solid focus:outline-2 outline-constructive',
         )}
         onClick={handleClick}
         ref={menuTriggerRef}
@@ -243,7 +243,7 @@ export default function PopOutMenu({
         <div
           className={cn(
             POP_OUT_MENU_CLASS_NAME,
-            'absolute z-50 duration-150 p-3 rounded-sm bg-background shadow-glow-primary',
+            'absolute z-50 duration-150 p-3 rounded-sm shadow-glow-primary bg-background',
             '-bottom-30 left-6',
             {
               'opacity-100 translate-y-4': isVisible,

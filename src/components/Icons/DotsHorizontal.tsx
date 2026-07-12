@@ -8,7 +8,7 @@ export default function DotsHorizontal() {
       className={cn('w-6')}
     >
       <path
-        className={cn('fill-primary-low')}
+        className={cn('fill-primary')}
         fill-rule="evenodd"
         d="M5 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"
       ></path>

@@ -56,12 +56,17 @@
   /* --color-primary-low: color-mix(in srgb, var(--primary) 50%, transparent); */
   /* --color-primary-low: var(--primary-low); */
   --color-primary-low: color-mix(in oklab, var(--primary), black 25%);
-  --color-background-high: rgb(39, 22, 37);
-  --color-background-high: color-mix(
+  --color-background-high: var(--background-high);
+  /* --color-background-high: color-mix(
     in oklab,
     var(--background),
     var(--primary) 10%
-  );
+  ); */
+
+  --color-constructive: var(--constructive);
+  --color-constructive-weak: var(--constructive-weak);
+  --color-destructive-weak: var(--destructive-weak);
+  --color-gradient: var(--gradient);
 }
 
 :root {
@@ -114,8 +119,8 @@
   --primary: rgb(192, 46, 131);
   --accent: rgb(234, 73, 183);
   --accent-foreground: rgb(20, 7, 14);
-  --destructive: oklch(79.015% 0.12737 69.506);
-  --destructive-weak: oklch(47.75% 0.08977 67.612);
+  --destructive: oklch(77.472% 0.1448 67.67);
+  --destructive-weak: oklch(38.242% 0.07795 64.937);
   --border: rgb(164, 30, 122);
   --input: rgb(164, 30, 122);
   --ring: rgb(255, 13, 158);
@@ -133,12 +138,16 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* --primary-low: rgb(107, 28, 72);
+  /* --primary-low: rgb(107, 28, 72); */
+  --background-high: color-mix(in oklab, var(--background), var(--primary) 15%);
 
-  --background-high: rgb(39, 22, 37); */
+  --constructive: rgb(13, 145, 119);
+  --constructive-weak: color-mix(in oklab, var(--constructive), black 25%);
 
   --gradient: linear-gradient(
-    linear-gradient(233deg, rgba(20, 7, 14, 1) 0%, rgba(46, 4, 32, 1) 100%) ;
+    233deg,
+    rgba(20, 7, 14, 1) 0%,
+    rgba(46, 4, 32, 1) 100%
   );
 }
 

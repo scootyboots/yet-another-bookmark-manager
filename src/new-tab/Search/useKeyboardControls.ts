@@ -12,7 +12,7 @@ export default function useKeyboardControls(
   hasMatches: boolean,
   focusIndex: number,
   setFocusIndex: React.Dispatch<React.SetStateAction<number>>,
-  promptUpdateBookmark: (bk: Bookmark) => void,
+  promptUpdateBookmark: (groupName?: string, col?: number) => void,
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>,
   setInputText: React.Dispatch<React.SetStateAction<string>>,
   setUrlToOpen: React.Dispatch<React.SetStateAction<string>>,
@@ -35,7 +35,7 @@ export default function useKeyboardControls(
       if (key === 'Enter' && metaKey) {
         const focusedMatch = matches?.[focusIndex]?.item
         if (focusedMatch) {
-          promptUpdateBookmark(focusedMatch)
+          promptUpdateBookmark(focusedMatch.group, focusedMatch.col)
           setShowSearch(false)
         }
         return

@@ -27,60 +27,62 @@ export default function CommandLine(props: CommandLineProps) {
     <Prompt
       isShown={isShown}
       setIsShown={setIsShown}
-      contentStyles={{
-        paddingInline: '0.5rem',
-        paddingBlock: '0.5rem',
-        borderRadius: '2rem',
-        position: 'relative',
-        overflow: 'visible',
-      }}
+      contentClasses={cn('p-2 rounded-full relative overflow-visible w-lg')}
     >
-      <input
-        className={cn('focus-visible:ring-accent')}
-        onChange={(e) => {
-          const value = e.target.value
-          const trimmed = value.toLowerCase().trim()
-          const hotKeyMatch = commands.find((c) => c.hotKey === trimmed)
-          if (hotKeyMatch) {
-            executeAction(hotKeyMatch.action)
-            return
-          }
-          const filtered = commands.filter((c) => c.name.includes(trimmed))
-          setMatching(filtered)
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            executeAction(matching[0].action)
-          }
-        }}
-        style={{ borderBottomWidth: '0px', marginBlockEnd: '0px' }}
-      />
-      <div
-        style={{
-          display: 'flex',
-          gap: '0.4rem',
-          flexWrap: 'nowrap',
-          justifyContent: 'center',
-          position: 'absolute',
-          bottom: '-2rem',
-          width: '100%',
-          fontFamily: 'monospace',
-          fontSize: '0.8rem',
-        }}
-      >
-        {matching.map((com, index) => {
-          const isLast = index + 1 === matching.length
-          return (
-            <>
-              <div>{`${com.name} (${com.hotKey})`}</div>
-              {!isLast && (
+      <div className={cn('relative')}>
+        <input
+          className={cn('focus:outline-0 border-b-0 mbe-0 ms-8')}
+          onChange={(e) => {
+            const value = e.target.value
+            const trimmed = value.toLowerCase().trim()
+            const hotKeyMatch = commands.find((c) => c.hotKey === trimmed)
+            if (hotKeyMatch) {
+              executeAction(hotKeyMatch.action)
+              return
+            }
+            const filtered = commands.filter((c) => c.name.includes(trimmed))
+            setMatching(filtered)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              executeAction(matching[0].action)
+            }
+          }}
+        />
+
+        <div
+          className={cn(
+            'absolute flex flex-col gap-1.5 content-center -bottom-28 w-full font-mono text-sm',
+          )}
+        >
+          <div
+            className={cn(
+              'flex w-full flex-col gap-1.5 content-center items-center',
+            )}
+          >
+            {matching.map((com, index) => {
+              const isLast = index + 1 === matching.length
+              const hotKey = (
+                <span className={'text-primary font-bold'}>{com.hotKey}</span>
+              )
+              return (
+                <>
+                  <div>
+                    {com.name}{' '}
+                    <span className={'text-primary font-bold'}>
+                      - {com.hotKey}
+                    </span>
+                  </div>
+                  {/* {!isLast && (
                 <div style={{ fontWeight: 'bold', color: 'var(--primary)' }}>
-                  |
+                  - ({hotKey})
                 </div>
-              )}
-            </>
-          )
-        })}
+              )} */}
+                </>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </Prompt>
   )

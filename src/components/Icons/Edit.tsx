@@ -16,7 +16,7 @@ export default function Edit() {
         height="2"
         x="2"
         y="20"
-        className={cn('fill-primary-low')}
+        className={cn('fill-background-high')}
         rx="1"
       ></rect>
     </svg>

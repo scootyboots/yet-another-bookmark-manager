@@ -9,13 +9,14 @@ import {
 import { useTrackFocus } from './useTrackFocus'
 import { useClickOutside } from './PopOutMenu'
 import { cn } from '@/lib/utils'
+import { ClassValue } from 'clsx'
 
 type PromptProps = PropsWithChildren<{
   isShown: boolean
   className?: string
   setIsShown?: (state: boolean) => void
   promptStyles?: CSSProperties
-  contentStyles?: CSSProperties
+  contentClasses?: ClassValue
   ref?: React.RefObject<null | HTMLDivElement>
 }>
 
@@ -29,7 +30,7 @@ export default function Prompt({
   setIsShown,
   children,
   promptStyles,
-  contentStyles,
+  contentClasses,
   ref,
 }: PromptProps) {
   const contentRef = useRef(null)
@@ -72,9 +73,9 @@ export default function Prompt({
           <div
             className={cn(
               'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary p-5.75 rounded-lg shadow-glow-primary',
+              contentClasses,
             )}
             ref={contentRef}
-            style={contentStyles}
           >
             {children}
           </div>

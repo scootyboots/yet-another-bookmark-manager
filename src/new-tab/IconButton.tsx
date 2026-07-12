@@ -14,7 +14,7 @@ export default function IconButton({
   return (
     <button
       className={cn(
-        'icon-button flex gap-1.5 items-center cursor-pointer focus:outline-solid focus:outline-2 outline-primary',
+        'icon-button flex gap-1.5 items-center cursor-pointer focus:outline-solid focus:outline-2 outline-constructive rounded-full',
       )}
       onClick={clickHandler}
     >
