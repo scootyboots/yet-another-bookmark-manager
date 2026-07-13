@@ -54,6 +54,8 @@ export default function BookmarkControls({
     [isLinkFocused, isUpdateFocused, isRemoveFocused, isControlElFocused],
   )
 
+  // const isVisible = true
+
   return (
     <div
       className={cn(
@@ -89,12 +91,14 @@ export default function BookmarkControls({
       >
         <div ref={updateRef}>
           <IconButton
+            classes={cn({ 'rotate-180': isControlsFocused })}
             icon={<Refresh />}
             clickHandler={() => {
               setSelectBookmark({ ...bookmark })
               setBookmarkPromptType('update-bookmark')
               showBookmarkPrompt(true)
             }}
+            style={{ transitionDuration: '0.265s' }}
           />
         </div>
 
@@ -102,7 +106,7 @@ export default function BookmarkControls({
           className={cn('text-over text-clip w-0', {
             'w-10': isControlsFocused,
           })}
-          style={{ transitionDuration: '0.085s' }}
+          style={{ transitionDuration: '0.075s' }}
         >
           {displayText}
         </div>
