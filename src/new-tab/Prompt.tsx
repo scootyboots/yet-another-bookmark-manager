@@ -17,6 +17,7 @@ type PromptProps = PropsWithChildren<{
   setIsShown?: (state: boolean) => void
   promptStyles?: CSSProperties
   contentClasses?: ClassValue
+  unstyled?: boolean
   ref?: React.RefObject<null | HTMLDivElement>
 }>
 
@@ -31,6 +32,7 @@ export default function Prompt({
   children,
   promptStyles,
   contentClasses,
+  unstyled,
   ref,
 }: PromptProps) {
   const contentRef = useRef(null)
@@ -72,7 +74,11 @@ export default function Prompt({
         >
           <div
             className={cn(
-              'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden bg-background border border-primary p-5.75 rounded-lg shadow-glow-primary',
+              'Prompt-content relative flex flex-col w-[55vw] max-w-[615px] max-h-[80vh] overflow-hidden',
+              {
+                'border border-primary p-5.75 rounded-lg shadow-glow-primary bg-background':
+                  !unstyled,
+              },
               contentClasses,
             )}
             ref={contentRef}

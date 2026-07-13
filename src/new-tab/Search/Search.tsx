@@ -16,6 +16,7 @@ import {
   selectedBookmarkAtom,
 } from '../bookmark-controller/bookmark-atoms'
 import { BookmarkListItem } from './BookmarkListItem'
+import { SearchInput } from './SearchInput'
 export { LINK_TO_OPEN_SELECTOR, IS_MATCH_SELECTOR } from './useKeyboardControls'
 
 export const SEARCH_INPUT_SELECTOR = '.Search input'
@@ -38,7 +39,7 @@ export default function Search({
   const [urlToOpen, setUrlToOpen] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
-  const [isInputIdle, setIsInputIdle] = useState(true)
+  // const [isInputIdle, setIsInputIdle] = useState(true)
   const setSelectedBookmark = useSetAtom(selectedBookmarkAtom)
 
   const { matches, hasMatches, groupMatches, matchesToRender } = useMatches(
@@ -79,44 +80,11 @@ export default function Search({
       setIsShown={setShowSearch}
     >
       <div className="search-input-area flex content-center justify-center">
-        <div className={cn('relative p-1.5 mx-16')}>
-          <input
-            className={cn(
-              'border-0 bg-transparent text-white text-lg font-mono focus:outline-none w-full caret-transparent placeholder-neutral-600',
-            )}
-            placeholder=" type to search..."
-            onChange={(e) => {
-              setInputText(e.target.value)
-              if (e.target.value === '') {
-                setIsInputIdle(true)
-                return
-              }
-              if (isInputIdle) {
-                setIsInputIdle(false)
-              }
-              setTimeout(() => {
-                setIsInputIdle(true)
-              }, 1250)
-            }}
-            name="bookmark search"
-            type="text"
-            value={inputText}
-            ref={inputRef}
-            tabIndex={0}
-          />
-          <div className={cn('carrot flex flex-nowrap absolute bottom-1.5')}>
-            <Carrot isIdle={isInputIdle} isVisible={inputText === ''} />
-            {inputText.split('').map((_, i) => {
-              const isLast = i + 1 === inputText.length
-              const isTooMany = i > 19
-
-              return !isTooMany ? (
-                <Carrot isIdle={isInputIdle} isVisible={isLast || isTooMany} />
-              ) : null
-            })}
-            <Carrot isVisible={inputText.length > 20} isIdle={isInputIdle} />
-          </div>
-        </div>
+        <SearchInput
+          inputText={inputText}
+          setInputText={setInputText}
+          ref={inputRef}
+        />
       </div>
 
       <div className="search-results text-sm pbs-4 relative">
@@ -291,7 +259,7 @@ function SearchResultEdit({
 
 /**
  * decided to go away from this kind of approach in favor of highlightedRegexMatch
- * should probably just delete this
+ * should probably should just delete this
  */
 // function highlightedMatch({ match, input }: { match: string; input: string }) {
 //   const bookmarkLabel = match.split('')
