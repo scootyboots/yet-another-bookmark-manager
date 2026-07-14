@@ -246,6 +246,7 @@ export default function NewTab() {
                         showBookmarkPrompt={setShowBkPrompt}
                         removeBookmark={removeBookmark}
                         setBookmarkPromptType={setBookmarkPromptType}
+                        index={i}
                         key={'bookmark-entry-' + i}
                       />
                     )}

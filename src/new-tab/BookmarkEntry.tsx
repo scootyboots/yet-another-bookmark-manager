@@ -12,19 +12,15 @@ export type BookmarkEntryProps = {
   setBookmarkPromptType: React.Dispatch<
     React.SetStateAction<BookmarkPromptType>
   >
+  index: number
 }
 
 export default function BookmarkEntry(props: BookmarkEntryProps) {
   const linkRef = useRef(null)
   const bookmarkRef = useRef(null)
-  const isLinkFocused = useHasFocusHover(linkRef)
-  const isBookmarkFocused = useHasFocusHover(bookmarkRef)
-  const [mountControls, setMountControls] = useState(true)
-  useEffect(() => {
-    return () => {
-      setMountControls(false)
-    }
-  }, [])
+  const [_, setMountControls] = useState(false)
+  const isBookmarkEntryFocused = useHasFocusHover(bookmarkRef)
+
   return (
     <div className={cn('BookmarkEntry relative mbe-3')} ref={bookmarkRef}>
       <a
@@ -39,13 +35,13 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
         {props.bookmark.text}
       </a>
       <div className={cn('hidden')}>{props.bookmark.href}</div>
-      {mountControls ? (
+      {isBookmarkEntryFocused && (
         <BookmarkControls
           {...props}
-          isLinkFocused={isLinkFocused || isBookmarkFocused}
+          isBookmarkEntryFocused={isBookmarkEntryFocused}
           setMountControls={setMountControls}
         />
-      ) : null}
+      )}
     </div>
   )
 }

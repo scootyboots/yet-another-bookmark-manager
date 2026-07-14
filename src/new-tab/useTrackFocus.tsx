@@ -11,8 +11,8 @@ const MAIN_CONTENT_CLASS = 'bookmark-groups'
 export const BOOKMARK_LINK_CLASS = 'bookmark-link'
 
 type FocusContext = {
-  currentFocus: React.RefObject<HTMLAnchorElement | null>
-  previousFocus: React.RefObject<HTMLAnchorElement | null>
+  currentFocus: React.RefObject<HTMLAnchorElement | HTMLDivElement | null>
+  previousFocus: React.RefObject<HTMLAnchorElement | HTMLDivElement | null>
   focusPreviousElement: () => void
 }
 

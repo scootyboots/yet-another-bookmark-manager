@@ -6,11 +6,19 @@ export default function useHasFocusHover<T>(ref: React.RefObject<T | null>) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    if (!(el instanceof HTMLElement)) return
+    const isHtmlEl = el instanceof HTMLElement
+    if (!isHtmlEl) return
     function handleFocus() {
       setIsFocused(true)
     }
-    function handleUnfocus() {
+    function handleUnfocus(event: FocusEvent) {
+      const nextTarget = event.relatedTarget as Node
+      if (!isHtmlEl) {
+        return
+      }
+      if (nextTarget && el.contains(nextTarget)) {
+        return
+      }
       setIsFocused(false)
     }
     el.addEventListener('focusin', handleFocus)

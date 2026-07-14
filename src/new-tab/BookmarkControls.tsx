@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useEffect, useState } from 'react'
 import { useSetAtom } from 'jotai'
 import { cn } from '@/lib/utils'
 import { BookmarkEntryProps } from './BookmarkEntry'
@@ -8,16 +8,18 @@ import useHasFocusHover from './useHasFocusHover'
 import IconButton from './IconButton'
 import Refresh from '@/components/Icons/Refresh'
 import CloseCircle from '@/components/Icons/CloseCircle'
+import { useTrackFocus } from './useTrackFocus'
 
 type BookmarkControlProps = Pick<
   BookmarkEntryProps,
   'bookmark' | 'showBookmarkPrompt' | 'removeBookmark'
 > & {
-  isLinkFocused: boolean
+  isBookmarkEntryFocused: boolean
   setMountControls: React.Dispatch<React.SetStateAction<boolean>>
   setBookmarkPromptType: React.Dispatch<
     React.SetStateAction<BookmarkPromptType>
   >
+  index: number
 }
 
 // TODO: refactor to use motion
@@ -26,17 +28,26 @@ export default function BookmarkControls({
   bookmark,
   showBookmarkPrompt,
   removeBookmark,
-  isLinkFocused,
+  isBookmarkEntryFocused,
   setMountControls,
   setBookmarkPromptType,
+  index,
 }: BookmarkControlProps) {
-  const updateRef = useRef(null)
-  const removeRef = useRef(null)
-  const controlsRef = useRef(null)
+  const updateRef = useRef<HTMLDivElement>(null)
+  const removeRef = useRef<HTMLDivElement>(null)
+  const controlsRef = useRef<HTMLDivElement>(null)
   const isUpdateFocused = useHasFocusHover(updateRef)
   const isRemoveFocused = useHasFocusHover(removeRef)
   const isControlsFocused = useHasFocusHover(controlsRef)
   const setSelectBookmark = useSetAtom(selectedBookmarkAtom)
+  const [forceVisible, setForceVisible] = useState(false)
+
+  const { currentFocus } = useTrackFocus()
+
+  const bookmarkId = useMemo(
+    () => `${bookmark.group}-${bookmark.groupIndex}-${index}`,
+    [bookmark, index],
+  )
 
   const { displayText, isControlElFocused } = useMemo(() => {
     let displayText = ''
@@ -48,21 +59,14 @@ export default function BookmarkControls({
     return { displayText, isControlElFocused }
   }, [isUpdateFocused, isRemoveFocused, isControlsFocused])
 
-  const isVisible = useMemo(
-    () =>
-      isLinkFocused || isUpdateFocused || isRemoveFocused || isControlElFocused,
-    [isLinkFocused, isUpdateFocused, isRemoveFocused, isControlElFocused],
-  )
-
-  // const isVisible = true
-
   return (
     <div
       className={cn(
         'bookmark-controls absolute px-7, py-1 -right-2.5 -top-2 cursor-pointer invisible duration-0',
-        { visible: isVisible },
+        { visible: isBookmarkEntryFocused },
       )}
       ref={controlsRef}
+      data-bookmark-id={bookmarkId}
       onClick={() => {
         if (displayText === 'update') {
           setBookmarkPromptType('update-bookmark')
@@ -89,18 +93,20 @@ export default function BookmarkControls({
         // doesn't get removed from view instantly - opting for inline style instead
         style={{ transitionDuration: '0.02s' }}
       >
-        <div ref={updateRef}>
-          <IconButton
-            classes={cn({ 'rotate-180': isControlsFocused })}
-            icon={<Refresh />}
-            clickHandler={() => {
-              setSelectBookmark({ ...bookmark })
-              setBookmarkPromptType('update-bookmark')
-              showBookmarkPrompt(true)
-            }}
-            style={{ transitionDuration: '0.265s' }}
-          />
-        </div>
+        {isBookmarkEntryFocused && (
+          <div ref={updateRef}>
+            <IconButton
+              classes={cn({ 'rotate-180': isControlsFocused })}
+              icon={<Refresh />}
+              clickHandler={() => {
+                setSelectBookmark({ ...bookmark })
+                setBookmarkPromptType('update-bookmark')
+                showBookmarkPrompt(true)
+              }}
+              style={{ transitionDuration: '0.265s' }}
+            />
+          </div>
+        )}
 
         <div
           className={cn('text-over text-clip w-0', {
