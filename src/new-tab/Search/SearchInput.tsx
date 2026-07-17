@@ -9,6 +9,7 @@ export type SearchInputProps = {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
   onKeydown?: (event: KeyboardEvent<HTMLInputElement>) => void
   placeholder?: string
+  textMd?: boolean
 }
 
 export function SearchInput(props: SearchInputProps) {
@@ -19,13 +20,16 @@ export function SearchInput(props: SearchInputProps) {
     onChange,
     placeholder = ' type to search...',
     onKeydown,
+    textMd,
   } = props
   const [isInputIdle, setIsInputIdle] = useState(true)
+  const maxCarrotLength = textMd ? 45 : 19
   return (
     <div className={cn('relative p-1.5 mx-16')}>
       <input
         className={cn(
-          'border-0 bg-transparent text-white text-lg font-mono focus:outline-none w-full caret-transparent placeholder-neutral-600',
+          'border-0 bg-transparent text-white font-mono focus:outline-none w-full caret-transparent placeholder-neutral-600',
+          { 'text-lg': !textMd },
         )}
         placeholder={placeholder}
         onChange={(e) => {
@@ -50,16 +54,28 @@ export function SearchInput(props: SearchInputProps) {
         tabIndex={0}
       />
       <div className={cn('carrot flex flex-nowrap absolute bottom-1.5')}>
-        <Carrot isIdle={isInputIdle} isVisible={inputText === ''} />
+        <Carrot
+          isIdle={isInputIdle}
+          isVisible={inputText === ''}
+          textMd={textMd}
+        />
         {inputText.split('').map((_, i) => {
           const isLast = i + 1 === inputText.length
-          const isTooMany = i > 19
+          const isTooMany = i > maxCarrotLength
 
           return !isTooMany ? (
-            <Carrot isIdle={isInputIdle} isVisible={isLast || isTooMany} />
+            <Carrot
+              isIdle={isInputIdle}
+              isVisible={isLast || isTooMany}
+              textMd={textMd}
+            />
           ) : null
         })}
-        <Carrot isVisible={inputText.length > 20} isIdle={isInputIdle} />
+        <Carrot
+          isVisible={inputText.length > 20}
+          isIdle={isInputIdle}
+          textMd={textMd}
+        />
       </div>
     </div>
   )
@@ -68,9 +84,11 @@ export function SearchInput(props: SearchInputProps) {
 export function Carrot({
   isIdle,
   isVisible,
+  textMd,
 }: {
   isIdle: boolean
   isVisible: boolean
+  textMd?: boolean
 }) {
   const [scope, animate] = useAnimate()
 
@@ -90,7 +108,8 @@ export function Carrot({
   return (
     <div
       ref={scope}
-      className={cn('w-2.75 h-1', {
+      className={cn('h-1 w-2.75', {
+        'w-[7.5px]': textMd,
         'bg-primary': isVisible,
       })}
     />

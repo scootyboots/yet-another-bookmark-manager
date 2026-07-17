@@ -3,6 +3,8 @@ import Prompt from './Prompt'
 import { cn } from '@/lib/utils'
 import { SearchInput } from './Search/SearchInput'
 
+export const USER = 'motoko'
+
 export type Command = { action: () => void; name: string; hotKey: string }
 
 export type CommandLineProps = {
@@ -10,8 +12,6 @@ export type CommandLineProps = {
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
   commands: Command[]
 }
-
-const commandSearchRegex = / /i
 
 export default function CommandLine(props: CommandLineProps) {
   const { commands, setIsShown, isShown } = props
@@ -41,19 +41,41 @@ export default function CommandLine(props: CommandLineProps) {
     <Prompt
       isShown={isShown}
       setIsShown={setIsShown}
-      contentClasses={cn('p-2 rounded-full relative overflow-visible w-lg')}
-      unstyled
+      contentClasses={cn(
+        'px-2 py-8 relative overflow-visible w-lg',
+        // 'p-2 rounded-full relative overflow-visible w-lg'
+      )}
+      // unstyled
     >
       <div className={cn('flex flex-col gap-2')}>
         <div
-          className={cn(
-            'rounded-full border border-primary shadow-glow-primary bg-background',
-          )}
+          className={
+            cn()
+            // 'rounded-full border border-primary shadow-glow-primary bg-background',
+          }
         >
+          <div className={cn('font-mono bg-none mx-17 pt-1 text-[0.8rem]')}>
+            <span className={cn('text-constructive font-bold')}>
+              {USER}@bookmarks
+            </span>
+            <span className={cn('text-white')}>:</span>
+            <span className={'text-primary'}> ~ </span>
+            <span>command -list</span>
+            {matching.map((cmd, index) => {
+              return (
+                <div className={'flex flex-nowrap gap-8'}>
+                  <div className={cn('text-primary font-bold')}>
+                    {cmd.hotKey}
+                  </div>
+                  <div>{cmd.name}</div>
+                </div>
+              )
+            })}
+          </div>
           <SearchInput
             inputText={inputText}
             setInputText={setInputText}
-            placeholder=" command name or key combination"
+            placeholder=""
             ref={inputRef}
             onChange={changeHandler}
             onKeydown={(e) => {
@@ -61,27 +83,8 @@ export default function CommandLine(props: CommandLineProps) {
                 executeAction(matching[0].action)
               }
             }}
+            textMd
           />
-        </div>
-        <div
-          className={cn(
-            'flex w-full flex-col gap-1.5 content-center items-center text-[1rem]',
-          )}
-        >
-          {matching.map((com, index) => {
-            const isLast = index + 1 === matching.length
-            const hotKey = (
-              <span className={'text-primary font-bold'}>{com.hotKey}</span>
-            )
-            return (
-              <>
-                <div>
-                  {com.name} :{' '}
-                  <span className={'text-primary font-bold'}>{com.hotKey}</span>
-                </div>
-              </>
-            )
-          })}
         </div>
       </div>
     </Prompt>

@@ -41,9 +41,6 @@ export default function BookmarkControls({
   const isRemoveFocused = useHasFocusHover(removeRef)
   const isControlsFocused = useHasFocusHover(controlsRef)
   const setSelectBookmark = useSetAtom(selectedBookmarkAtom)
-  const [forceVisible, setForceVisible] = useState(false)
-
-  const { currentFocus } = useTrackFocus()
 
   const bookmarkId = useMemo(
     () => `${bookmark.group}-${bookmark.groupIndex}-${index}`,
@@ -93,7 +90,7 @@ export default function BookmarkControls({
               'border-primary border',
               'bg-background-high',
               'gap-0.5',
-              { 'gap-1.5': isControlsFocused },
+              { 'gap-1.5': isControlElFocused },
             )}
             // using the `duration` utility class is making it such that this part of the component
             // doesn't get removed from view instantly - opting for inline style instead
@@ -102,7 +99,7 @@ export default function BookmarkControls({
             {isBookmarkEntryFocused && (
               <div ref={updateRef}>
                 <IconButton
-                  classes={cn({ 'rotate-180': isControlsFocused })}
+                  classes={cn({ 'rotate-180': isControlElFocused })}
                   icon={<Refresh />}
                   clickHandler={() => {
                     setSelectBookmark({ ...bookmark })
@@ -113,16 +110,18 @@ export default function BookmarkControls({
                 />
               </div>
             )}
-            {isControlsFocused && (
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: '40px' }}
-                transition={{ duration: 0.095, ease: 'easeOut' }}
-                className={cn('text-over text-clip w-0')}
-              >
-                {displayText}
-              </motion.div>
-            )}
+            <AnimatePresence>
+              {isControlElFocused && (
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: '40px' }}
+                  transition={{ duration: 0.095, ease: 'easeOut' }}
+                  className={cn('text-over text-clip w-0')}
+                >
+                  {displayText}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div ref={removeRef}>
               <IconButton
