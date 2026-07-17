@@ -16,6 +16,7 @@ type BookmarkControlProps = Pick<
   'bookmark' | 'showBookmarkPrompt' | 'removeBookmark'
 > & {
   isBookmarkEntryFocused: boolean
+  isBookmarkEntryMoused: boolean
   setMountControls: React.Dispatch<React.SetStateAction<boolean>>
   setBookmarkPromptType: React.Dispatch<
     React.SetStateAction<BookmarkPromptType>
@@ -30,6 +31,7 @@ export default function BookmarkControls({
   showBookmarkPrompt,
   removeBookmark,
   isBookmarkEntryFocused,
+  isBookmarkEntryMoused,
   setMountControls,
   setBookmarkPromptType,
   index,
@@ -37,10 +39,25 @@ export default function BookmarkControls({
   const updateRef = useRef<HTMLDivElement>(null)
   const removeRef = useRef<HTMLDivElement>(null)
   const controlsRef = useRef<HTMLDivElement>(null)
+  const gapRef = useRef<HTMLDivElement>(null)
   const isUpdateFocused = useHasFocusHover(updateRef)
   const isRemoveFocused = useHasFocusHover(removeRef)
   const isControlsFocused = useHasFocusHover(controlsRef)
+  const isGapFocused = useHasFocusHover(gapRef)
   const setSelectBookmark = useSetAtom(selectedBookmarkAtom)
+
+  const isFocusOrHover = useMemo(
+    () => isBookmarkEntryFocused || isBookmarkEntryMoused,
+    [isBookmarkEntryFocused, isBookmarkEntryMoused],
+  )
+
+  const [hasMouse, setHasMouse] = useState(false)
+
+  useEffect(() => {
+    if (isControlsFocused) {
+      console.log('CONTROLS REF FOCUS OR MOUSE EVENT')
+    }
+  }, [controlsRef])
 
   const bookmarkId = useMemo(
     () => `${bookmark.group}-${bookmark.groupIndex}-${index}`,
@@ -50,23 +67,37 @@ export default function BookmarkControls({
   const { displayText, isControlElFocused } = useMemo(() => {
     let displayText = ''
     let isControlElFocused =
-      isUpdateFocused || isRemoveFocused || isControlsFocused
-    if (isUpdateFocused || isControlsFocused) displayText = 'update'
+      isUpdateFocused ||
+      isRemoveFocused ||
+      isControlsFocused ||
+      isGapFocused ||
+      hasMouse
+    if (isUpdateFocused || isControlsFocused || isGapFocused || hasMouse)
+      displayText = 'update'
     if (isRemoveFocused) displayText = 'remove'
     // const isVisible = isLinkFocused || isUpdateFocused || isRemoveFocused
     return { displayText, isControlElFocused }
-  }, [isUpdateFocused, isRemoveFocused, isControlsFocused])
+  }, [
+    isUpdateFocused,
+    isRemoveFocused,
+    isControlsFocused,
+    isGapFocused,
+    hasMouse,
+  ])
 
   return (
     <AnimatePresence>
-      {isBookmarkEntryFocused && (
+      {isFocusOrHover && (
         <motion.div
+          onMouseEnter={() => setHasMouse(true)}
+          onMouseOut={() => setHasMouse(false)}
+          onMouseMove={() => setHasMouse(true)}
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.065, ease: 'easeOut' }}
           className={cn(
             'bookmark-controls absolute px-7, py-1 -right-2.5 -top-2 cursor-pointer invisible duration-0',
-            { visible: isBookmarkEntryFocused },
+            { visible: isFocusOrHover },
           )}
           ref={controlsRef}
           data-bookmark-id={bookmarkId}
@@ -78,8 +109,6 @@ export default function BookmarkControls({
             }
             if (displayText === 'remove') {
               removeBookmark(bookmark)
-              // controls not getting remounted
-              setMountControls(false)
             }
           }}
         >
@@ -92,14 +121,15 @@ export default function BookmarkControls({
               'gap-0.5',
               { 'gap-1.5': isControlElFocused },
             )}
-            // using the `duration` utility class is making it such that this part of the component
-            // doesn't get removed from view instantly - opting for inline style instead
             style={{ transitionDuration: '0.02s' }}
+            ref={gapRef}
           >
-            {isBookmarkEntryFocused && (
+            {isFocusOrHover && (
               <div ref={updateRef}>
                 <IconButton
-                  classes={cn({ 'rotate-180': isControlElFocused })}
+                  classes={cn('', {
+                    'rotate-180': isControlElFocused,
+                  })}
                   icon={<Refresh />}
                   clickHandler={() => {
                     setSelectBookmark({ ...bookmark })
@@ -110,25 +140,33 @@ export default function BookmarkControls({
                 />
               </div>
             )}
-            <AnimatePresence>
+            {/* <AnimatePresence>
               {isControlElFocused && (
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: '40px' }}
-                  transition={{ duration: 0.095, ease: 'easeOut' }}
+                  transition={{ duration: 0.095, ease: 'linear' }}
                   className={cn('text-over text-clip w-0')}
                 >
                   {displayText}
                 </motion.div>
               )}
-            </AnimatePresence>
+            </AnimatePresence> */}
+
+            <div
+              className={cn('text-over text-clip w-0', {
+                'w-10': isControlElFocused,
+              })}
+              style={{ transitionDuration: '0.095s' }}
+            >
+              {displayText}
+            </div>
 
             <div ref={removeRef}>
               <IconButton
+                classes={cn('')}
                 clickHandler={() => {
                   removeBookmark(bookmark)
-                  // controls not getting remounted
-                  setMountControls(false)
                 }}
                 icon={
                   <CloseCircle

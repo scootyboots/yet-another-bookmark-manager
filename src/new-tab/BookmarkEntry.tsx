@@ -20,9 +20,20 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
   const bookmarkRef = useRef(null)
   const [_, setMountControls] = useState(false)
   const isBookmarkEntryFocused = useHasFocusHover(bookmarkRef)
+  const [hasMouse, setHasMouse] = useState(false)
 
   return (
-    <div className={cn('BookmarkEntry relative mbe-3')} ref={bookmarkRef}>
+    <div
+      className={cn('BookmarkEntry relative mbe-3')}
+      ref={bookmarkRef}
+      onMouseEnter={() => {
+        setHasMouse(true)
+      }}
+      onMouseMove={() => {
+        setHasMouse(true)
+      }}
+      onMouseLeave={() => setHasMouse(false)}
+    >
       <a
         className={cn(
           'bookmark-link text-white text-base no-underline focus:outline-solid focus:outline-2 outline-constructive',
@@ -35,13 +46,15 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
         {props.bookmark.text}
       </a>
       <div className={cn('hidden')}>{props.bookmark.href}</div>
-      {isBookmarkEntryFocused && (
-        <BookmarkControls
-          {...props}
-          isBookmarkEntryFocused={isBookmarkEntryFocused}
-          setMountControls={setMountControls}
-        />
-      )}
+      {isBookmarkEntryFocused ||
+        (hasMouse && (
+          <BookmarkControls
+            {...props}
+            isBookmarkEntryFocused={isBookmarkEntryFocused}
+            isBookmarkEntryMoused={hasMouse}
+            setMountControls={setMountControls}
+          />
+        ))}
     </div>
   )
 }

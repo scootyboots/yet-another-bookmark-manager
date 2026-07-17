@@ -166,3 +166,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+@utility click-expand {
+  &::after {
+    content: '';
+    position: absolute;
+    top: -1rem;
+    bottom: -1rem;
+    left: -1rem;
+    right: -1rem;
+  }
+}
