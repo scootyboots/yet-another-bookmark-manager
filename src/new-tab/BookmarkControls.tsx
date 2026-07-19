@@ -65,7 +65,7 @@ export default function BookmarkControls({
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.065, ease: 'easeOut' }}
           className={cn(
-            'bookmark-controls absolute px-7, py-1 -right-2.5 -top-2 cursor-pointer invisible duration-0',
+            'bookmark-controls absolute px-7, py-1 -right-0.5 -top-2 cursor-pointer invisible duration-0',
             { visible: isControlsVisible },
           )}
           ref={controlsRef}
