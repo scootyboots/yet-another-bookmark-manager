@@ -37,7 +37,8 @@ export default function BookmarkControls({
   const [controlsText, setControlsText] = useState('update')
 
   const isControlsVisible = useMemo(
-    () => isBookmarkEntryFocused || isBookmarkEntryMoused,
+    () => true,
+    // () => isBookmarkEntryFocused || isBookmarkEntryMoused,
     [isBookmarkEntryFocused, isBookmarkEntryMoused],
   )
 
@@ -55,7 +56,6 @@ export default function BookmarkControls({
           }}
           onBlur={() => {
             setIsControlsExpand(false)
-            setControlsText('')
           }}
           onMouseEnter={() => setIsControlsExpand(true)}
           onMouseOut={() => {
@@ -94,8 +94,10 @@ export default function BookmarkControls({
             style={{ transitionDuration: '0.02s' }}
           >
             <div
-              // overlaps the right side do you don't see the text slide in
-              className={cn('w-7.5 h-6 bg-background absolute z-20 right-0')}
+              data-kill-me="scott"
+              className={cn(
+                'w-7.5 h-6 background-gradient-side-dark absolute z-20 right-0 bg-linear-to-r from-transparent from-0% to-background to-20%',
+              )}
             />
             <div
               onMouseEnter={() => setControlsText('update')}
@@ -121,7 +123,11 @@ export default function BookmarkControls({
               })}
               style={{ transitionDuration: '0.095s' }}
             >
-              <div className={cn('absolute z-10 left-0 -bottom-2.25')}>
+              <div
+                className={cn('absolute z-10 left-2 -bottom-2.25', {
+                  'left-0': isControlsExpand,
+                })}
+              >
                 {controlsText}
               </div>
             </div>

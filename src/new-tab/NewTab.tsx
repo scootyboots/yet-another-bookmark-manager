@@ -97,9 +97,6 @@ export default function NewTab() {
       name: 'add bookmark',
       hotKey: 'ff',
     },
-    // { action: removeBookmark, name: 'remove bookmark' },
-    // looks like we'll handle both of these from search
-    // { action: updateBookmark, name: 'update bookmark' },
     {
       action: () => {
         initPrompt.newGroup()
@@ -121,7 +118,13 @@ export default function NewTab() {
       name: 'update group',
       hotKey: 'uu',
     },
-    // TODO: rename group
+    {
+      action: () => {
+        setShowSearch(true)
+      },
+      name: 'search',
+      hotKey: 'ss',
+    },
   ]
 
   const { focusPreviousElement } = useTrackFocus()

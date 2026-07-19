@@ -66,7 +66,8 @@
   --color-constructive: var(--constructive);
   --color-constructive-weak: var(--constructive-weak);
   --color-destructive-weak: var(--destructive-weak);
-  --color-gradient: var(--gradient);
+  /* --color-gradient: var(--gradient); */
+  /* --color-gradient-side-dark: var(--gradient-side-dark); */
 }
 
 :root {
@@ -148,6 +149,12 @@
     233deg,
     rgba(20, 7, 14, 1) 0%,
     rgba(46, 4, 32, 1) 100%
+  );
+
+  --gradient-side-dark: linear-gradient(
+    90deg,
+    var(--transparent) 0%,
+    var(--background) 20%
   );
 }
 
