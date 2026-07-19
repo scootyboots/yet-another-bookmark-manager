@@ -37,8 +37,7 @@ export default function BookmarkControls({
   const [controlsText, setControlsText] = useState('update')
 
   const isControlsVisible = useMemo(
-    () => true,
-    // () => isBookmarkEntryFocused || isBookmarkEntryMoused,
+    () => isBookmarkEntryFocused || isBookmarkEntryMoused,
     [isBookmarkEntryFocused, isBookmarkEntryMoused],
   )
 
