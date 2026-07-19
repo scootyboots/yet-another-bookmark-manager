@@ -22,19 +22,20 @@ export default function useHasFocusHover<T>(ref: React.RefObject<T | null>) {
       setIsFocused(false)
     }
     function handleMouseLeave() {
-      setTimeout(() => {
-        setIsFocused(false)
-      }, 100)
+      // setTimeout(() => {
+      //   setIsFocused(false)
+      // }, 100)
+      setIsFocused(false)
     }
     el.addEventListener('focusin', handleFocus)
     el.addEventListener('focusout', handleUnfocus)
-    // el.addEventListener('mouseenter', handleFocus)
-    // el.addEventListener('mouseleave', handleMouseLeave)
+    el.addEventListener('mouseenter', handleFocus)
+    el.addEventListener('mouseleave', handleMouseLeave)
     return () => {
       el.removeEventListener('focus', handleFocus)
       el.removeEventListener('focusout', handleUnfocus)
-      // el.removeEventListener('mouseenter', handleFocus)
-      // el.removeEventListener('mouseleave', handleMouseLeave)
+      el.removeEventListener('mouseenter', handleFocus)
+      el.removeEventListener('mouseleave', handleMouseLeave)
     }
   }, [])
 

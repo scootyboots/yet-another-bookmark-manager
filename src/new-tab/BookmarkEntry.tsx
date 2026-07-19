@@ -1,8 +1,7 @@
 import { cn } from '@/lib/utils'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Bookmark } from '../background'
 import { BookmarkPromptType } from './BookmarkPrompt'
-import useHasFocusHover from './useHasFocusHover'
 import BookmarkControls from './BookmarkControls'
 
 export type BookmarkEntryProps = {
@@ -19,8 +18,8 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
   const linkRef = useRef(null)
   const bookmarkRef = useRef(null)
   const [_, setMountControls] = useState(false)
-  const isBookmarkEntryFocused = useHasFocusHover(bookmarkRef)
   const [hasMouse, setHasMouse] = useState(false)
+  const [isBookmarkEntryFocused, setIsBookmarkEntryFocused] = useState(false)
 
   return (
     <div
@@ -33,6 +32,12 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
         setHasMouse(true)
       }}
       onMouseLeave={() => setHasMouse(false)}
+      onFocus={() => {
+        setIsBookmarkEntryFocused(true)
+      }}
+      onBlur={() => {
+        setIsBookmarkEntryFocused(false)
+      }}
     >
       <a
         className={cn(
@@ -46,15 +51,12 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
         {props.bookmark.text}
       </a>
       <div className={cn('hidden')}>{props.bookmark.href}</div>
-      {isBookmarkEntryFocused ||
-        (hasMouse && (
-          <BookmarkControls
-            {...props}
-            isBookmarkEntryFocused={isBookmarkEntryFocused}
-            isBookmarkEntryMoused={hasMouse}
-            setMountControls={setMountControls}
-          />
-        ))}
+      <BookmarkControls
+        {...props}
+        isBookmarkEntryFocused={isBookmarkEntryFocused}
+        isBookmarkEntryMoused={hasMouse}
+        setMountControls={setMountControls}
+      />
     </div>
   )
 }

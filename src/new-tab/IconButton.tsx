@@ -7,6 +7,7 @@ export type IconButtonProps = PropsWithChildren<{
   clickHandler: () => void
   style?: CSSProperties
   classes?: ClassValue
+  ref?: React.RefObject<HTMLButtonElement | null>
 }>
 
 export default function IconButton({
@@ -15,6 +16,7 @@ export default function IconButton({
   clickHandler,
   style,
   classes,
+  ref,
 }: IconButtonProps) {
   return (
     <button
@@ -24,6 +26,7 @@ export default function IconButton({
       )}
       onClick={clickHandler}
       style={style}
+      ref={ref}
     >
       {icon}
       {children}

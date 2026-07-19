@@ -45,7 +45,7 @@ export default function CommandLine(props: CommandLineProps) {
         'px-2 py-8 relative overflow-visible w-lg',
         // 'p-2 rounded-full relative overflow-visible w-lg'
       )}
-      // unstyled
+      unstyled
     >
       <div className={cn('flex flex-col gap-2')}>
         <div
@@ -54,7 +54,7 @@ export default function CommandLine(props: CommandLineProps) {
             // 'rounded-full border border-primary shadow-glow-primary bg-background',
           }
         >
-          <div className={cn('font-mono bg-none mx-17 pt-1 text-[0.8rem]')}>
+          <div className={cn('font-mono bg-none mx-17 pt-1 text-[1rem]')}>
             <span className={cn('text-constructive font-bold')}>
               {USER}@bookmarks
             </span>
@@ -83,7 +83,7 @@ export default function CommandLine(props: CommandLineProps) {
                 executeAction(matching[0].action)
               }
             }}
-            textMd
+            // textMd
           />
         </div>
       </div>

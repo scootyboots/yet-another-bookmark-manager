@@ -88,6 +88,7 @@ export default function NewTab() {
     },
   }
 
+  // TODO: add search
   const commands: Command[] = [
     {
       action: () => {
