@@ -1,4 +1,4 @@
-import { useRef, useMemo, useState } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { useSetAtom } from 'jotai'
 import { cn } from '@/lib/utils'
 import { BookmarkEntryProps } from './BookmarkEntry'
@@ -28,15 +28,13 @@ export default function BookmarkControls({
   removeBookmark,
   isBookmarkEntryFocused,
   isBookmarkEntryMoused,
-  setMountControls,
   setBookmarkPromptType,
   index,
 }: BookmarkControlProps) {
   const controlsRef = useRef<HTMLDivElement>(null)
   const setSelectBookmark = useSetAtom(selectedBookmarkAtom)
-
   const [isControlsExpand, setIsControlsExpand] = useState(false)
-  const [controlsText, setControlsText] = useState('')
+  const [controlsText, setControlsText] = useState('update')
 
   const isControlsVisible = useMemo(
     () => isBookmarkEntryFocused || isBookmarkEntryMoused,
@@ -57,9 +55,12 @@ export default function BookmarkControls({
           }}
           onBlur={() => {
             setIsControlsExpand(false)
+            setControlsText('')
           }}
           onMouseEnter={() => setIsControlsExpand(true)}
-          onMouseOut={() => setIsControlsExpand(false)}
+          onMouseOut={() => {
+            setIsControlsExpand(false)
+          }}
           onMouseMove={() => setIsControlsExpand(true)}
           initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -83,7 +84,7 @@ export default function BookmarkControls({
         >
           <div
             className={cn(
-              'overflow-hidden flex border-primary content-center items-center flex-nowrap',
+              'overflow-hidden flex border-primary content-center items-center flex-nowrap relative',
               'font-mono p-1 rounded-full',
               'border-primary border',
               'bg-background-high',
@@ -91,12 +92,14 @@ export default function BookmarkControls({
               { 'gap-1.5': isControlsExpand },
             )}
             style={{ transitionDuration: '0.02s' }}
-            // ref={gapRef}
           >
+            <div
+              // overlaps the right side do you don't see the text slide in
+              className={cn('w-7.5 h-6 bg-background absolute z-20 right-0')}
+            />
             <div
               onMouseEnter={() => setControlsText('update')}
               onFocus={() => setControlsText('update')}
-              // ref={updateRef}
             >
               <IconButton
                 classes={cn('', {
@@ -113,22 +116,23 @@ export default function BookmarkControls({
             </div>
 
             <div
-              className={cn('text-over text-clip w-0', {
+              className={cn('text-over text-clip w-0 relative', {
                 'w-10': isControlsExpand,
               })}
               style={{ transitionDuration: '0.095s' }}
             >
-              {controlsText}
+              <div className={cn('absolute z-10 left-0 -bottom-2.25')}>
+                {controlsText}
+              </div>
             </div>
 
             <div
+              className={cn('z-30')}
               onMouseEnter={() => setControlsText('remove')}
               onFocus={() => setControlsText('remove')}
-              // ref={removeRef}
             >
               <IconButton
                 classes={cn('')}
-                // ref={removeRef}
                 clickHandler={() => {
                   removeBookmark(bookmark)
                 }}

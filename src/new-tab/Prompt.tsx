@@ -59,7 +59,7 @@ export default function Prompt({
     <>
       <div
         className={cn(
-          'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background z-30 opacity-95 shadow-glow-primary-inset',
+          'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background z-40 opacity-95 shadow-glow-primary-inset',
         )}
       />
       <FocusTrap>
