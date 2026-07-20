@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { Bookmarks } from '../background'
 
+// TODO: expose this using atoms
 export default function useBookmarkSorter(bookmarks: Bookmarks) {
   const sorted = useMemo(() => {
     const columns = [...new Set(bookmarks.map((bk) => bk.col))].sort(

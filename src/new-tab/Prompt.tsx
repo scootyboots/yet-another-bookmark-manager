@@ -7,9 +7,9 @@ import {
   useRef,
 } from 'react'
 import { useTrackFocus } from './useTrackFocus'
-import { useClickOutside } from './PopOutMenu'
 import { cn } from '@/lib/utils'
 import { ClassValue } from 'clsx'
+import useClickOutside from './hooks/useClickOutside'
 
 type PromptProps = PropsWithChildren<{
   isShown: boolean

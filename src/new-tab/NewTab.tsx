@@ -15,11 +15,14 @@ import {
   selectedBookmarkAtom,
   useInitializeBookmarks,
   EMPTY_BOOKMARK,
+  setPromptCommandAtom,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
 import GroupControls from './GroupControls'
 import { ShadTesting } from './ShadTesting'
+import { Button } from '@/components/ui/button'
+import CommandPrompt from './command-prompts/CommandPrompt'
 
 type Bookmarks = typeof bookmarksJson
 
@@ -51,12 +54,16 @@ export default function NewTab() {
   )
   const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
 
+  const setCommandAtom = useSetAtom(setPromptCommandAtom)
+
   const initPrompt = {
     newBookmark: (groupName?: string) => {
       const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
-      setBookmarkPromptType('new-bookmark')
+      // setBookmarkPromptType('new-bookmark')
       setSelectedBookmark(bk)
       setShowBkPrompt(true)
+
+      setCommandAtom('new-bookmark')
     },
     updateBookmark: (groupName?: string, col?: number) => {
       const bk = {
@@ -67,24 +74,32 @@ export default function NewTab() {
       setBookmarkPromptType('update-bookmark')
       setSelectedBookmark(bk)
       setShowBkPrompt(true)
+
+      setCommandAtom('update-bookmark')
     },
     newGroup: (colIndex?: number) => {
       const bk = { ...EMPTY_BOOKMARK, col: colIndex ?? 0 }
       setBookmarkPromptType('new-group')
       setSelectedBookmark(bk)
       setShowBkPrompt(true)
+
+      setCommandAtom('new-group')
     },
     removeGroup: (groupName?: string) => {
       const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
       setBookmarkPromptType('remove-group')
       setSelectedBookmark(bk)
       setShowBkPrompt(true)
+
+      setCommandAtom('remove-group')
     },
     updateGroup: (groupName?: string) => {
       const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
       setBookmarkPromptType('update-group')
       setSelectedBookmark(bk)
       setShowBkPrompt(true)
+
+      setCommandAtom('update-group')
     },
   }
 
@@ -163,6 +178,8 @@ export default function NewTab() {
           reset
         </button>
         <button onClick={focusPreviousElement}>focus previous</button>
+        <Button onClick={() => initPrompt.newBookmark()}>add bk atom</Button>
+        <ShadTesting />
         <div>
           <button>mod</button> + <button>k</button> to search
         </div>
@@ -192,15 +209,17 @@ export default function NewTab() {
           promptUpdateBookmark={initPrompt.updateBookmark}
         />
       ) : null}
-
       {showBkPrompt ? (
+        <CommandPrompt isShown={showBkPrompt} setIsShown={setShowBkPrompt} />
+      ) : null}
+      {/* {showBkPrompt ? (
         <BookmarkPrompt
           type={bookmarkPromptType}
           isShown={showBkPrompt}
           setIsShown={setShowBkPrompt}
           {...sorter}
         />
-      ) : null}
+      ) : null} */}
       {showCommandLine ? (
         <CommandLine
           commands={commands}

@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useRef, useState } from 'react'
+import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import Prompt from './Prompt'
 import { cn } from '@/lib/utils'
 import { SearchInput } from './Search/SearchInput'
@@ -18,9 +18,10 @@ export default function CommandLine(props: CommandLineProps) {
   const [matching, setMatching] = useState<Command[]>(commands)
   const [inputText, setInputText] = useState('')
   const inputRef = useRef(null)
-  function executeAction(action: () => void) {
+  const noMatchingCommand = useMemo(() => !Boolean(matching.length), [matching])
+  function executeAction(action: () => void | undefined) {
     setTimeout(() => {
-      action()
+      action?.()
       setIsShown(false)
     }, 10)
   }
@@ -71,6 +72,9 @@ export default function CommandLine(props: CommandLineProps) {
                 </div>
               )
             })}
+            {noMatchingCommand && inputText ? (
+              <div className={cn('')}>command not found</div>
+            ) : null}
           </div>
           <SearchInput
             inputText={inputText}
@@ -80,7 +84,7 @@ export default function CommandLine(props: CommandLineProps) {
             onChange={changeHandler}
             onKeydown={(e) => {
               if (e.key === 'Enter') {
-                executeAction(matching[0].action)
+                executeAction(matching[0]?.action)
               }
             }}
             // textMd

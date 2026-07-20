@@ -10,6 +10,7 @@ import DotsHorizontal from '../components/Icons/DotsHorizontal'
 import Dot from '../components/Icons/Dot'
 import { cn } from '@/lib/utils'
 import { ClassValue } from 'clsx'
+import useClickOutside from './hooks/useClickOutside'
 
 const POP_OUT_TRANSITION_MS = 150
 const POP_OUT_MENU_CLASS_NAME = 'pop-out-menu-menu'
@@ -45,43 +46,6 @@ const IconToUse = ({
       </div>
     </div>
   )
-}
-
-export function useClickOutside<T extends HTMLElement>(
-  ref: React.RefObject<T | null>,
-  onClickOutside?: () => void,
-  shouldRemoveListener?: boolean,
-) {
-  const [isClickOutside, setIsClickOutside] = useState(false)
-  useEffect(() => {
-    function mouseToucheHandler(event: Event) {
-      const t = event.target as HTMLElement | null
-      if (!ref.current) {
-        setIsClickOutside(false)
-        return
-      }
-      const targetIsInsideRefNode = ref?.current?.contains(t)
-      if (targetIsInsideRefNode) {
-        setIsClickOutside(false)
-        return
-      }
-      setIsClickOutside(true)
-      onClickOutside?.()
-    }
-
-    document.addEventListener('mousedown', mouseToucheHandler)
-    document.addEventListener('touchstart', mouseToucheHandler)
-    if (shouldRemoveListener) {
-      document.removeEventListener('mousedown', mouseToucheHandler)
-      document.removeEventListener('touchstart', mouseToucheHandler)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', mouseToucheHandler)
-      document.removeEventListener('touchstart', mouseToucheHandler)
-    }
-  }, [])
-  return isClickOutside
 }
 
 export default function PopOutMenu({

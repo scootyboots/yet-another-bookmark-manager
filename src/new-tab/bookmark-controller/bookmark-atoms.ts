@@ -32,6 +32,10 @@ export const selectedBookmarkAtom = atom<Bookmark>({ ...EMPTY_BOOKMARK })
 export const clearSelectedBookmarkAtom = atom(null, (_get, set) => {
   set(selectedBookmarkAtom, { ...EMPTY_BOOKMARK })
 })
+export const selectedBookmarkOnMountAtom = atom<Bookmark>({ ...EMPTY_BOOKMARK })
+export const clearSelectedBookmarkOnMountAtom = atom(null, (_get, set) => {
+  set(selectedBookmarkAtom, { ...EMPTY_BOOKMARK })
+})
 
 export const refreshBookmarksFromStorageAtom = atom(null, async (_get, set) => {
   const { data: bookmarks } = await getStoredBookmarks()
@@ -42,6 +46,22 @@ export const clearBookmarksAtom = atom(null, async (_get, set) => {
   await resetBookmarks()
   set(bookmarksAtom, [])
 })
+
+export type PromptCommands =
+  | 'new-bookmark'
+  | 'update-bookmark'
+  | 'new-group'
+  | 'update-group'
+  | 'remove-group'
+  | ''
+
+export const promptCommandAtom = atom<PromptCommands>('')
+export const setPromptCommandAtom = atom(
+  null,
+  (_get, set, command: PromptCommands) => {
+    set(promptCommandAtom, command)
+  },
+)
 
 export const refreshRecentLinksFromStorageAtom = atom(
   null,
