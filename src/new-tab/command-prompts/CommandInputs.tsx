@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
 import { IGNORE_CLICK_OUTSIDE_ATTRIBUTE } from '../hooks/useClickOutside'
 
 const groupsAtom = atom<string[]>([])
@@ -98,7 +99,7 @@ function CommandLabel({
   children,
 }: { name: string } & PropsWithChildren) {
   return (
-    <label className={cn('w-12 font-mono text-[1rem]')} htmlFor={name}>
+    <label className={cn('w-14.5 font-mono text-[1rem]')} htmlFor={name}>
       {children}
     </label>
   )
@@ -132,19 +133,37 @@ export function CommandSelectGroup(props: CommandSelectGroupProps) {
   return (
     <CommandGroup>
       <CommandLabel name={name}>{children}</CommandLabel>
-      <Select name={name} onValueChange={onChange}>
-        <SelectTrigger>
-          <SelectValue>group</SelectValue>
-        </SelectTrigger>
-        <SelectContent data-ignore-click-outside>
-          <SelectGroup>
-            <SelectLabel>groups</SelectLabel>
-            {options.map((group) => (
-              <SelectItem value={group}>{group}</SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+      <NativeSelect
+        className={cn('w-full')}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        <NativeSelectOption value=""></NativeSelectOption>
+        {options.map((group) => (
+          <NativeSelectOption value={group}>{group}</NativeSelectOption>
+        ))}
+      </NativeSelect>
     </CommandGroup>
   )
 }
+
+// export function CommandSelectGroup(props: CommandSelectGroupProps) {
+//   const { options, name, children, onChange } = props
+//   return (
+//     <CommandGroup>
+//       <CommandLabel name={name}>{children}</CommandLabel>
+//       <Select name={name} onValueChange={onChange}>
+//         <SelectTrigger>
+//           <SelectValue>group</SelectValue>
+//         </SelectTrigger>
+//         <SelectContent className={cn('z-60')} data-ignore-click-outside>
+//           <SelectGroup>
+//             <SelectLabel>groups</SelectLabel>
+//             {options.map((group) => (
+//               <SelectItem value={group}>{group}</SelectItem>
+//             ))}
+//           </SelectGroup>
+//         </SelectContent>
+//       </Select>
+//     </CommandGroup>
+//   )
+// }

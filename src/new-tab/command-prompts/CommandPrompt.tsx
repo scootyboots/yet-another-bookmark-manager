@@ -109,6 +109,7 @@ function CommandPromptWrapper(props: CommandPromptWrapper) {
       <div
         className={cn(
           'BookmarkPrompt-content flex flex-col gap-4 m-2',
+          'max-w-105',
           // 'bg-background',
         )}
         ref={contentRef}
