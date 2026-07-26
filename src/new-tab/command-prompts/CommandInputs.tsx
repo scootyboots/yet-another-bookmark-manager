@@ -1,3 +1,11 @@
+import {
+  ChangeEvent,
+  PropsWithChildren,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { cn } from '@/lib/utils'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import {
@@ -5,19 +13,10 @@ import {
   PromptCommands,
   selectedBookmarkAtom,
 } from '../bookmark-controller/bookmark-atoms'
-import { ChangeEvent, PropsWithChildren, useEffect, useMemo } from 'react'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
-import { IGNORE_CLICK_OUTSIDE_ATTRIBUTE } from '../hooks/useClickOutside'
+import { motion, useAnimate } from 'motion/react'
+import { CircleNotchIcon, SwapIcon } from '@phosphor-icons/react'
 
 const groupsAtom = atom<string[]>([])
 
@@ -34,6 +33,8 @@ export default function CommandInputs(props: CommandInputsProps) {
       [...new Set(bookmarks.map((bk) => bk.group))].filter((group) => group),
     [bookmarks],
   )
+  const [isNewGroupSelected, setIsNewGroupSelected] = useState(false)
+  const [isTransitionInput, setIsTransitionInput] = useState(false)
 
   useEffect(() => {
     console.log('ALL GROUPS')
@@ -43,6 +44,9 @@ export default function CommandInputs(props: CommandInputsProps) {
     <div className={cn('command-inputs')}>
       {command === 'new-bookmark' && (
         <>
+          {/* <div>
+            <SpinnerCircle />
+          </div> */}
           <CommandInputGroup
             name="add-bookmark"
             value={selectedBookmark.href}
@@ -67,15 +71,42 @@ export default function CommandInputs(props: CommandInputsProps) {
           >
             text
           </CommandInputGroup>
-          <CommandSelectGroup
-            options={allGroups}
-            name="new-bookmark"
-            onChange={(value) => {
-              setSelectedBookmark({ ...selectedBookmark, group: value })
-            }}
-          >
-            group
-          </CommandSelectGroup>
+          {isNewGroupSelected ? (
+            <CommandInputGroup
+              name="add-bookmark"
+              value={selectedBookmark.group}
+              focusOnMount
+              onChange={(event) => {
+                setSelectedBookmark({
+                  ...selectedBookmark,
+                  group: event.target.value,
+                })
+              }}
+            >
+              group
+            </CommandInputGroup>
+          ) : (
+            <CommandSelectGroup
+              options={allGroups}
+              name="new-bookmark"
+              isTransitioning={isTransitionInput}
+              onValueChange={(value) => {
+                if (value === NEW_GROUP_OPTION_VALUE) {
+                  setSelectedBookmark({ ...selectedBookmark, group: '' })
+                  setIsTransitionInput(true)
+                  setTimeout(() => {
+                    setIsTransitionInput(false)
+                    setIsNewGroupSelected(true)
+                  }, 150)
+                  return
+                }
+                setSelectedBookmark({ ...selectedBookmark, group: value })
+              }}
+              newGroupOption
+            >
+              group
+            </CommandSelectGroup>
+          )}
         </>
       )}
       {command === 'update-bookmark' && <></>}
@@ -99,9 +130,40 @@ function CommandLabel({
   children,
 }: { name: string } & PropsWithChildren) {
   return (
-    <label className={cn('w-14.5 font-mono text-[1rem]')} htmlFor={name}>
+    <label className={cn('w-13.5 font-mono text-sm text-end')} htmlFor={name}>
       {children}
     </label>
+  )
+}
+
+function SpinnerIcon({ children }: PropsWithChildren) {
+  return (
+    <motion.div
+      animate={{ rotate: 360 }}
+      transition={{ duration: 0.75, repeat: Infinity, ease: 'easeInOut' }}
+      // className={cn('w-4')}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function SpinnerCircle() {
+  return (
+    <SpinnerIcon>
+      <CircleNotchIcon color="var(--primary)" weight="bold" />
+    </SpinnerIcon>
+  )
+}
+
+function SwapIconAnimated() {
+  return (
+    <motion.div
+      animate={{ x: [0, 6, 0] }}
+      transition={{ duration: 0.075, ease: 'linear' }}
+    >
+      <SwapIcon color="var(--primary)" size={20} />
+    </motion.div>
   )
 }
 
@@ -109,42 +171,91 @@ type CommandInputGroupProps = {
   name: string
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  focusOnMount?: boolean
+  divider?: boolean
 } & PropsWithChildren
 
 export function CommandInputGroup(props: CommandInputGroupProps) {
-  const { value, name, onChange, children } = props
+  const {
+    value,
+    name,
+    onChange,
+    focusOnMount = false,
+    divider,
+    children,
+  } = props
+  const [scope, animate] = useAnimate<HTMLInputElement>()
+
+  useEffect(() => {
+    if (focusOnMount) {
+      scope.current?.focus()
+      animate(
+        scope.current,
+        { scale: [0.95, 1.02, 1] },
+        { duration: 0.0875, ease: 'easeOut' },
+      )
+    }
+  }, [])
   return (
     <CommandGroup>
       <CommandLabel name={name}>{children}</CommandLabel>
-      {/* <div className={cn('Search-result-divider w-4')}>:</div> */}
-      <Input onChange={onChange} type="text" value={value} name={name} />
+      {divider && <div className={cn('Search-result-divider w-4')}>:</div>}
+      <Input
+        onChange={onChange}
+        type="text"
+        value={value}
+        name={name}
+        ref={scope}
+      />
     </CommandGroup>
   )
 }
+
+const NEW_GROUP_OPTION_VALUE = 'new-group-prompt-user'
 
 type CommandSelectGroupProps = {
   name: string
   options: string[]
-  onChange: (valueChange: string) => void
+  onValueChange: (value: string) => void
+  newGroupOption?: boolean
+  isTransitioning?: boolean
 } & PropsWithChildren
 
 export function CommandSelectGroup(props: CommandSelectGroupProps) {
-  const { options, name, children, onChange } = props
+  const {
+    options,
+    name,
+    children,
+    onValueChange,
+    newGroupOption,
+    isTransitioning,
+  } = props
   return (
     <CommandGroup>
       <CommandLabel name={name}>{children}</CommandLabel>
-      <NativeSelect
-        className={cn('w-full')}
-        onChange={(e) => onChange(e.target.value)}
-      >
-        <NativeSelectOption value=""></NativeSelectOption>
-        {options.map((group) => (
-          <NativeSelectOption value={group}>{group}</NativeSelectOption>
-        ))}
-      </NativeSelect>
+      {isTransitioning ? (
+        <SwapIconAnimated />
+      ) : (
+        <NativeSelect
+          className={cn('w-full')}
+          onChange={(e) => onValueChange(e.target.value)}
+        >
+          <NativeSelectOption value=""></NativeSelectOption>
+          {newGroupOption && (
+            <NativeSelectOption value={NEW_GROUP_OPTION_VALUE}>
+              CREATE NEW GROUP
+            </NativeSelectOption>
+          )}
+          {options.map((group) => (
+            <NativeSelectOption value={group}>{group}</NativeSelectOption>
+          ))}
+        </NativeSelect>
+      )}
     </CommandGroup>
   )
 }
+
+// TODO: figure out why having trouble with non-native select inside of modals
 
 // export function CommandSelectGroup(props: CommandSelectGroupProps) {
 //   const { options, name, children, onChange } = props

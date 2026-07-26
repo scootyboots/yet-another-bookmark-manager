@@ -108,16 +108,25 @@ function CommandPromptWrapper(props: CommandPromptWrapper) {
     >
       <div
         className={cn(
-          'BookmarkPrompt-content flex flex-col gap-4 m-2',
-          'max-w-105',
-          // 'bg-background',
+          'w-full flex items-center content-center justify-center',
+          'BookmarkPrompt-content-wrapper',
         )}
-        ref={contentRef}
-        // data-has-new-bookmark-data={hadNeededNewBookmarkProps}
-        // data-has-group={Boolean(group)}
-        // data-action-type={type}
       >
-        {children}
+        <div
+          className={cn(
+            'CommandPrompt-content flex flex-col gap-4 m-2 border border-primary p-8 rounded-sm',
+            'bg-background',
+            'min-w-100',
+            'max-w-120',
+            // 'bg-background',
+          )}
+          ref={contentRef}
+          // data-has-new-bookmark-data={hadNeededNewBookmarkProps}
+          // data-has-group={Boolean(group)}
+          // data-action-type={type}
+        >
+          {children}
+        </div>
       </div>
     </Prompt>
   )

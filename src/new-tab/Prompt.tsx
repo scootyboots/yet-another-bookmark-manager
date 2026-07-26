@@ -65,7 +65,7 @@ export default function Prompt({
       <FocusTrap>
         <div
           className={cn(
-            'Prompt fixed top-8 left-0 right-0 z-40 rounded-[0.75rem] py-4 px-4 flex justify-center',
+            'Prompt fixed top-8 left-0 right-0 z-40 rounded-[0.75rem] py-4 px-4 flex justify-center items-center',
             className,
           )}
           data-prompt-open={isShown}

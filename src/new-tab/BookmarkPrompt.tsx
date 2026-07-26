@@ -304,7 +304,7 @@ export default function BookmarkPrompt(props: BookmarkPromptProps) {
       ref={promptRef}
     >
       <div
-        className={cn('BookmarkPrompt-content flex flex-col gap-4')}
+        className={cn('BookmarkPrompt-content flex flex-col gap-4 min-w-100')}
         ref={contentRef}
         data-has-new-bookmark-data={hadNeededNewBookmarkProps}
         data-has-group={Boolean(group)}
