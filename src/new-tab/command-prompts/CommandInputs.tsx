@@ -44,9 +44,6 @@ export default function CommandInputs(props: CommandInputsProps) {
     <div className={cn('command-inputs')}>
       {command === 'new-bookmark' && (
         <>
-          {/* <div>
-            <SpinnerCircle />
-          </div> */}
           <CommandInputGroup
             name="add-bookmark"
             value={selectedBookmark.href}
@@ -89,15 +86,10 @@ export default function CommandInputs(props: CommandInputsProps) {
             <CommandSelectGroup
               options={allGroups}
               name="new-bookmark"
-              isTransitioning={isTransitionInput}
               onValueChange={(value) => {
                 if (value === NEW_GROUP_OPTION_VALUE) {
                   setSelectedBookmark({ ...selectedBookmark, group: '' })
-                  setIsTransitionInput(true)
-                  setTimeout(() => {
-                    setIsTransitionInput(false)
-                    setIsNewGroupSelected(true)
-                  }, 150)
+                  setIsNewGroupSelected(true)
                   return
                 }
                 setSelectedBookmark({ ...selectedBookmark, group: value })
@@ -109,7 +101,34 @@ export default function CommandInputs(props: CommandInputsProps) {
           )}
         </>
       )}
-      {command === 'update-bookmark' && <></>}
+      {command === 'update-bookmark' && (
+        <>
+          <CommandInputGroup
+            name="href"
+            value={selectedBookmark.href}
+            onChange={(event) => {
+              setSelectedBookmark({
+                ...selectedBookmark,
+                href: event.target.value,
+              })
+            }}
+          >
+            href
+          </CommandInputGroup>
+          <CommandInputGroup
+            name="text"
+            value={selectedBookmark.text}
+            onChange={(event) => {
+              setSelectedBookmark({
+                ...selectedBookmark,
+                text: event.target.value,
+              })
+            }}
+          >
+            text
+          </CommandInputGroup>
+        </>
+      )}
       {command === 'new-group' && <></>}
       {command === 'update-group' && <></>}
       {command === 'remove-group' && <></>}
@@ -119,7 +138,9 @@ export default function CommandInputs(props: CommandInputsProps) {
 
 function CommandGroup({ children }: PropsWithChildren) {
   return (
-    <div className={cn('Bookmark-input-group flex gap-4 items-baseline mb-4')}>
+    <div
+      className={cn('Bookmark-input-group flex gap-4 items-baseline mb-4 h-8')}
+    >
       {children}
     </div>
   )
@@ -161,8 +182,9 @@ function SwapIconAnimated() {
     <motion.div
       animate={{ x: [0, 6, 0] }}
       transition={{ duration: 0.075, ease: 'linear' }}
+      className={'h-6'}
     >
-      <SwapIcon color="var(--primary)" size={20} />
+      <SwapIcon color="var(--primary)" size={24} />
     </motion.div>
   )
 }
@@ -173,6 +195,7 @@ type CommandInputGroupProps = {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   focusOnMount?: boolean
   divider?: boolean
+  enterAnimation?: boolean
 } & PropsWithChildren
 
 export function CommandInputGroup(props: CommandInputGroupProps) {
@@ -183,17 +206,24 @@ export function CommandInputGroup(props: CommandInputGroupProps) {
     focusOnMount = false,
     divider,
     children,
+    enterAnimation,
   } = props
   const [scope, animate] = useAnimate<HTMLInputElement>()
 
   useEffect(() => {
     if (focusOnMount) {
-      scope.current?.focus()
       animate(
         scope.current,
-        { scale: [0.95, 1.02, 1] },
-        { duration: 0.0875, ease: 'easeOut' },
+        { y: [6, 0] },
+        { duration: 0.0575, ease: 'easeInOut' },
       )
+      if (enterAnimation) {
+        setTimeout(() => {
+          scope.current?.focus()
+        }, 125)
+      } else {
+        scope.current?.focus()
+      }
     }
   }, [])
   return (
@@ -233,24 +263,20 @@ export function CommandSelectGroup(props: CommandSelectGroupProps) {
   return (
     <CommandGroup>
       <CommandLabel name={name}>{children}</CommandLabel>
-      {isTransitioning ? (
-        <SwapIconAnimated />
-      ) : (
-        <NativeSelect
-          className={cn('w-full')}
-          onChange={(e) => onValueChange(e.target.value)}
-        >
-          <NativeSelectOption value=""></NativeSelectOption>
-          {newGroupOption && (
-            <NativeSelectOption value={NEW_GROUP_OPTION_VALUE}>
-              CREATE NEW GROUP
-            </NativeSelectOption>
-          )}
-          {options.map((group) => (
-            <NativeSelectOption value={group}>{group}</NativeSelectOption>
-          ))}
-        </NativeSelect>
-      )}
+      <NativeSelect
+        className={cn('w-full')}
+        onChange={(e) => onValueChange(e.target.value)}
+      >
+        <NativeSelectOption value=""></NativeSelectOption>
+        {newGroupOption && (
+          <NativeSelectOption value={NEW_GROUP_OPTION_VALUE}>
+            CREATE NEW GROUP
+          </NativeSelectOption>
+        )}
+        {options.map((group) => (
+          <NativeSelectOption value={group}>{group}</NativeSelectOption>
+        ))}
+      </NativeSelect>
     </CommandGroup>
   )
 }

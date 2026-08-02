@@ -125,6 +125,7 @@
   --border: rgb(164, 30, 122);
   --input: rgb(164, 30, 122);
   --ring: rgb(255, 13, 158);
+  --ring: var(--constructive);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
