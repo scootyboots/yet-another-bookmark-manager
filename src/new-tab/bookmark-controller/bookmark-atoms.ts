@@ -23,7 +23,7 @@ export const EMPTY_BOOKMARK: Bookmark = {
   col: 1,
   href: '',
   text: '',
-}
+} as const
 
 export const bookmarksAtom = atom<Bookmark[]>([])
 export const recentLinksAtom = atom<RecentLinks[]>([])
@@ -190,4 +190,63 @@ export const bookmarkMutationAtoms = {
   updateGroupNameAtom,
   clearBookmarksAtom,
   updateRecentLinksAtom,
+}
+
+export const showPromptAtom = atom<boolean>(false)
+export const showPromptSetAtom = atom(null, (_get, set, isShown: boolean) => {
+  set(showPromptAtom, isShown)
+})
+
+export const newBookmarkPromptSetAtom = atom(
+  null,
+  (_get, set, groupName?: string) => {
+    console.log('tried running new bookmark prompt set atom')
+    set(selectedBookmarkAtom, { ...EMPTY_BOOKMARK, group: groupName ?? '' })
+    set(showPromptAtom, true)
+    set(promptCommandAtom, 'new-bookmark')
+  },
+)
+
+export const updateBookmarkPromptSetAtom = atom(
+  null,
+  (_get, set, bookmark: Bookmark) => {
+    set(selectedBookmarkAtom, bookmark)
+    set(showPromptAtom, true)
+    set(promptCommandAtom, 'update-bookmark')
+  },
+)
+
+export const newGroupPromptSetAtom = atom(
+  null,
+  (_get, set, colIndex?: number) => {
+    set(selectedBookmarkAtom, { ...EMPTY_BOOKMARK, col: colIndex ?? 0 })
+    set(promptCommandAtom, 'new-group')
+    set(showPromptAtom, true)
+  },
+)
+
+export const removeGroupPromptSetAtom = atom(
+  null,
+  (_get, set, groupName?: string) => {
+    set(selectedBookmarkAtom, { ...EMPTY_BOOKMARK, group: groupName ?? '' })
+    set(promptCommandAtom, 'remove-group')
+    set(showPromptAtom, true)
+  },
+)
+
+export const updateGroupPromptSetAtom = atom(
+  null,
+  (_get, set, groupName?: string) => {
+    set(selectedBookmarkAtom, { ...EMPTY_BOOKMARK, group: groupName ?? '' })
+    set(promptCommandAtom, 'update-group')
+    set(showPromptAtom, true)
+  },
+)
+
+export const promptSetAtoms = {
+  newBookmark: newBookmarkPromptSetAtom,
+  updateBookmark: updateBookmarkPromptSetAtom,
+  newGroup: newGroupPromptSetAtom,
+  removeGroup: removeGroupPromptSetAtom,
+  updateGroup: updateGroupPromptSetAtom,
 }

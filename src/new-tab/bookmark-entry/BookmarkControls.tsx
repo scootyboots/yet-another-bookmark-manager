@@ -2,9 +2,12 @@ import { useRef, useMemo, useState, useEffect } from 'react'
 import { useSetAtom } from 'jotai'
 import { cn } from '@/lib/utils'
 import { BookmarkEntryProps } from './BookmarkEntry'
-import { BookmarkPromptType } from './BookmarkPrompt'
-import { selectedBookmarkAtom } from './bookmark-controller/bookmark-atoms'
-import IconButton from './IconButton'
+import { BookmarkPromptType } from '../BookmarkPrompt'
+import {
+  selectedBookmarkAtom,
+  setPromptCommandAtom,
+} from '../bookmark-controller/bookmark-atoms'
+import IconButton from '../IconButton'
 import Refresh from '@/components/Icons/Refresh'
 import CloseCircle from '@/components/Icons/CloseCircle'
 import { AnimatePresence, motion } from 'motion/react'
@@ -16,9 +19,6 @@ type BookmarkControlProps = Pick<
   isBookmarkEntryFocused: boolean
   isBookmarkEntryMoused: boolean
   setMountControls: React.Dispatch<React.SetStateAction<boolean>>
-  setBookmarkPromptType: React.Dispatch<
-    React.SetStateAction<BookmarkPromptType>
-  >
   index: number
 }
 
@@ -28,11 +28,11 @@ export default function BookmarkControls({
   removeBookmark,
   isBookmarkEntryFocused,
   isBookmarkEntryMoused,
-  setBookmarkPromptType,
   index,
 }: BookmarkControlProps) {
   const controlsRef = useRef<HTMLDivElement>(null)
   const setSelectBookmark = useSetAtom(selectedBookmarkAtom)
+  const setPromptCommand = useSetAtom(setPromptCommandAtom)
   const [isControlsExpand, setIsControlsExpand] = useState(false)
   const [controlsText, setControlsText] = useState('update')
 
@@ -72,7 +72,7 @@ export default function BookmarkControls({
           data-bookmark-id={bookmarkId}
           onClick={() => {
             if (controlsText === 'update') {
-              setBookmarkPromptType('update-bookmark')
+              setPromptCommand('update-bookmark')
               setSelectBookmark({ ...bookmark })
               showBookmarkPrompt(true)
             }
@@ -109,7 +109,7 @@ export default function BookmarkControls({
                 icon={<Refresh />}
                 clickHandler={() => {
                   setSelectBookmark({ ...bookmark })
-                  setBookmarkPromptType('update-bookmark')
+                  setPromptCommand('update-bookmark')
                   showBookmarkPrompt(true)
                 }}
                 style={{ transitionDuration: '0.265s' }}

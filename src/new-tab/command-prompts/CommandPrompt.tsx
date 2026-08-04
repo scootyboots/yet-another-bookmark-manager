@@ -8,6 +8,7 @@ import {
   PromptCommands,
   selectedBookmarkAtom,
   selectedBookmarkOnMountAtom,
+  showPromptAtom,
 } from '../bookmark-controller/bookmark-atoms'
 import Prompt from '../Prompt'
 import { GenericHeader } from '../GenericHeader'
@@ -46,13 +47,10 @@ export const COMMAND_SPECIFIC_COPY: Record<
   '': { header: 'Remove Existing Group', cancel: '', confirm: '' },
 }
 
-export type CommandPromptProps = {
-  isShown: boolean
-  setIsShown: React.Dispatch<React.SetStateAction<boolean>>
-}
+export type CommandPromptProps = {}
 
 export default function CommandPrompt(props: CommandPromptProps) {
-  const { isShown, setIsShown } = props
+  const isShown = useAtomValue(showPromptAtom)
   const command = useAtomValue(promptCommandAtom)
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
   const [_, setSelectedBookmarkOnMount] = useAtom(selectedBookmarkOnMountAtom)
@@ -82,10 +80,12 @@ export default function CommandPrompt(props: CommandPromptProps) {
       {...props}
     >
       <div className={cn('flex items-center justify-center')}>
-        <GenericHeader>{COMMAND_SPECIFIC_COPY[command].header}</GenericHeader>
+        <GenericHeader underline={false}>
+          {COMMAND_SPECIFIC_COPY[command].header}
+        </GenericHeader>
       </div>
       <CommandInputs command={command} />
-      <CommandPromptControls command={command} setIsShown={setIsShown} />
+      <CommandPromptControls command={command} />
     </CommandPromptWrapper>
   )
 }
@@ -96,7 +96,8 @@ type CommandPromptWrapper = {
 } & PropsWithChildren &
   CommandPromptProps
 function CommandPromptWrapper(props: CommandPromptWrapper) {
-  const { isShown, setIsShown, promptRef, contentRef, children } = props
+  const [isShown, setIsShown] = useAtom(showPromptAtom)
+  const { promptRef, contentRef, children } = props
   return (
     <Prompt
       // TODO: animate shake x

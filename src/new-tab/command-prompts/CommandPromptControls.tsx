@@ -1,18 +1,20 @@
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtomValue, useSetAtom, useAtom } from 'jotai'
 import {
   bookmarkMutationAtoms,
   PromptCommands,
   selectedBookmarkAtom,
   selectedBookmarkOnMountAtom,
+  showPromptAtom,
+  showPromptSetAtom,
 } from '../bookmark-controller/bookmark-atoms'
 import { useMemo, useState } from 'react'
 import { COMMAND_SPECIFIC_COPY } from './CommandPrompt'
 
 type CommandPromptControlsProps = {
   command: PromptCommands
-  setIsShown: React.Dispatch<React.SetStateAction<boolean>>
+  // setIsShown: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function CommandPromptControls(
@@ -30,7 +32,8 @@ export default function CommandPromptControls(
   const removeGroup = useSetAtom(bookmarkMutationAtoms.removeGroupAtom)
   const selectedBookmark = useAtomValue(selectedBookmarkAtom)
   const selectedBookmarkOnMount = useAtomValue(selectedBookmarkOnMountAtom)
-  const { setIsShown } = props
+  const setPromptShown = useSetAtom(showPromptSetAtom)
+
   const { cancel, confirm } = useMemo(() => {
     return COMMAND_SPECIFIC_COPY[command]
   }, [command])
@@ -125,16 +128,16 @@ export default function CommandPromptControls(
         break
       }
     }
-    setIsShown(false)
+    setPromptShown(false)
   }
 
   return (
-    <div className={cn('flex gap-1.5 justify-evenly')}>
+    <div className={cn('flex justify-end-safe gap-4')}>
       <Button
         variant={'outline'}
         onClick={() => {
           // cancelFn?.()
-          setIsShown(false)
+          setPromptShown(false)
         }}
       >
         {cancel}

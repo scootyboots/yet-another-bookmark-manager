@@ -33,8 +33,10 @@ export default function CommandInputs(props: CommandInputsProps) {
       [...new Set(bookmarks.map((bk) => bk.group))].filter((group) => group),
     [bookmarks],
   )
+
   const [isNewGroupSelected, setIsNewGroupSelected] = useState(false)
   const [isTransitionInput, setIsTransitionInput] = useState(false)
+  const hasGroup = Boolean(selectedBookmark.group)
 
   useEffect(() => {
     console.log('ALL GROUPS')
@@ -42,6 +44,7 @@ export default function CommandInputs(props: CommandInputsProps) {
   }, [allGroups])
   return (
     <div className={cn('command-inputs')}>
+      <>{command}</>
       {command === 'new-bookmark' && (
         <>
           <CommandInputGroup
@@ -73,6 +76,7 @@ export default function CommandInputs(props: CommandInputsProps) {
               name="add-bookmark"
               value={selectedBookmark.group}
               focusOnMount
+              enterAnimation
               onChange={(event) => {
                 setSelectedBookmark({
                   ...selectedBookmark,
@@ -86,6 +90,7 @@ export default function CommandInputs(props: CommandInputsProps) {
             <CommandSelectGroup
               options={allGroups}
               name="new-bookmark"
+              currentGroup={selectedBookmark.group}
               onValueChange={(value) => {
                 if (value === NEW_GROUP_OPTION_VALUE) {
                   setSelectedBookmark({ ...selectedBookmark, group: '' })
@@ -127,10 +132,57 @@ export default function CommandInputs(props: CommandInputsProps) {
           >
             text
           </CommandInputGroup>
+          <CommandSelectGroup
+            options={allGroups}
+            name="update-existing-group-name"
+            currentGroup={selectedBookmark.group}
+            onValueChange={(value) => {
+              if (value === NEW_GROUP_OPTION_VALUE) {
+                setSelectedBookmark({ ...selectedBookmark, group: '' })
+                setIsNewGroupSelected(true)
+                return
+              }
+              setSelectedBookmark({ ...selectedBookmark, group: value })
+            }}
+            disableOnMatch
+          >
+            group
+          </CommandSelectGroup>
         </>
       )}
       {command === 'new-group' && <></>}
-      {command === 'update-group' && <></>}
+      {command === 'update-group' && (
+        <>
+          <CommandSelectGroup
+            options={allGroups}
+            name="update-group-name"
+            currentGroup={selectedBookmark.group}
+            onValueChange={(value) => {
+              if (value === NEW_GROUP_OPTION_VALUE) {
+                setSelectedBookmark({ ...selectedBookmark, group: '' })
+                setIsNewGroupSelected(true)
+                return
+              }
+              setSelectedBookmark({ ...selectedBookmark, group: value })
+            }}
+            disableOnMatch
+          >
+            group
+          </CommandSelectGroup>
+
+          <CommandSelectGroup
+            options={allGroups}
+            name="update-group-col"
+            currentGroup={`${selectedBookmark.col}`}
+            onValueChange={(value) => {
+              setSelectedBookmark({ ...selectedBookmark, col: Number(value) })
+            }}
+            disableOnMatch
+          >
+            group
+          </CommandSelectGroup>
+        </>
+      )}
       {command === 'remove-group' && <></>}
     </div>
   )
@@ -220,7 +272,7 @@ export function CommandInputGroup(props: CommandInputGroupProps) {
       if (enterAnimation) {
         setTimeout(() => {
           scope.current?.focus()
-        }, 125)
+        }, 115)
       } else {
         scope.current?.focus()
       }
@@ -249,6 +301,8 @@ type CommandSelectGroupProps = {
   onValueChange: (value: string) => void
   newGroupOption?: boolean
   isTransitioning?: boolean
+  currentGroup?: string
+  disableOnMatch?: boolean
 } & PropsWithChildren
 
 export function CommandSelectGroup(props: CommandSelectGroupProps) {
@@ -259,23 +313,34 @@ export function CommandSelectGroup(props: CommandSelectGroupProps) {
     onValueChange,
     newGroupOption,
     isTransitioning,
+    currentGroup,
+    disableOnMatch = false,
   } = props
+
+  const hasMatchingGroup = Boolean(options.find((op) => op === currentGroup))
+
   return (
     <CommandGroup>
       <CommandLabel name={name}>{children}</CommandLabel>
       <NativeSelect
         className={cn('w-full')}
         onChange={(e) => onValueChange(e.target.value)}
+        disabled={hasMatchingGroup && disableOnMatch}
       >
         <NativeSelectOption value=""></NativeSelectOption>
         {newGroupOption && (
           <NativeSelectOption value={NEW_GROUP_OPTION_VALUE}>
-            CREATE NEW GROUP
+            INPUT NEW GROUP
           </NativeSelectOption>
         )}
-        {options.map((group) => (
-          <NativeSelectOption value={group}>{group}</NativeSelectOption>
-        ))}
+        {options.map((group) => {
+          const matchingGroup = currentGroup === group
+          return (
+            <NativeSelectOption value={group} selected={matchingGroup}>
+              {group}
+            </NativeSelectOption>
+          )
+        })}
       </NativeSelect>
     </CommandGroup>
   )

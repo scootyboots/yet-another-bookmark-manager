@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
-import BookmarkEntry from './BookmarkEntry'
+import BookmarkEntry from './bookmark-entry/BookmarkEntry'
 import Search from './Search/Search'
 import BookmarkPrompt, { BookmarkPromptType } from './BookmarkPrompt'
 import useBookmarkSorter from './useBookmarkSorter'
@@ -16,6 +16,8 @@ import {
   useInitializeBookmarks,
   EMPTY_BOOKMARK,
   setPromptCommandAtom,
+  promptCommandAtom,
+  showPromptAtom,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
@@ -23,27 +25,16 @@ import GroupControls from './GroupControls'
 import { ShadTesting } from './ShadTesting'
 import { Button } from '@/components/ui/button'
 import CommandPrompt from './command-prompts/CommandPrompt'
+import { Bookmark } from '@/background'
+import usePromptController from './command-prompts/usePromptController'
 
 type Bookmarks = typeof bookmarksJson
-
-export type InitPrompt = {
-  newBookmark: (groupName?: string | undefined) => void
-  updateBookmark: (
-    groupName?: string | undefined,
-    col?: number | undefined,
-  ) => void
-  newGroup: (colIndex?: number | undefined) => void
-  removeGroup: (groupName?: string | undefined) => void
-  updateGroup: (groupName?: string | undefined) => void
-}
 
 export default function NewTab() {
   useInitializeBookmarks()
   const [showSearch, setShowSearch] = useState(true)
   const [showBkPrompt, setShowBkPrompt] = useState(false)
   const [showCommandLine, setShowCommandLine] = useState(false)
-  const [bookmarkPromptType, setBookmarkPromptType] =
-    useState<BookmarkPromptType>('new-bookmark')
   const bookmarks = useAtomValue(bookmarksAtom)
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
   const sorter = useBookmarkSorter(bookmarks)
@@ -55,80 +46,34 @@ export default function NewTab() {
   const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
 
   const setCommandAtom = useSetAtom(setPromptCommandAtom)
+  const promptController = usePromptController()
 
-  const initPrompt = {
-    newBookmark: (groupName?: string) => {
-      const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
-      // setBookmarkPromptType('new-bookmark')
-      setSelectedBookmark(bk)
-      setShowBkPrompt(true)
-
-      setCommandAtom('new-bookmark')
-    },
-    updateBookmark: (groupName?: string, col?: number) => {
-      const bk = {
-        ...EMPTY_BOOKMARK,
-        groupName: groupName ?? '',
-        col: col ?? 0,
-      }
-      setBookmarkPromptType('update-bookmark')
-      setSelectedBookmark(bk)
-      setShowBkPrompt(true)
-
-      setCommandAtom('update-bookmark')
-    },
-    newGroup: (colIndex?: number) => {
-      const bk = { ...EMPTY_BOOKMARK, col: colIndex ?? 0 }
-      setBookmarkPromptType('new-group')
-      setSelectedBookmark(bk)
-      setShowBkPrompt(true)
-
-      setCommandAtom('new-group')
-    },
-    removeGroup: (groupName?: string) => {
-      const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
-      setBookmarkPromptType('remove-group')
-      setSelectedBookmark(bk)
-      setShowBkPrompt(true)
-
-      setCommandAtom('remove-group')
-    },
-    updateGroup: (groupName?: string) => {
-      const bk = { ...EMPTY_BOOKMARK, groupName: groupName ?? '' }
-      setBookmarkPromptType('update-group')
-      setSelectedBookmark(bk)
-      setShowBkPrompt(true)
-
-      setCommandAtom('update-group')
-    },
-  }
-
-  // TODO: add search
   const commands: Command[] = [
     {
       action: () => {
-        initPrompt.newBookmark()
+        // initPrompt.newBookmark()
+        promptController.newBookmark()
       },
       name: 'add bookmark',
       hotKey: 'ff',
     },
     {
       action: () => {
-        initPrompt.newGroup()
+        promptController.newGroup()
       },
       name: 'add group',
       hotKey: 'jj',
     },
     {
       action: () => {
-        initPrompt.removeGroup()
+        promptController.removeGroup()
       },
       name: 'remove group',
       hotKey: 'dd',
     },
     {
       action: () => {
-        initPrompt.updateGroup()
+        promptController.updateGroup()
       },
       name: 'update group',
       hotKey: 'uu',
@@ -178,7 +123,9 @@ export default function NewTab() {
           reset
         </button>
         <button onClick={focusPreviousElement}>focus previous</button>
-        <Button onClick={() => initPrompt.newBookmark()}>add bk atom</Button>
+        <Button onClick={() => promptController.newBookmark()}>
+          add bk atom
+        </Button>
         <ShadTesting />
         <div>
           <button>mod</button> + <button>k</button> to search
@@ -188,14 +135,14 @@ export default function NewTab() {
         </div>
         <button
           onClick={() => {
-            initPrompt.newBookmark()
+            promptController.newBookmark()
           }}
         >
           add bookmark
         </button>
         <button
           onClick={() => {
-            initPrompt.newGroup()
+            promptController.newGroup()
           }}
         >
           add group
@@ -206,19 +153,12 @@ export default function NewTab() {
         <Search
           showSearch={showSearch}
           setShowSearch={setShowSearch}
-          promptUpdateBookmark={initPrompt.updateBookmark}
+          promptUpdateBookmark={promptController.updateBookmark}
         />
       ) : null}
-      {showBkPrompt ? (
+      {promptController.isPromptShown ? <CommandPrompt /> : null}
+      {/* {showBkPrompt || promptAtom ? (
         <CommandPrompt isShown={showBkPrompt} setIsShown={setShowBkPrompt} />
-      ) : null}
-      {/* {showBkPrompt ? (
-        <BookmarkPrompt
-          type={bookmarkPromptType}
-          isShown={showBkPrompt}
-          setIsShown={setShowBkPrompt}
-          {...sorter}
-        />
       ) : null} */}
       {showCommandLine ? (
         <CommandLine
@@ -256,9 +196,7 @@ export default function NewTab() {
                         colIndex={entry.col}
                         groupIndex={entry.groupIndex}
                         isEmptyGroup={isEmptyGroup}
-                        setBookmarkPromptType={setBookmarkPromptType}
                         setShowBkPrompt={setShowBkPrompt}
-                        initPrompt={initPrompt}
                       >
                         <GenericHeader>{groupName}</GenericHeader>
                       </GroupControls>
@@ -268,7 +206,6 @@ export default function NewTab() {
                         bookmark={entry}
                         showBookmarkPrompt={setShowBkPrompt}
                         removeBookmark={removeBookmark}
-                        setBookmarkPromptType={setBookmarkPromptType}
                         index={i}
                         key={'bookmark-entry-' + i}
                       />

@@ -1,16 +1,13 @@
 import { cn } from '@/lib/utils'
 import { useRef, useState } from 'react'
-import { Bookmark } from '../background'
-import { BookmarkPromptType } from './BookmarkPrompt'
+import { Bookmark } from '../../background'
+import { BookmarkPromptType } from '../BookmarkPrompt'
 import BookmarkControls from './BookmarkControls'
 
 export type BookmarkEntryProps = {
   bookmark: Bookmark
   showBookmarkPrompt: (show: boolean) => void
   removeBookmark: (bk: Bookmark) => void
-  setBookmarkPromptType: React.Dispatch<
-    React.SetStateAction<BookmarkPromptType>
-  >
   index: number
 }
 

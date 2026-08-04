@@ -25,7 +25,7 @@ export const MAX_DISPLAYED_RESULTS = 13
 type SearchProps = {
   showSearch: boolean
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
-  promptUpdateBookmark: (groupName?: string, col?: number) => void
+  promptUpdateBookmark: (bookmark: Bookmark) => void
 }
 
 export default function Search({
@@ -125,7 +125,7 @@ export default function Search({
               <SearchResultEdit
                 isFocused={isFocused}
                 onClick={() => {
-                  promptUpdateBookmark(match.item.group, match.item.col)
+                  promptUpdateBookmark(match.item)
                   setShowSearch(false)
                 }}
               />

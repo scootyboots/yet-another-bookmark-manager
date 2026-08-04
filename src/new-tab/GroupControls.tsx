@@ -11,39 +11,36 @@ import { useSetAtom } from 'jotai'
 import {
   bookmarkMutationAtoms,
   EMPTY_BOOKMARK,
+  promptCommandAtom,
   selectedBookmarkAtom,
 } from './bookmark-controller/bookmark-atoms'
 import { BookmarkPromptType } from './BookmarkPrompt'
 import { PropsWithChildren } from 'react'
-import { InitPrompt } from './NewTab'
+import usePromptController from './command-prompts/usePromptController'
 
 export type GroupControlsProps = {
   groupName: string
   isEmptyGroup: boolean
-  setBookmarkPromptType: (
-    value: React.SetStateAction<BookmarkPromptType>,
-  ) => void
   setShowBkPrompt: (value: React.SetStateAction<boolean>) => void
   colIndex: number
   groupIndex: number
-  initPrompt: InitPrompt
 } & PropsWithChildren
 
 export default function GroupControls(props: GroupControlsProps) {
   const {
     groupName,
     isEmptyGroup,
-    setBookmarkPromptType,
     setShowBkPrompt,
     colIndex,
     groupIndex,
     children,
-    initPrompt,
   } = props
   const setSelectedBookmark = useSetAtom(selectedBookmarkAtom)
+  const setPromptCommand = useSetAtom(promptCommandAtom)
   const updateGroupOrder = useSetAtom(
     bookmarkMutationAtoms.updateGroupOrderAtom,
   )
+  const promptController = usePromptController()
   return (
     <div>
       <div className={cn('bookmark-group', 'flex gap-1 items-center')}>
@@ -58,7 +55,9 @@ export default function GroupControls(props: GroupControlsProps) {
           <IconButton
             icon={<Add />}
             clickHandler={() => {
-              initPrompt.newBookmark(groupName)
+              // setSelectedBookmark({ ...EMPTY_BOOKMARK, group: groupName })
+              // setPromptCommand('new-bookmark')
+              promptController.newBookmark(groupName)
             }}
           >
             add bookmark
@@ -66,7 +65,7 @@ export default function GroupControls(props: GroupControlsProps) {
           <IconButton
             icon={<AddCircle />}
             clickHandler={() => {
-              setBookmarkPromptType('new-group')
+              setPromptCommand('new-group')
               setShowBkPrompt(true)
               setSelectedBookmark({
                 ...EMPTY_BOOKMARK,
@@ -79,7 +78,7 @@ export default function GroupControls(props: GroupControlsProps) {
           <IconButton
             icon={<Edit />}
             clickHandler={() => {
-              initPrompt.updateBookmark(groupName, colIndex)
+              promptController.updateGroup(groupName)
             }}
           >
             update group
@@ -87,7 +86,7 @@ export default function GroupControls(props: GroupControlsProps) {
           <IconButton
             icon={<RemoveCircle />}
             clickHandler={() => {
-              initPrompt.removeGroup(groupName)
+              promptController.removeGroup(groupName)
             }}
           >
             remove group
