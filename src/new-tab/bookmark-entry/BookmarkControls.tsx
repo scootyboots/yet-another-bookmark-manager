@@ -62,7 +62,7 @@ export default function BookmarkControls({
           }}
           onMouseMove={() => setIsControlsExpand(true)}
           initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 1, scale: 1.1 }}
           transition={{ duration: 0.065, ease: 'easeOut' }}
           className={cn(
             'bookmark-controls absolute px-7, py-1 -right-0.5 -top-2 cursor-pointer invisible duration-0',
@@ -98,13 +98,15 @@ export default function BookmarkControls({
                 'w-7.5 h-6 background-gradient-side-dark absolute z-20 right-0 bg-linear-to-r from-transparent from-0% to-background to-20%',
               )}
             />
-            <div
+            <motion.div
               onMouseEnter={() => setControlsText('update')}
               onFocus={() => setControlsText('update')}
+              animate={{ rotate: isControlsExpand ? 180 : 0 }}
+              transition={{ type: 'spring', damping: 12 }}
             >
               <IconButton
                 classes={cn('', {
-                  'rotate-180': isControlsExpand,
+                  // 'rotate-180': isControlsExpand,
                 })}
                 icon={<Refresh />}
                 clickHandler={() => {
@@ -112,15 +114,16 @@ export default function BookmarkControls({
                   setPromptCommand('update-bookmark')
                   showBookmarkPrompt(true)
                 }}
-                style={{ transitionDuration: '0.265s' }}
+                // style={{ transitionDuration: '0.265s' }}
               />
-            </div>
+            </motion.div>
 
-            <div
-              className={cn('text-over text-clip w-0 relative', {
-                'w-10': isControlsExpand,
-              })}
-              style={{ transitionDuration: '0.095s' }}
+            <motion.div
+              animate={{
+                width: isControlsExpand ? 40 : 0,
+              }}
+              transition={{ type: 'spring', duration: 0.15 }}
+              className={cn('text-over text-clip w-0 relative', {})}
             >
               <div
                 className={cn('absolute z-10 left-2 -bottom-2.25', {
@@ -129,7 +132,7 @@ export default function BookmarkControls({
               >
                 {controlsText}
               </div>
-            </div>
+            </motion.div>
 
             <div
               className={cn('z-30')}

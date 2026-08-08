@@ -33,7 +33,6 @@ type Bookmarks = typeof bookmarksJson
 export default function NewTab() {
   useInitializeBookmarks()
   const [showSearch, setShowSearch] = useState(true)
-  const [showBkPrompt, setShowBkPrompt] = useState(false)
   const [showCommandLine, setShowCommandLine] = useState(false)
   const bookmarks = useAtomValue(bookmarksAtom)
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
@@ -157,9 +156,6 @@ export default function NewTab() {
         />
       ) : null}
       {promptController.isPromptShown ? <CommandPrompt /> : null}
-      {/* {showBkPrompt || promptAtom ? (
-        <CommandPrompt isShown={showBkPrompt} setIsShown={setShowBkPrompt} />
-      ) : null} */}
       {showCommandLine ? (
         <CommandLine
           commands={commands}
@@ -196,7 +192,7 @@ export default function NewTab() {
                         colIndex={entry.col}
                         groupIndex={entry.groupIndex}
                         isEmptyGroup={isEmptyGroup}
-                        setShowBkPrompt={setShowBkPrompt}
+                        setShowBkPrompt={promptController.setIsPromptShown}
                       >
                         <GenericHeader>{groupName}</GenericHeader>
                       </GroupControls>
@@ -204,7 +200,7 @@ export default function NewTab() {
                     {!isEmptyBookmarkEntry && (
                       <BookmarkEntry
                         bookmark={entry}
-                        showBookmarkPrompt={setShowBkPrompt}
+                        showBookmarkPrompt={promptController.setIsPromptShown}
                         removeBookmark={removeBookmark}
                         index={i}
                         key={'bookmark-entry-' + i}

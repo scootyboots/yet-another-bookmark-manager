@@ -11,6 +11,7 @@ export default function usePromptController() {
   const setNewGroup = useSetAtom(promptSetAtoms.newGroup)
   const setRemoveGroup = useSetAtom(promptSetAtoms.removeGroup)
   const setUpdateGroup = useSetAtom(promptSetAtoms.updateGroup)
+
   return {
     isPromptShown,
     setIsPromptShown,

@@ -15,7 +15,7 @@ import {
 } from '../bookmark-controller/bookmark-atoms'
 import { Input } from '@/components/ui/input'
 import { NativeSelect, NativeSelectOption } from '@/components/ui/native-select'
-import { motion, useAnimate } from 'motion/react'
+import { motion, useAnimate, type AnimationOptions } from 'motion/react'
 import { CircleNotchIcon, SwapIcon } from '@phosphor-icons/react'
 
 const groupsAtom = atom<string[]>([])
@@ -44,7 +44,6 @@ export default function CommandInputs(props: CommandInputsProps) {
   }, [allGroups])
   return (
     <div className={cn('command-inputs')}>
-      <>{command}</>
       {command === 'new-bookmark' && (
         <>
           <CommandInputGroup
@@ -266,8 +265,9 @@ export function CommandInputGroup(props: CommandInputGroupProps) {
     if (focusOnMount) {
       animate(
         scope.current,
-        { y: [6, 0] },
-        { duration: 0.0575, ease: 'easeInOut' },
+        { y: [4, 0] },
+        { type: 'spring', duration: 0.65 },
+        // { duration: 0.0575, ease: 'easeInOut' },
       )
       if (enterAnimation) {
         setTimeout(() => {

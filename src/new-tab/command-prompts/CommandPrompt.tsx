@@ -80,7 +80,7 @@ export default function CommandPrompt(props: CommandPromptProps) {
       {...props}
     >
       <div className={cn('flex items-center justify-center')}>
-        <GenericHeader underline={false}>
+        <GenericHeader classNames={cn('text-white')} underline={false}>
           {COMMAND_SPECIFIC_COPY[command].header}
         </GenericHeader>
       </div>
@@ -115,7 +115,7 @@ function CommandPromptWrapper(props: CommandPromptWrapper) {
       >
         <div
           className={cn(
-            'CommandPrompt-content flex flex-col gap-4 m-2 border border-primary p-8 rounded-sm',
+            'CommandPrompt-content flex flex-col gap-4 m-2 border border-primary p-4.5 rounded-sm',
             'bg-background',
             'min-w-100',
             'max-w-120',
