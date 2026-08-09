@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
-import { default as bookmarksJson } from '../../public/bookmarks-backup.json'
 import BookmarkEntry from './bookmark-entry/BookmarkEntry'
 import Search from './Search/Search'
-import BookmarkPrompt, { BookmarkPromptType } from './BookmarkPrompt'
 import useBookmarkSorter from './useBookmarkSorter'
 import { useTrackFocus } from './useTrackFocus'
 import TopContextRow from './TopContextRow'
@@ -14,10 +12,7 @@ import {
   bookmarksAtom,
   selectedBookmarkAtom,
   useInitializeBookmarks,
-  EMPTY_BOOKMARK,
   setPromptCommandAtom,
-  promptCommandAtom,
-  showPromptAtom,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
@@ -25,10 +20,7 @@ import GroupControls from './GroupControls'
 import { ShadTesting } from './ShadTesting'
 import { Button } from '@/components/ui/button'
 import CommandPrompt from './command-prompts/CommandPrompt'
-import { Bookmark } from '@/background'
 import usePromptController from './command-prompts/usePromptController'
-
-type Bookmarks = typeof bookmarksJson
 
 export default function NewTab() {
   useInitializeBookmarks()

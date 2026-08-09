@@ -1,8 +1,16 @@
-import bookmarks from '../../public/bookmarks-backup.json'
 import { EMPTY_BOOKMARK } from '../new-tab/bookmark-controller/bookmark-atoms'
+import backupBookmarks from '../../public/bookmarks-backup.json'
 
-export type BookmarksBackup = typeof bookmarks
-export type Bookmark = BookmarksBackup[number] & { id: number }
+const initialBookmarks = backupBookmarks ?? []
+
+export type Bookmark = {
+  id: number
+  href: string
+  text: string
+  col: number
+  group: string
+  groupIndex: number
+}
 export type NewBookmark = Omit<Bookmark, 'id'>
 export type Bookmarks = Array<Bookmark>
 
@@ -10,7 +18,7 @@ chrome.action.onClicked.addListener(() => {
   chrome.tabs.create({ url: 'newTab.html' })
 })
 
-function addIdsToBookmarks(bookmarks: BookmarksBackup) {
+function addIdsToBookmarks(bookmarks: NewBookmark[]) {
   let initialId = 1000
 
   const bookmarksWithId = bookmarks.map((bk) => {
@@ -20,12 +28,30 @@ function addIdsToBookmarks(bookmarks: BookmarksBackup) {
   return { bookmarksWithId, lastId: initialId }
 }
 
-chrome.runtime.onInstalled.addListener(() => {
-  const { bookmarksWithId, lastId } = addIdsToBookmarks(bookmarks)
-  chrome.storage.local.set({
-    bookmarks: bookmarksWithId,
-    lastId,
-  })
+chrome.runtime.onInstalled.addListener(async (details) => {
+  const isInstall = details.reason === 'install'
+  const isUpdate = details.reason === 'update'
+  if (isUpdate) {
+    const fileUrl = chrome.runtime.getURL('bookmarks-backup.json')
+    console.log('GOT JSON URL', fileUrl)
+  }
+  if (isInstall) {
+    try {
+      const fileUrl = chrome.runtime.getURL('bookmarks-backup.json')
+      const response = await fetch(fileUrl)
+      const backupBookmarks = await response.json()
+      const { bookmarksWithId, lastId } = addIdsToBookmarks(backupBookmarks)
+      chrome.storage.local.set({
+        bookmarks: bookmarksWithId,
+        lastId,
+      })
+    } catch (e) {
+      chrome.storage.local.set({
+        bookmarks: [],
+        lastId: 1000,
+      })
+    }
+  }
 })
 
 function makeAddRemoveMessage(
@@ -41,7 +67,7 @@ function makeAddRemoveMessage(
 }
 
 export async function resetBookmarks() {
-  const { bookmarksWithId, lastId } = addIdsToBookmarks(bookmarks)
+  const { bookmarksWithId, lastId } = addIdsToBookmarks(initialBookmarks)
   await chrome.storage.local.set({
     bookmarks: bookmarksWithId,
     lastId,
