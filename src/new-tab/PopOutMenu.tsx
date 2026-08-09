@@ -11,6 +11,7 @@ import Dot from '../components/Icons/Dot'
 import { cn } from '@/lib/utils'
 import { ClassValue } from 'clsx'
 import useClickOutside from './hooks/useClickOutside'
+import { motion, AnimatePresence } from 'motion/react'
 
 const POP_OUT_TRANSITION_MS = 150
 const POP_OUT_MENU_CLASS_NAME = 'pop-out-menu-menu'
@@ -61,7 +62,6 @@ export default function PopOutMenu({
   menuClasses?: ClassValue
 } & PropsWithChildren) {
   const [isOpen, setIsOpen] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -75,47 +75,40 @@ export default function PopOutMenu({
       const targetIsMenu = checkTargetMenu()
       if (targetIsMenu) return
       if (isOpen) {
-        setTimeout(() => {
-          setIsOpen(false)
-        }, POP_OUT_TRANSITION_MS)
+        setIsOpen(false)
       } else {
         setIsOpen(true)
-        setTimeout(() => {
-          setIsVisible(true)
-        }, 10)
-      }
-      if (isVisible) {
-        setIsVisible(false)
       }
     },
-    [isOpen, isVisible],
+    [isOpen],
   )
 
-  const handleExit = useCallback(() => {
-    setIsVisible(false)
-    setTimeout(() => {
+  useClickOutside(
+    menuRef,
+    () => {
       setIsOpen(false)
-    }, POP_OUT_TRANSITION_MS)
-  }, [])
-
-  useClickOutside(menuRef, handleExit, true)
+    },
+    true,
+  )
 
   useEffect(() => {
     function keyboardHandler(event: KeyboardEvent) {
+      console.log('KEYBOARD EVENT!!!')
       if (event.key === 'Escape') {
-        handleExit()
+        console.log('ESCAPE FROM POPOUTMENUE')
+        setIsOpen(false)
         return
       }
       setTimeout(() => {
         const menuEl = menuRef.current
         const focusedEl = menuEl?.querySelector(':focus')
         if (!focusedEl) {
-          handleExit()
+          setIsOpen(false)
           return
         }
       }, 10)
     }
-    if (isVisible) {
+    if (isOpen) {
       document.addEventListener('keydown', keyboardHandler)
       setTimeout(() => {
         const menuEl = menuRef.current
@@ -126,14 +119,11 @@ export default function PopOutMenu({
         }
       }, 10)
     }
-    if (!isVisible) {
-      document.removeEventListener('keydown', keyboardHandler)
-    }
 
     return () => {
       document.removeEventListener('keydown', keyboardHandler)
     }
-  }, [isVisible])
+  }, [isOpen])
 
   function menuClickHandler(event: React.MouseEvent<HTMLDivElement>) {
     const t = event.target as HTMLElement
@@ -141,7 +131,7 @@ export default function PopOutMenu({
       const isButton = t.localName === 'button'
       const isLink = t.localName === 'a'
       if (isButton || isLink) {
-        handleExit()
+        setIsOpen(false)
       }
     }
   }
@@ -155,7 +145,6 @@ export default function PopOutMenu({
       if (menuRef?.current?.contains(t)) {
         return
       }
-      setIsVisible(false)
       setTimeout(() => {
         setIsOpen(false)
       }, POP_OUT_TRANSITION_MS)
@@ -172,7 +161,7 @@ export default function PopOutMenu({
       document.removeEventListener('mousedown', mouseToucheHandler)
       document.removeEventListener('touchstart', mouseToucheHandler)
     }
-  }, [menuRef, isOpen, isVisible])
+  }, [menuRef, isOpen])
 
   useEffect(() => {
     if (focusOnMount) {
@@ -200,27 +189,34 @@ export default function PopOutMenu({
             iconClasses,
           )}
         >
-          <IconToUse isVis={isVisible} icon={icon} />
+          <IconToUse isVis={isOpen} icon={icon} />
         </div>
       </button>
-      {isOpen && (
-        <div
-          className={cn(
-            POP_OUT_MENU_CLASS_NAME,
-            'absolute z-50 duration-150 p-3 rounded-sm shadow-glow-primary bg-background',
-            '-bottom-30 left-6',
-            {
-              'opacity-100 translate-y-4': isVisible,
-              'opacity-0 translate-y-0': !isVisible,
-            },
-            menuClasses,
-          )}
-          ref={menuRef}
-          onClick={menuClickHandler}
-        >
-          {children}
-        </div>
-      )}
+      <AnimatePresence mode="wait">
+        {isOpen ? (
+          <motion.div
+            key={POP_OUT_MENU_CLASS_NAME}
+            initial={{ opacity: 0, translateY: 0 }}
+            animate={{ opacity: 1, translateY: 12 }}
+            transition={{ duration: 0.05, ease: 'easeIn' }}
+            exit={{
+              opacity: 0,
+              translateY: -36,
+              transition: { duration: 0.1, ease: 'easeOut' },
+            }}
+            className={cn(
+              POP_OUT_MENU_CLASS_NAME,
+              'absolute z-50 duration-150 p-3 rounded-sm shadow-glow-primary bg-background',
+              '-bottom-30 left-6',
+              menuClasses,
+            )}
+            ref={menuRef}
+            onClick={menuClickHandler}
+          >
+            {children}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   )
 }
