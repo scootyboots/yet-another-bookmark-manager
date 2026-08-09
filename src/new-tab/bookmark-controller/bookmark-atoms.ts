@@ -192,6 +192,19 @@ export const bookmarkMutationAtoms = {
   updateRecentLinksAtom,
 }
 
+export const showSearchAtom = atom<boolean>(true)
+export const showSearchSetAtom = atom(null, (_get, set, isShown: boolean) => {
+  set(showSearchAtom, isShown)
+})
+
+export const showCommandLineAtom = atom<boolean>(false)
+export const showCommandLineSetAtom = atom(
+  null,
+  (_get, set, isShown: boolean) => {
+    set(showCommandLineAtom, isShown)
+  },
+)
+
 export const showPromptAtom = atom<boolean>(false)
 export const showPromptSetAtom = atom(null, (_get, set, isShown: boolean) => {
   set(showPromptAtom, isShown)

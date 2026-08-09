@@ -5,7 +5,7 @@ import useBookmarkSorter from './useBookmarkSorter'
 import { useTrackFocus } from './useTrackFocus'
 import TopContextRow from './TopContextRow'
 import { checkPromptOpen, isEmptyBookmark } from './util'
-import CommandLine, { Command } from './CommandLine'
+import CommandLine from './command-prompts/CommandLine'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   bookmarkMutationAtoms,
@@ -13,6 +13,8 @@ import {
   selectedBookmarkAtom,
   useInitializeBookmarks,
   setPromptCommandAtom,
+  showSearchAtom,
+  showCommandLineAtom,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
@@ -24,10 +26,10 @@ import usePromptController from './command-prompts/usePromptController'
 
 export default function NewTab() {
   useInitializeBookmarks()
-  const [showSearch, setShowSearch] = useState(true)
-  const [showCommandLine, setShowCommandLine] = useState(false)
-  const bookmarks = useAtomValue(bookmarksAtom)
+  const [showSearch, setShowSearch] = useAtom(showSearchAtom)
+  const [showCommandLine, setShowCommandLine] = useAtom(showCommandLineAtom)
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
+  const bookmarks = useAtomValue(bookmarksAtom)
   const sorter = useBookmarkSorter(bookmarks)
 
   const reset = useSetAtom(bookmarkMutationAtoms.clearBookmarksAtom)
@@ -35,48 +37,7 @@ export default function NewTab() {
     bookmarkMutationAtoms.updateGroupOrderAtom,
   )
   const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
-
-  const setCommandAtom = useSetAtom(setPromptCommandAtom)
   const promptController = usePromptController()
-
-  const commands: Command[] = [
-    {
-      action: () => {
-        // initPrompt.newBookmark()
-        promptController.newBookmark()
-      },
-      name: 'add bookmark',
-      hotKey: 'ff',
-    },
-    {
-      action: () => {
-        promptController.newGroup()
-      },
-      name: 'add group',
-      hotKey: 'jj',
-    },
-    {
-      action: () => {
-        promptController.removeGroup()
-      },
-      name: 'remove group',
-      hotKey: 'dd',
-    },
-    {
-      action: () => {
-        promptController.updateGroup()
-      },
-      name: 'update group',
-      hotKey: 'uu',
-    },
-    {
-      action: () => {
-        setShowSearch(true)
-      },
-      name: 'search',
-      hotKey: 'ss',
-    },
-  ]
 
   const { focusPreviousElement } = useTrackFocus()
 
@@ -108,7 +69,6 @@ export default function NewTab() {
         <button
           onClick={() => {
             reset()
-            // updateRecentLinks('', '', true)
           }}
         >
           reset
@@ -150,13 +110,11 @@ export default function NewTab() {
       {promptController.isPromptShown ? <CommandPrompt /> : null}
       {showCommandLine ? (
         <CommandLine
-          commands={commands}
           isShown={showCommandLine}
           setIsShown={setShowCommandLine}
+          setShowSearch={setShowSearch}
         />
       ) : null}
-
-      {/* <ShadTesting /> */}
 
       <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid p-4')}>
         {sorter.sortedColumns.map((col, index) => (

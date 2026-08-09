@@ -1,7 +1,8 @@
 import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
-import Prompt from './Prompt'
+import Prompt from '../Prompt'
 import { cn } from '@/lib/utils'
-import { SearchInput } from './Search/SearchInput'
+import { SearchInput } from '../Search/SearchInput'
+import usePromptController from './usePromptController'
 
 export const USER = 'motoko'
 
@@ -10,11 +11,12 @@ export type Command = { action: () => void; name: string; hotKey: string }
 export type CommandLineProps = {
   isShown: boolean
   setIsShown: React.Dispatch<React.SetStateAction<boolean>>
-  commands: Command[]
+  setShowSearch: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function CommandLine(props: CommandLineProps) {
-  const { commands, setIsShown, isShown } = props
+  const { setIsShown, isShown, setShowSearch } = props
+  const { commands } = usePromptController()
   const [matching, setMatching] = useState<Command[]>(commands)
   const [inputText, setInputText] = useState('')
   const inputRef = useRef(null)
