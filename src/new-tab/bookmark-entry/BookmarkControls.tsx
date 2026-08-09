@@ -36,6 +36,9 @@ export default function BookmarkControls({
   const [isControlsExpand, setIsControlsExpand] = useState(false)
   const [controlsText, setControlsText] = useState('update')
 
+  // const isControlsExpand = true
+  // const isControlsVisible = true
+
   const isControlsVisible = useMemo(
     () => isBookmarkEntryFocused || isBookmarkEntryMoused,
     [isBookmarkEntryFocused, isBookmarkEntryMoused],
@@ -65,7 +68,7 @@ export default function BookmarkControls({
           animate={{ opacity: 1, scale: 1.1 }}
           transition={{ duration: 0.065, ease: 'easeOut' }}
           className={cn(
-            'bookmark-controls absolute px-7, py-1 -right-0.5 -top-2 cursor-pointer invisible duration-0',
+            'bookmark-controls absolute px-7, py-1 -right-0.5 -top-2 cursor-pointer invisible duration-0 ps-6',
             { visible: isControlsVisible },
           )}
           ref={controlsRef}
@@ -93,28 +96,26 @@ export default function BookmarkControls({
             style={{ transitionDuration: '0.02s' }}
           >
             <div
-              data-kill-me="scott"
               className={cn(
                 'w-7.5 h-6 background-gradient-side-dark absolute z-20 right-0 bg-linear-to-r from-transparent from-0% to-background to-20%',
               )}
             />
             <motion.div
-              onMouseEnter={() => setControlsText('update')}
+              onMouseEnter={() => {
+                setIsControlsExpand(true)
+                setControlsText('update')
+              }}
               onFocus={() => setControlsText('update')}
               animate={{ rotate: isControlsExpand ? 180 : 0 }}
               transition={{ type: 'spring', damping: 12 }}
             >
               <IconButton
-                classes={cn('', {
-                  // 'rotate-180': isControlsExpand,
-                })}
                 icon={<Refresh />}
                 clickHandler={() => {
                   setSelectBookmark({ ...bookmark })
                   setPromptCommand('update-bookmark')
                   showBookmarkPrompt(true)
                 }}
-                // style={{ transitionDuration: '0.265s' }}
               />
             </motion.div>
 
@@ -123,7 +124,7 @@ export default function BookmarkControls({
                 width: isControlsExpand ? 40 : 0,
               }}
               transition={{ type: 'spring', duration: 0.15 }}
-              className={cn('text-over text-clip w-0 relative', {})}
+              className={cn('text-over text-clip w-0 relative')}
             >
               <div
                 className={cn('absolute z-10 left-2 -bottom-2.25', {

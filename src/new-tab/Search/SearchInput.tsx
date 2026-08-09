@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { Ref, useState, useEffect, ChangeEvent, KeyboardEvent } from 'react'
-import { useAnimate } from 'motion/react'
+import { Carrot } from './Carrot'
 
 export type SearchInputProps = {
   setInputText: (value: React.SetStateAction<string>) => void
@@ -78,40 +78,5 @@ export function SearchInput(props: SearchInputProps) {
         />
       </div>
     </div>
-  )
-}
-
-export function Carrot({
-  isIdle,
-  isVisible,
-  textMd,
-}: {
-  isIdle: boolean
-  isVisible: boolean
-  textMd?: boolean
-}) {
-  const [scope, animate] = useAnimate()
-
-  useEffect(() => {
-    if (isVisible && isIdle) {
-      animate(
-        scope.current,
-        { opacity: [1, 0, 1] },
-        {
-          duration: 0.95,
-          ease: 'linear',
-          repeat: Infinity,
-        },
-      )
-    }
-  }, [isIdle, isVisible])
-  return (
-    <div
-      ref={scope}
-      className={cn('h-1 w-2.75', {
-        'w-[7.5px]': textMd,
-        'bg-primary': isVisible,
-      })}
-    />
   )
 }

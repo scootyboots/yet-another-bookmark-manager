@@ -3,12 +3,10 @@ import Prompt from '../Prompt'
 import { search as fuzzySearch, type MatchData } from 'fast-fuzzy'
 import { type Bookmark } from '../../background'
 import { cn } from '@/lib/utils'
-import { motion, useAnimate } from 'motion/react'
 import useMatches from './useMatches'
 import useKeyboardControls from './useKeyboardControls'
 import useShakeX from './useShakeX'
 import useLinkToOpen from './useLinkToOpen'
-import { Carrot } from './Carrot'
 import { useAtomValue, useSetAtom } from 'jotai'
 import {
   bookmarksAtom,
