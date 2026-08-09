@@ -37,10 +37,17 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   }
   if (isInstall) {
     try {
-      const fileUrl = chrome.runtime.getURL('bookmarks-backup.json')
-      const response = await fetch(fileUrl)
-      const backupBookmarks = await response.json()
-      const { bookmarksWithId, lastId } = addIdsToBookmarks(backupBookmarks)
+      const backupUrl = chrome.runtime.getURL('bookmarks-backup.json')
+      const personalUrl = chrome.runtime.getURL('bookmarks-personal.json')
+      const responses = await Promise.all([
+        fetch(backupUrl),
+        fetch(personalUrl),
+      ])
+      const data = (await Promise.all(
+        responses.map((resp) => resp.json()),
+      )) as Bookmark[][]
+      const combined = data.flat()
+      const { bookmarksWithId, lastId } = addIdsToBookmarks(combined)
       chrome.storage.local.set({
         bookmarks: bookmarksWithId,
         lastId,
