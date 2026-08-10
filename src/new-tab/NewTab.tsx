@@ -11,8 +11,6 @@ import {
   bookmarkMutationAtoms,
   bookmarksAtom,
   selectedBookmarkAtom,
-  useInitializeBookmarks,
-  setPromptCommandAtom,
   showSearchAtom,
   showCommandLineAtom,
 } from './bookmark-controller/bookmark-atoms'
@@ -23,6 +21,7 @@ import { ShadTesting } from './ShadTesting'
 import { Button } from '@/components/ui/button'
 import CommandPrompt from './command-prompts/CommandPrompt'
 import usePromptController from './command-prompts/usePromptController'
+import useInitializeBookmarks from './bookmark-controller/useInitializeBookmarks'
 
 export default function NewTab() {
   useInitializeBookmarks()

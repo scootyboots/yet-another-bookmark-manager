@@ -93,9 +93,7 @@ export default function PopOutMenu({
 
   useEffect(() => {
     function keyboardHandler(event: KeyboardEvent) {
-      console.log('KEYBOARD EVENT!!!')
       if (event.key === 'Escape') {
-        console.log('ESCAPE FROM POPOUTMENUE')
         setIsOpen(false)
         return
       }
@@ -192,7 +190,7 @@ export default function PopOutMenu({
           <IconToUse isVis={isOpen} icon={icon} />
         </div>
       </button>
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {isOpen ? (
           <motion.div
             key={POP_OUT_MENU_CLASS_NAME}

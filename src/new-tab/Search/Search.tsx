@@ -9,6 +9,7 @@ import useShakeX from './useShakeX'
 import useLinkToOpen from './useLinkToOpen'
 import { useAtomValue, useSetAtom } from 'jotai'
 import {
+  bookmarkMutationAtoms,
   bookmarksAtom,
   recentLinksAtom,
   selectedBookmarkAtom,
@@ -37,7 +38,6 @@ export default function Search({
   const [urlToOpen, setUrlToOpen] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
-  // const [isInputIdle, setIsInputIdle] = useState(true)
   const setSelectedBookmark = useSetAtom(selectedBookmarkAtom)
 
   const { matches, hasMatches, groupMatches, matchesToRender } = useMatches(
@@ -94,6 +94,7 @@ export default function Search({
                 isFocused={isFocused}
                 resultIndex={index}
                 href={link.url}
+                text={link.text}
               >
                 <BookmarkListItem text={link.text} href={link.url} />
               </SearchResult>
@@ -110,7 +111,12 @@ export default function Search({
           }
           const { group, href, text } = match.item
           return (
-            <SearchResult isFocused={isFocused} resultIndex={index} href={href}>
+            <SearchResult
+              isFocused={isFocused}
+              resultIndex={index}
+              href={href}
+              text={text}
+            >
               <SearchResultGroup isFocused={isFocused}>
                 {group}
               </SearchResultGroup>
@@ -149,8 +155,8 @@ function SelectedLink({
 }) {
   return (
     <div
+      className={cn('hidden')}
       data-link-to-open={Boolean(matchLink)}
-      style={{ display: 'none' }}
       data-link-text={matchLinkText}
     >
       {matchLink}
@@ -165,9 +171,6 @@ function SearchResultsOverview({
 }) {
   return (
     <div
-      // animate={{ rotate: 360 }}
-      // whileTap={{ scale: 0.88 }}
-      // key={`${matches}`}
       className={cn(
         'matches-number-display absolute bottom-4 w-[calc(100%-4rem)] text-primary font-bold text-sm',
       )}
@@ -193,11 +196,14 @@ type SearchResultProps = {
   isFocused: boolean
   resultIndex: number
   href: string
+  text: string
 } & PropsWithChildren
 
 function SearchResult(props: SearchResultProps) {
-  const { isFocused, resultIndex, children, href } = props
-  // TODO: better handle this
+  const { isFocused, resultIndex, children, href, text } = props
+  const updateRecentLinks = useSetAtom(
+    bookmarkMutationAtoms.updateRecentLinksAtom,
+  )
   return (
     <a
       href={href}
@@ -208,8 +214,13 @@ function SearchResult(props: SearchResultProps) {
           'border-transparent': !isFocused,
         },
       )}
-      data-is-match
       key={'matching-bookmark-' + resultIndex}
+      onClick={(e) => {
+        e.preventDefault()
+        updateRecentLinks(href, text, false)
+        window.location.href = href
+      }}
+      data-is-match
     >
       {children}
     </a>
@@ -254,104 +265,3 @@ function SearchResultEdit({
     </div>
   ) : null
 }
-
-/**
- * decided to go away from this kind of approach in favor of highlightedRegexMatch
- * should probably should just delete this
- */
-// function highlightedMatch({ match, input }: { match: string; input: string }) {
-//   const bookmarkLabel = match.split('')
-//   const searchInput = input.split('')
-
-//   const bestMatches = []
-//   const query = searchInput
-//   const ignoreCharacters = /[\s;:\.\?\!\,'"\|]/
-//   for (let queryIndex = 0; queryIndex < query.length; queryIndex++) {
-//     const queryCar = query[queryIndex].toLowerCase()
-
-//     let matchLength = 0
-//     let bestLength = 0
-//     let bestMatch = {
-//       start: queryCar,
-//       car: '',
-//       labelCar: '',
-//       internalLabelIndex: 0,
-//       labelIndex: 0,
-//       length: 0,
-//     }
-
-//     for (let labelIndex = 0; labelIndex < bookmarkLabel.length; labelIndex++) {
-//       const labelCar = bookmarkLabel[labelIndex].toLowerCase()
-//       // TODO: expand match logic
-//       const isCurrentMatch = queryCar === labelCar
-
-//       if (isCurrentMatch) {
-//         matchLength = 1
-
-//         for (
-//           let nextLabelIndex = 1 + labelIndex;
-//           nextLabelIndex < bookmarkLabel.length;
-//           nextLabelIndex++
-//         ) {
-//           let nextQueryIndex = matchLength + queryIndex
-//           const nextQueryCar = query[nextQueryIndex]?.toLowerCase()
-//           const nextLabelCar = bookmarkLabel[nextLabelIndex]?.toLowerCase()
-
-//           const isContinueCarLabel = ignoreCharacters.test(nextLabelCar)
-//           const isContinueCarQuery = ignoreCharacters.test(nextQueryCar)
-
-//           // if (isContinueCarLabel && !isContinueCarQuery) {
-//           //   console.log('skipping: ' + nextLabelCar)
-//           //   // matchLength++
-//           //   continue;
-//           // }
-
-//           if (!nextQueryCar) {
-//             if (matchLength > bestLength) {
-//               bestLength = matchLength
-//               bestMatch.car = queryCar
-//               bestMatch.labelCar = nextLabelCar
-//               bestMatch.internalLabelIndex = nextLabelIndex
-//               bestMatch.labelIndex = nextLabelIndex + 1 - bestLength
-//               bestMatch.length = bestLength
-//             }
-//             // matchLength = 0
-//             break
-//           }
-//           // console.log(queryCar, nextQueryCar)
-
-//           const isNextMatch = nextQueryCar === nextLabelCar
-//           if (isNextMatch) {
-//             matchLength++
-//             nextQueryIndex++
-//             // console.log(nextQueryCar, nextLabelCar)
-//             if (matchLength > bestLength) {
-//               bestLength = matchLength
-//               bestMatch.car = queryCar
-//               bestMatch.labelCar = nextLabelCar
-//               bestMatch.internalLabelIndex = nextLabelIndex
-//               bestMatch.labelIndex = nextLabelIndex + 1 - bestLength
-//               bestMatch.length = bestLength
-//             }
-//           }
-//         }
-//       }
-//     }
-//     if (bestMatch.length) {
-//       bestMatches.push(bestMatch)
-//     }
-//   }
-
-//   const longestMatch = bestMatches.sort((a, b) => b.length - a.length)[0]
-//   const longestMatchIndex = longestMatch?.labelIndex ?? 0
-//   const longestMatchLength = longestMatch?.length ?? 0
-//   const beforeMatch = bookmarkLabel.slice(0, longestMatchIndex)
-//   const matched = bookmarkLabel.slice(
-//     longestMatchIndex,
-//     longestMatchIndex + longestMatchLength,
-//   )
-//   const afterMatched = bookmarkLabel.slice(
-//     longestMatchIndex + longestMatchLength,
-//   )
-//   return { beforeMatch, matched, afterMatched }
-// }

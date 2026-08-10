@@ -12,6 +12,7 @@ import {
   updateGroupName,
   updateGroupOrder,
   updateRecentLinks,
+  increaseOpenCount,
 } from '@/background'
 import { atom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
@@ -23,6 +24,9 @@ export const EMPTY_BOOKMARK: Bookmark = {
   col: 1,
   href: '',
   text: '',
+  tags: [],
+  comment: '',
+  openCount: 0,
 } as const
 
 export const bookmarksAtom = atom<Bookmark[]>([])
@@ -78,13 +82,6 @@ export const initializeBookmarkAtomsAtom = atom(null, async (_get, set) => {
   set(recentLinksAtom, recentLinks ?? [])
 })
 
-export function useInitializeBookmarks() {
-  const init = useSetAtom(initializeBookmarkAtomsAtom)
-  useEffect(() => {
-    init()
-  }, [])
-}
-
 export const updateRecentLinksAtom = atom(
   null,
   async (_get, set, url: string, text: string, clear: boolean) => {
@@ -121,6 +118,18 @@ export const updateBookmarkAtom = atom(
   null,
   async (_get, set, bookmark: Bookmark) => {
     const { error } = await updateBookmark(bookmark)
+    if (error) {
+      console.log(error)
+      return
+    }
+    await set(refreshBookmarksFromStorageAtom)
+  },
+)
+
+export const increaseOpenCountAtom = atom(
+  null,
+  async (_get, set, bookmark: Bookmark) => {
+    const { error } = await increaseOpenCount(bookmark)
     if (error) {
       console.log(error)
       return
@@ -190,6 +199,7 @@ export const bookmarkMutationAtoms = {
   updateGroupNameAtom,
   clearBookmarksAtom,
   updateRecentLinksAtom,
+  increaseOpenCountAtom,
 }
 
 export const showSearchAtom = atom<boolean>(true)

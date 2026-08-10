@@ -48,7 +48,11 @@ export default function useKeyboardControls(
         if (matchLinkEl) {
           const href = matchLinkEl?.textContent ?? ''
           const text = matchLinkEl.getAttribute('data-link-text') ?? ''
-          // TODO: have an option to leave the bookmark search open
+          updateRecentLinks(href, text, false)
+          setInputText('')
+          setUrlToOpen('')
+          setFocusIndex(0)
+
           const currentTabQuery = chrome.tabs.query({
             active: true,
             lastFocusedWindow: true,
@@ -67,11 +71,6 @@ export default function useKeyboardControls(
                 })
             }
           })
-
-          updateRecentLinks(href, text, false)
-          setInputText('')
-          setUrlToOpen('')
-          setFocusIndex(0)
         }
         return
       }

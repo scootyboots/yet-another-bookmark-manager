@@ -1,7 +1,4 @@
 import { EMPTY_BOOKMARK } from '../new-tab/bookmark-controller/bookmark-atoms'
-import backupBookmarks from '../../public/bookmarks-backup.json'
-
-const initialBookmarks = backupBookmarks ?? []
 
 export type Bookmark = {
   id: number
@@ -10,6 +7,9 @@ export type Bookmark = {
   col: number
   group: string
   groupIndex: number
+  tags: string[]
+  comment: string
+  openCount: number
 }
 export type NewBookmark = Omit<Bookmark, 'id'>
 export type Bookmarks = Array<Bookmark>
@@ -18,46 +18,50 @@ chrome.action.onClicked.addListener(() => {
   chrome.tabs.create({ url: 'newTab.html' })
 })
 
-function addIdsToBookmarks(bookmarks: NewBookmark[]) {
+function addIdsAndPropsToBookmarks(bookmarks: NewBookmark[]) {
   let initialId = 1000
 
   const bookmarksWithId = bookmarks.map((bk) => {
     initialId += 1
-    return { ...bk, id: initialId }
+    return { ...bk, id: initialId, tags: [bk.group], comment: '', openCount: 0 }
   })
   return { bookmarksWithId, lastId: initialId }
+}
+
+async function initializeBookmarks() {
+  try {
+    const backupUrl = chrome.runtime.getURL('bookmarks-backup.json')
+    const personalUrl = chrome.runtime.getURL('bookmarks-personal.json')
+    const responses = await Promise.all([fetch(backupUrl), fetch(personalUrl)])
+    const data = (await Promise.all(
+      responses.map((resp) => resp.json()),
+    )) as Bookmark[][]
+    const combined = data.flat()
+    const { bookmarksWithId, lastId } = addIdsAndPropsToBookmarks(combined)
+    chrome.storage.local.set({
+      bookmarks: bookmarksWithId,
+      lastId,
+      // TODO: remove recentLinks
+      recentLinks: [],
+      mostOpened: [],
+    })
+  } catch (e) {
+    chrome.storage.local.set({
+      bookmarks: [],
+      lastId: 1000,
+      // TODO: remove recentLinks
+      recentLinks: [],
+      mostOpened: [],
+    })
+  }
 }
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   const isInstall = details.reason === 'install'
   const isUpdate = details.reason === 'update'
-  if (isUpdate) {
-    const fileUrl = chrome.runtime.getURL('bookmarks-backup.json')
-    console.log('GOT JSON URL', fileUrl)
-  }
+
   if (isInstall) {
-    try {
-      const backupUrl = chrome.runtime.getURL('bookmarks-backup.json')
-      const personalUrl = chrome.runtime.getURL('bookmarks-personal.json')
-      const responses = await Promise.all([
-        fetch(backupUrl),
-        fetch(personalUrl),
-      ])
-      const data = (await Promise.all(
-        responses.map((resp) => resp.json()),
-      )) as Bookmark[][]
-      const combined = data.flat()
-      const { bookmarksWithId, lastId } = addIdsToBookmarks(combined)
-      chrome.storage.local.set({
-        bookmarks: bookmarksWithId,
-        lastId,
-      })
-    } catch (e) {
-      chrome.storage.local.set({
-        bookmarks: [],
-        lastId: 1000,
-      })
-    }
+    await initializeBookmarks()
   }
 })
 
@@ -74,12 +78,7 @@ function makeAddRemoveMessage(
 }
 
 export async function resetBookmarks() {
-  const { bookmarksWithId, lastId } = addIdsToBookmarks(initialBookmarks)
-  await chrome.storage.local.set({
-    bookmarks: bookmarksWithId,
-    lastId,
-    recentLinks: [],
-  })
+  await initializeBookmarks()
   return { data: 'reset bookmarks', error: null }
 }
 
@@ -372,4 +371,31 @@ export async function updateGroupOrder(
   await storeBookmarks(updatedBookmarks)
 
   return { data: 'updated bookmark order for: ' + groupName, error: null }
+}
+
+export async function increaseOpenCount(bookmark: Bookmark) {
+  const { data: bookmarks, error } = await getStoredBookmarks()
+  if (!bookmarks) return { data: null, error }
+  const updated = bookmarks.map((bk) => {
+    if (bk.id === bookmark.id) {
+      return { ...bk, id: bk.id + 1 }
+    }
+    return bk
+  })
+  await storeBookmarks(updated)
+  await storeMostOpenedBookmarks()
+  return { data: 'updated open count', error: null }
+}
+
+export async function getMostOpenedBookmarks() {
+  const { data: bookmarks, error } = await getStoredBookmarks()
+  if (!bookmarks) return { data: null, error }
+  const sorted = [...bookmarks].sort((a, b) => b.openCount - a.openCount)
+  const filteredZero = sorted.filter((bk) => bk.openCount)
+  return { data: filteredZero, error: null }
+}
+
+export async function storeMostOpenedBookmarks() {
+  const { data: sorted } = await getMostOpenedBookmarks()
+  await chrome.storage.local.set({ mostOpened: sorted ?? [] })
 }

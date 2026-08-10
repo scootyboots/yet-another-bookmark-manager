@@ -11,7 +11,7 @@ export default function useLinkToOpen(
     const link =
       matches?.[focusIndex]?.item?.href ?? recentLinks?.[focusIndex]?.url
     const text =
-      matches?.[focusIndex]?.item?.href ?? recentLinks?.[focusIndex]?.text
+      matches?.[focusIndex]?.item?.text ?? recentLinks?.[focusIndex]?.text
 
     return {
       href: link ?? '',
