@@ -64,8 +64,8 @@ export default function BookmarkControls({
             setIsControlsExpand(false)
           }}
           onMouseMove={() => setIsControlsExpand(true)}
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1.1 }}
+          initial={{ opacity: 0, scale: 0.88 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.065, ease: 'easeOut' }}
           className={cn(
             'bookmark-controls absolute px-7, py-1 -right-0.5 -top-2 cursor-pointer invisible duration-0 ps-6',
@@ -107,7 +107,7 @@ export default function BookmarkControls({
               }}
               onFocus={() => setControlsText('update')}
               animate={{ rotate: isControlsExpand ? 180 : 0 }}
-              transition={{ type: 'spring', damping: 12 }}
+              transition={{ type: 'spring', damping: 13 }}
             >
               <IconButton
                 icon={<Refresh />}
@@ -123,7 +123,7 @@ export default function BookmarkControls({
               animate={{
                 width: isControlsExpand ? 40 : 0,
               }}
-              transition={{ type: 'spring', duration: 0.15 }}
+              transition={{ type: 'spring', duration: 0.2 }}
               className={cn('text-over text-clip w-0 relative')}
             >
               <div

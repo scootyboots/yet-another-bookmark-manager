@@ -72,25 +72,25 @@ export default function NewTab() {
         {JSON.stringify(selectedBookmark)}
       </div>
       <TopContextRow>
-        <button
+        <Button
           onClick={() => {
             reset()
           }}
         >
           reset
-        </button>
-        <button onClick={focusPreviousElement}>focus previous</button>
+        </Button>
+        {/* <button onClick={focusPreviousElement}>focus previous</button>
         <Button onClick={() => promptController.newBookmark()}>
           add bk atom
         </Button>
-        <ShadTesting />
+        <ShadTesting /> */}
         <div>
           <button>mod</button> + <button>k</button> to search
         </div>
         <div>
           <button>.</button> for command line
         </div>
-        <button
+        {/* <button
           onClick={() => {
             promptController.newBookmark()
           }}
@@ -103,7 +103,7 @@ export default function NewTab() {
           }}
         >
           add group
-        </button>
+        </button> */}
       </TopContextRow>
 
       {showSearch ? (
@@ -121,42 +121,6 @@ export default function NewTab() {
           setShowSearch={setShowSearch}
         />
       ) : null}
-
-      <div
-        className={cn(
-          'bookmark-display gap-4 grid p-4',
-          `grid-cols-${GRID_COLS}`,
-        )}
-      >
-        <div>
-          <GenericHeader>newest to oldest</GenericHeader>
-          {bookmarksAscending.map((bk, i) => (
-            <BookmarkEntry
-              bookmark={bk}
-              showBookmarkPrompt={promptController.setIsPromptShown}
-              removeBookmark={removeBookmark}
-              index={i}
-              key={'newest-to-oldest-' + i}
-            />
-          ))}
-        </div>
-        <div>
-          <GenericHeader>most visited</GenericHeader>
-          {bookmarksMostVisited.map((bk, i) => (
-            <BookmarkEntry
-              bookmark={bk}
-              showBookmarkPrompt={promptController.setIsPromptShown}
-              removeBookmark={removeBookmark}
-              index={i}
-              key={'most-visited-' + i}
-              showCount
-            />
-          ))}
-        </div>
-        <div>
-          <GenericHeader>filters will go here</GenericHeader>
-        </div>
-      </div>
 
       <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid p-4')}>
         {sorter.sortedColumns.map((col, index) => (
@@ -204,6 +168,42 @@ export default function NewTab() {
             </div>
           </div>
         ))}
+      </div>
+
+      <div
+        className={cn(
+          'bookmark-display gap-4 grid p-4',
+          `grid-cols-${GRID_COLS}`,
+        )}
+      >
+        <div>
+          <GenericHeader>newest to oldest</GenericHeader>
+          {bookmarksAscending.map((bk, i) => (
+            <BookmarkEntry
+              bookmark={bk}
+              showBookmarkPrompt={promptController.setIsPromptShown}
+              removeBookmark={removeBookmark}
+              index={i}
+              key={'newest-to-oldest-' + i}
+            />
+          ))}
+        </div>
+        <div>
+          <GenericHeader>most visited</GenericHeader>
+          {bookmarksMostVisited.map((bk, i) => (
+            <BookmarkEntry
+              bookmark={bk}
+              showBookmarkPrompt={promptController.setIsPromptShown}
+              removeBookmark={removeBookmark}
+              index={i}
+              key={'most-visited-' + i}
+              showCount
+            />
+          ))}
+        </div>
+        <div>
+          <GenericHeader>filters will go here</GenericHeader>
+        </div>
       </div>
     </div>
   )

@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 import { ClassValue } from 'clsx'
 import useClickOutside from './hooks/useClickOutside'
 import { motion, AnimatePresence } from 'motion/react'
+import { BackgroundMask } from './Prompt'
 
 const POP_OUT_TRANSITION_MS = 150
 const POP_OUT_MENU_CLASS_NAME = 'pop-out-menu-menu'
@@ -168,53 +169,70 @@ export default function PopOutMenu({
   }, [])
 
   return (
-    <div className={cn('pop-out-menu relative w-6 h-6')}>
-      <button
-        className={cn(
-          'pop-out-menu-button absolute duration-150 shadow-primary cursor-pointer',
-          'p-1',
-          'bottom-0 left-0',
-          'rounded-sm',
-          { 'border-0 px-0 py-0': icon },
-          'focus:outline-solid focus:outline-2 outline-constructive',
-        )}
-        onClick={handleClick}
-        ref={menuTriggerRef}
-      >
-        <div
+    <>
+      <div className={cn('pop-out-menu relative w-6 h-6')}>
+        <button
           className={cn(
-            'pop-out-menu-button-icon-wrapper flex items-center content-center w-6',
-            iconClasses,
+            'pop-out-menu-button absolute duration-150 shadow-primary cursor-pointer',
+            'p-1',
+            'bottom-0 left-0',
+            'rounded-sm',
+            { 'border-0 px-0 py-0': icon },
+            'focus:outline-solid focus:outline-2 outline-constructive',
           )}
+          onClick={handleClick}
+          ref={menuTriggerRef}
         >
-          <IconToUse isVis={isOpen} icon={icon} />
-        </div>
-      </button>
-      <AnimatePresence>
-        {isOpen ? (
-          <motion.div
-            key={POP_OUT_MENU_CLASS_NAME}
-            initial={{ opacity: 0, translateY: 0 }}
-            animate={{ opacity: 1, translateY: 12 }}
-            transition={{ duration: 0.05, ease: 'easeIn' }}
-            exit={{
-              opacity: 0,
-              translateY: -36,
-              transition: { duration: 0.1, ease: 'easeOut' },
-            }}
+          <div
             className={cn(
-              POP_OUT_MENU_CLASS_NAME,
-              'absolute z-50 duration-150 p-3 rounded-sm shadow-glow-primary bg-background',
-              '-bottom-30 left-6',
-              menuClasses,
+              'pop-out-menu-button-icon-wrapper flex items-center content-center w-6',
+              iconClasses,
             )}
-            ref={menuRef}
-            onClick={menuClickHandler}
           >
-            {children}
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-    </div>
+            <IconToUse isVis={isOpen} icon={icon} />
+          </div>
+        </button>
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.div
+              key={POP_OUT_MENU_CLASS_NAME}
+              initial={{
+                opacity: 0,
+                translateY: 2,
+                translateX: 6,
+                scaleY: 0.98,
+              }}
+              animate={{ opacity: 1, translateY: 11, translateX: 6, scaleY: 1 }}
+              transition={{ duration: 0.025, ease: 'backOut' }}
+              exit={{
+                opacity: 0,
+                translateY: -36,
+                transition: { duration: 0.15, ease: 'easeOut' },
+              }}
+              className={cn(
+                POP_OUT_MENU_CLASS_NAME,
+                'absolute z-50 duration-150 p-3 rounded-sm shadow-glow-primary bg-background',
+                '-bottom-30 left-6',
+                menuClasses,
+              )}
+              ref={menuRef}
+              onClick={menuClickHandler}
+            >
+              {children}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      </div>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.3 }}
+          transition={{ duration: 0.4, ease: 'backOut' }}
+          className={cn(
+            'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background opacity-30 shadow-glow-primary-inset z-10',
+          )}
+        />
+      )}
+    </>
   )
 }

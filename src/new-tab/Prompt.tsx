@@ -11,6 +11,17 @@ import { cn } from '@/lib/utils'
 import { ClassValue } from 'clsx'
 import useClickOutside from './hooks/useClickOutside'
 
+// TODO: fix this
+export function BackgroundMask() {
+  return (
+    <div
+      className={cn(
+        'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background z-40 opacity-95 shadow-glow-primary-inset',
+      )}
+    />
+  )
+}
+
 type PromptProps = PropsWithChildren<{
   isShown: boolean
   className?: string
@@ -57,11 +68,8 @@ export default function Prompt({
 
   return (
     <>
-      <div
-        className={cn(
-          'Prompt-background fixed top-0 bottom-0 left-0 right-0 bg-background z-40 opacity-95 shadow-glow-primary-inset',
-        )}
-      />
+      <BackgroundMask />
+
       <FocusTrap>
         <div
           className={cn(
