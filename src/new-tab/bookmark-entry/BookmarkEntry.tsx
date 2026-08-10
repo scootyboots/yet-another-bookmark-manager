@@ -9,6 +9,7 @@ export type BookmarkEntryProps = {
   showBookmarkPrompt: (show: boolean) => void
   removeBookmark: (bk: Bookmark) => void
   index: number
+  showCount?: boolean
 }
 
 export default function BookmarkEntry(props: BookmarkEntryProps) {
@@ -38,7 +39,7 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
     >
       <a
         className={cn(
-          'bookmark-link text-white text-base no-underline focus:outline-solid focus:outline-2 outline-constructive',
+          'bookmark-link text-white text-base no-underline focus:outline-solid focus:outline-2 outline-constructive relative',
         )}
         href={props.bookmark.href}
         target="_blank"
@@ -46,6 +47,12 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
         ref={linkRef}
       >
         {props.bookmark.text}
+        {props.showCount && (
+          <span className={cn('text-primary-low font-bold')}>
+            {' : '}
+            {props.bookmark.openCount}
+          </span>
+        )}
       </a>
       <div className={cn('hidden')}>{props.bookmark.href}</div>
       <BookmarkControls
@@ -54,6 +61,18 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
         isBookmarkEntryMoused={hasMouse}
         setMountControls={setMountControls}
       />
+    </div>
+  )
+}
+
+function CountDisplay({ count }: { count: number }) {
+  return (
+    <div
+      className={cn(
+        'absolute -right-8 -top-1 w-5.5 h-5.5 rounded-full font-bold bg-primary-low text-center text-sm',
+      )}
+    >
+      {count}
     </div>
   )
 }

@@ -13,6 +13,8 @@ import {
   selectedBookmarkAtom,
   showSearchAtom,
   showCommandLineAtom,
+  bookmarksNewestToOldestReadOnlyAtom,
+  mostVisitedBookmarksReadOnlyAtom,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
@@ -23,6 +25,9 @@ import CommandPrompt from './command-prompts/CommandPrompt'
 import usePromptController from './command-prompts/usePromptController'
 import useInitializeBookmarks from './bookmark-controller/useInitializeBookmarks'
 
+// TODO: control from options
+const GRID_COLS = 4
+
 export default function NewTab() {
   useInitializeBookmarks()
   const [showSearch, setShowSearch] = useAtom(showSearchAtom)
@@ -30,6 +35,8 @@ export default function NewTab() {
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
   const bookmarks = useAtomValue(bookmarksAtom)
   const sorter = useBookmarkSorter(bookmarks)
+  const bookmarksAscending = useAtomValue(bookmarksNewestToOldestReadOnlyAtom)
+  const bookmarksMostVisited = useAtomValue(mostVisitedBookmarksReadOnlyAtom)
 
   const reset = useSetAtom(bookmarkMutationAtoms.clearBookmarksAtom)
   const updateGroupOrder = useSetAtom(
@@ -114,6 +121,42 @@ export default function NewTab() {
           setShowSearch={setShowSearch}
         />
       ) : null}
+
+      <div
+        className={cn(
+          'bookmark-display gap-4 grid p-4',
+          `grid-cols-${GRID_COLS}`,
+        )}
+      >
+        <div>
+          <GenericHeader>newest to oldest</GenericHeader>
+          {bookmarksAscending.map((bk, i) => (
+            <BookmarkEntry
+              bookmark={bk}
+              showBookmarkPrompt={promptController.setIsPromptShown}
+              removeBookmark={removeBookmark}
+              index={i}
+              key={'newest-to-oldest-' + i}
+            />
+          ))}
+        </div>
+        <div>
+          <GenericHeader>most visited</GenericHeader>
+          {bookmarksMostVisited.map((bk, i) => (
+            <BookmarkEntry
+              bookmark={bk}
+              showBookmarkPrompt={promptController.setIsPromptShown}
+              removeBookmark={removeBookmark}
+              index={i}
+              key={'most-visited-' + i}
+              showCount
+            />
+          ))}
+        </div>
+        <div>
+          <GenericHeader>filters will go here</GenericHeader>
+        </div>
+      </div>
 
       <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid p-4')}>
         {sorter.sortedColumns.map((col, index) => (

@@ -7,17 +7,19 @@ import useMatches from './useMatches'
 import useKeyboardControls from './useKeyboardControls'
 import useShakeX from './useShakeX'
 import useLinkToOpen from './useLinkToOpen'
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   bookmarkMutationAtoms,
   bookmarksAtom,
+  mostVisitedBookmarksReadOnlyAtom,
   recentLinksAtom,
   selectedBookmarkAtom,
 } from '../bookmark-controller/bookmark-atoms'
 import { BookmarkListItem } from './BookmarkListItem'
 import { SearchInput } from './SearchInput'
-export { LINK_TO_OPEN_SELECTOR, IS_MATCH_SELECTOR } from './useKeyboardControls'
+export { LINK_TO_OPEN_SELECTOR } from './useKeyboardControls'
 
+export const IS_SEARCH_TEST = true
 export const SEARCH_INPUT_SELECTOR = '.Search input'
 export const MAX_DISPLAYED_RESULTS = 13
 
@@ -34,16 +36,15 @@ export default function Search({
 }: SearchProps) {
   const bookmarks = useAtomValue(bookmarksAtom)
   const recentLinks = useAtomValue(recentLinksAtom)
+  const mostOpenBks = useAtomValue(mostVisitedBookmarksReadOnlyAtom)
   const [inputText, setInputText] = useState('')
-  const [urlToOpen, setUrlToOpen] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
-  const setSelectedBookmark = useSetAtom(selectedBookmarkAtom)
+  const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
 
   const { matches, hasMatches, groupMatches, matchesToRender } = useMatches(
     inputText,
     bookmarks,
-    setUrlToOpen,
     setLastMatches,
   )
 
@@ -57,7 +58,6 @@ export default function Search({
     promptUpdateBookmark,
     setShowSearch,
     setInputText,
-    setUrlToOpen,
     inputRef,
   )
 
@@ -87,16 +87,15 @@ export default function Search({
 
       <div className="search-results text-sm pbs-4 relative">
         {!hasMatches &&
-          recentLinks.slice(0, MAX_DISPLAYED_RESULTS).map((link, index) => {
+          mostOpenBks.slice(0, MAX_DISPLAYED_RESULTS).map((bookmark, index) => {
             const isFocused = index === focusIndex
             return (
               <SearchResult
                 isFocused={isFocused}
                 resultIndex={index}
-                href={link.url}
-                text={link.text}
+                bookmark={bookmark}
               >
-                <BookmarkListItem text={link.text} href={link.url} />
+                <BookmarkListItem text={bookmark.text} href={bookmark.href} />
               </SearchResult>
             )
           })}
@@ -114,8 +113,7 @@ export default function Search({
             <SearchResult
               isFocused={isFocused}
               resultIndex={index}
-              href={href}
-              text={text}
+              bookmark={match.item}
             >
               <SearchResultGroup isFocused={isFocused}>
                 {group}
@@ -195,18 +193,20 @@ function SearchResultsOverview({
 type SearchResultProps = {
   isFocused: boolean
   resultIndex: number
-  href: string
-  text: string
+  bookmark: Bookmark
 } & PropsWithChildren
 
 function SearchResult(props: SearchResultProps) {
-  const { isFocused, resultIndex, children, href, text } = props
+  const { isFocused, resultIndex, children, bookmark } = props
   const updateRecentLinks = useSetAtom(
     bookmarkMutationAtoms.updateRecentLinksAtom,
   )
+  const increaseOpenCount = useSetAtom(
+    bookmarkMutationAtoms.increaseOpenCountAtom,
+  )
   return (
     <a
-      href={href}
+      href={bookmark.href}
       className={cn(
         'search-result-entry relative font-bold flex gap-2 max-w-[95vw] px-2 py-2 border-2 focus:ring-0 focus:outline-none',
         {
@@ -217,9 +217,15 @@ function SearchResult(props: SearchResultProps) {
       key={'matching-bookmark-' + resultIndex}
       onClick={(e) => {
         e.preventDefault()
-        updateRecentLinks(href, text, false)
-        window.location.href = href
+        updateRecentLinks(bookmark.href, bookmark.text, false)
+        increaseOpenCount(bookmark)
+        if (IS_SEARCH_TEST) {
+          return
+        }
+        window.location.href = bookmark.href
       }}
+      data-bookmark={JSON.stringify(bookmark)}
+      data-is-focused={isFocused}
       data-is-match
     >
       {children}

@@ -3,9 +3,11 @@ import { type Bookmark } from '@/background'
 import { type MatchData } from 'fast-fuzzy'
 import { useSetAtom } from 'jotai'
 import { bookmarkMutationAtoms } from '../bookmark-controller/bookmark-atoms'
+import { IS_SEARCH_TEST } from './Search'
 
 export const LINK_TO_OPEN_SELECTOR = '[data-link-to-open]'
 export const IS_MATCH_SELECTOR = '[data-is-match]'
+export const FOCUSED_MATCH_SELECTOR = '[data-is-match][data-is-focused="true"]'
 
 export default function useKeyboardControls(
   matches: MatchData<Bookmark>[],
@@ -15,12 +17,15 @@ export default function useKeyboardControls(
   promptUpdateBookmark: (bookmark: Bookmark) => void,
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>,
   setInputText: React.Dispatch<React.SetStateAction<string>>,
-  setUrlToOpen: React.Dispatch<React.SetStateAction<string>>,
   inputRef: React.RefObject<HTMLInputElement | null>,
 ) {
   const updateRecentLinks = useSetAtom(
     bookmarkMutationAtoms.updateRecentLinksAtom,
   )
+  const increaseOpenCount = useSetAtom(
+    bookmarkMutationAtoms.increaseOpenCountAtom,
+  )
+
   const keydownHandler = useCallback(
     (event: KeyboardEvent) => {
       const { key, shiftKey, metaKey } = event
@@ -42,35 +47,40 @@ export default function useKeyboardControls(
       }
 
       if (key === 'Enter') {
-        const matchLinkEl = document.querySelector<HTMLDivElement>(
-          LINK_TO_OPEN_SELECTOR,
+        const focusedMatchEl = document.querySelector<HTMLDivElement>(
+          FOCUSED_MATCH_SELECTOR,
         )
-        if (matchLinkEl) {
-          const href = matchLinkEl?.textContent ?? ''
-          const text = matchLinkEl.getAttribute('data-link-text') ?? ''
-          updateRecentLinks(href, text, false)
-          setInputText('')
-          setUrlToOpen('')
-          setFocusIndex(0)
-
-          const currentTabQuery = chrome.tabs.query({
-            active: true,
-            lastFocusedWindow: true,
-          })
-          currentTabQuery.then((tabs) => {
-            const activeTabId = tabs?.[0]?.id
-            chrome.tabs.create({ url: href })
-            if (activeTabId) {
-              chrome.tabs
-                .remove(activeTabId)
-                .then((resp) => {
-                  console.log(resp)
-                })
-                .catch((error) => {
-                  console.log('TAB REMOVE ERROR', error)
-                })
+        if (focusedMatchEl) {
+          const bookmarkData = focusedMatchEl.dataset.bookmark
+          if (bookmarkData) {
+            const bookmark = JSON.parse(bookmarkData) as Bookmark
+            updateRecentLinks(bookmark.href, bookmark.text, false)
+            console.log(bookmark)
+            increaseOpenCount(bookmark)
+            // setInputText('')
+            // setFocusIndex(0)
+            if (IS_SEARCH_TEST) {
+              return
             }
-          })
+            const currentTabQuery = chrome.tabs.query({
+              active: true,
+              lastFocusedWindow: true,
+            })
+            currentTabQuery.then((tabs) => {
+              const activeTabId = tabs?.[0]?.id
+              chrome.tabs.create({ url: bookmark.href })
+              if (activeTabId) {
+                chrome.tabs
+                  .remove(activeTabId)
+                  .then((resp) => {
+                    console.log(resp)
+                  })
+                  .catch((error) => {
+                    console.log('TAB REMOVE ERROR', error)
+                  })
+              }
+            })
+          }
         }
         return
       }

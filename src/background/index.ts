@@ -10,6 +10,7 @@ export type Bookmark = {
   tags: string[]
   comment: string
   openCount: number
+  dateAdded: number
 }
 export type NewBookmark = Omit<Bookmark, 'id'>
 export type Bookmarks = Array<Bookmark>
@@ -20,10 +21,17 @@ chrome.action.onClicked.addListener(() => {
 
 function addIdsAndPropsToBookmarks(bookmarks: NewBookmark[]) {
   let initialId = 1000
-
+  const date = Date.now()
   const bookmarksWithId = bookmarks.map((bk) => {
     initialId += 1
-    return { ...bk, id: initialId, tags: [bk.group], comment: '', openCount: 0 }
+    return {
+      ...bk,
+      id: initialId,
+      tags: [bk.group],
+      comment: '',
+      openCount: 0,
+      dateAdded: date,
+    }
   })
   return { bookmarksWithId, lastId: initialId }
 }
@@ -236,7 +244,12 @@ export async function addBookmark(newBookmark: NewBookmark) {
   const { data: lastId } = await getStoredLastId()
   if (bookmarks && lastId) {
     const updatedLastId = lastId + 1
-    const newBookmarkWithId = { ...newBookmark, id: updatedLastId }
+    const now = Date.now()
+    const newBookmarkWithId = {
+      ...newBookmark,
+      id: updatedLastId,
+      dateAdded: now,
+    } satisfies Bookmark
     await storeBookmarks([newBookmarkWithId, ...bookmarks])
     await storeLastId(updatedLastId)
     return { data: makeAddRemoveMessage('add', newBookmarkWithId), error: null }
@@ -378,7 +391,7 @@ export async function increaseOpenCount(bookmark: Bookmark) {
   if (!bookmarks) return { data: null, error }
   const updated = bookmarks.map((bk) => {
     if (bk.id === bookmark.id) {
-      return { ...bk, id: bk.id + 1 }
+      return { ...bk, openCount: bk.openCount + 1 }
     }
     return bk
   })
@@ -392,6 +405,7 @@ export async function getMostOpenedBookmarks() {
   if (!bookmarks) return { data: null, error }
   const sorted = [...bookmarks].sort((a, b) => b.openCount - a.openCount)
   const filteredZero = sorted.filter((bk) => bk.openCount)
+  console.log('MOST OPENED UPDATED TO ', filteredZero)
   return { data: filteredZero, error: null }
 }
 

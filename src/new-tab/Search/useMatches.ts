@@ -6,7 +6,6 @@ import { MAX_DISPLAYED_RESULTS } from './Search'
 export default function useMatches(
   inputText: string,
   bookmarks: Bookmark[],
-  setUrlToOpen: (value: React.SetStateAction<string>) => void,
   setLastMatches: (value: React.SetStateAction<MatchData<Bookmark>[]>) => void,
 ) {
   const matched = useMemo(() => {
@@ -21,14 +20,12 @@ export default function useMatches(
     const uniqueGroups = [...new Set([...groupMatches])]
 
     if (!inputText) {
-      setUrlToOpen('')
       setLastMatches([])
       return { matches: [], hasMatches: false }
     }
 
     const hasMatches = Array.isArray(matches) && matches.length > 0
     if (hasMatches) setLastMatches(matches)
-    setUrlToOpen(matches?.[0]?.item.href ?? '')
     return { matches, hasMatches, groupMatches: uniqueGroups }
   }, [inputText])
 

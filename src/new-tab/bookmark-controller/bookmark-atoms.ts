@@ -14,8 +14,7 @@ import {
   updateRecentLinks,
   increaseOpenCount,
 } from '@/background'
-import { atom, useSetAtom } from 'jotai'
-import { useEffect } from 'react'
+import { atom } from 'jotai'
 
 export const EMPTY_BOOKMARK: Bookmark = {
   id: 0,
@@ -27,10 +26,21 @@ export const EMPTY_BOOKMARK: Bookmark = {
   tags: [],
   comment: '',
   openCount: 0,
+  dateAdded: 0,
 } as const
 
 export const bookmarksAtom = atom<Bookmark[]>([])
 export const recentLinksAtom = atom<RecentLinks[]>([])
+export const mostVisitedBookmarksReadOnlyAtom = atom<Bookmark[]>((get) => {
+  const bookmarks = get(bookmarksAtom)
+  const sorted = [...bookmarks].sort((a, b) => b.openCount - a.openCount)
+  return sorted.filter((bk) => bk.openCount)
+})
+export const bookmarksNewestToOldestReadOnlyAtom = atom<Bookmark[]>((get) => {
+  const bookmarks = get(bookmarksAtom)
+  const sorted = [...bookmarks].sort((a, b) => b.id - a.id)
+  return sorted
+})
 
 export const selectedBookmarkAtom = atom<Bookmark>({ ...EMPTY_BOOKMARK })
 export const clearSelectedBookmarkAtom = atom(null, (_get, set) => {
@@ -82,6 +92,7 @@ export const initializeBookmarkAtomsAtom = atom(null, async (_get, set) => {
   set(recentLinksAtom, recentLinks ?? [])
 })
 
+// TODO: update to be full bookmark rather than just href, text, count
 export const updateRecentLinksAtom = atom(
   null,
   async (_get, set, url: string, text: string, clear: boolean) => {
