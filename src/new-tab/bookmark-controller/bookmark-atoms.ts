@@ -45,17 +45,29 @@ export const bookmarksNewestToOldestReadOnlyAtom = atom<Bookmark[]>((get) => {
 export const suggestedBookmarksAtoms = atom<Bookmark[]>((get) => {
   const mostVisited = get(mostVisitedBookmarksReadOnlyAtom)
   const recentLinks = get(recentLinksAtom)
-  const mixedLinks = Array.from({ length: 20 }).map((_, i) => {
-    const recentLink = recentLinks?.[i]
-    const mostVisitedLink = mostVisited?.[i]
-    const isEven = i % 2 === 0
-    if (isEven) {
-      return recentLink ?? mostVisited
-    } else {
-      return mostVisited
+  const mixedLinks: Bookmark[] = []
+  for (let index = 0; index < mostVisited.length; index++) {
+    if (index >= 20) {
+      break
     }
-  })
-  return [...recentLinks, ...mostVisited]
+    const pushedIds = mixedLinks.map((bk) => bk.id)
+    const mostVisitedBookmark = mostVisited.find(
+      (bk) => !pushedIds.includes(bk.id),
+    )
+    const recentLink = recentLinks.find((bk) => !pushedIds.includes(bk.id))
+    const isEven = index % 2 === 0
+    if (index === 0 || isEven) {
+      const toPush = recentLink ?? mostVisitedBookmark
+      if (toPush) {
+        mixedLinks.push(toPush)
+      }
+    } else {
+      if (mostVisitedBookmark) {
+        mixedLinks.push(mostVisitedBookmark)
+      }
+    }
+  }
+  return mixedLinks
 })
 
 export const selectedBookmarkAtom = atom<Bookmark>({ ...EMPTY_BOOKMARK })

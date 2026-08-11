@@ -176,7 +176,7 @@ function SearchResultsOverview({
   return (
     <div
       className={cn(
-        'matches-number-display absolute bottom-4 w-[calc(100%-4rem)] text-primary font-bold text-sm',
+        'matches-number-display absolute -bottom-4 w-[calc(100%-4rem)] text-primary font-bold text-sm',
       )}
     >
       <div className="w-full">

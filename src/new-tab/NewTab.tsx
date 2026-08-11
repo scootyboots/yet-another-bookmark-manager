@@ -36,14 +36,9 @@ export default function NewTab() {
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
   const bookmarks = useAtomValue(bookmarksAtom)
   const recentLinks = useAtomValue(recentLinksAtom)
-  const sorter = useBookmarkSorter(bookmarks)
   const bookmarksAscending = useAtomValue(bookmarksNewestToOldestReadOnlyAtom)
   const bookmarksMostVisited = useAtomValue(mostVisitedBookmarksReadOnlyAtom)
-
   const reset = useSetAtom(bookmarkMutationAtoms.clearBookmarksAtom)
-  const updateGroupOrder = useSetAtom(
-    bookmarkMutationAtoms.updateGroupOrderAtom,
-  )
   const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
   const promptController = usePromptController()
 
