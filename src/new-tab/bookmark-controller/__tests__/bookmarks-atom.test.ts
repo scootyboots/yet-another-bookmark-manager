@@ -36,6 +36,11 @@ const testBookmark: Bookmark = {
   col: 1,
   href: 'https://example.com',
   text: 'test-test-test',
+  tags: ['tag'],
+  openCount: 1,
+  dateAdded: 0,
+  comment: '',
+  dateFormatted: '2026-01-01 01:01:01',
 }
 const otherBkText = 'another-test-bookmark'
 const otherBookmark = { ...testBookmark, text: otherBkText, id: 2 }

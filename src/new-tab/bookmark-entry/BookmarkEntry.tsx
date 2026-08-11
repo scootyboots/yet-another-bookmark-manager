@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Bookmark } from '../../background'
 import { BookmarkPromptType } from '../BookmarkPrompt'
 import BookmarkControls from './BookmarkControls'
@@ -10,6 +10,7 @@ export type BookmarkEntryProps = {
   removeBookmark: (bk: Bookmark) => void
   index: number
   showCount?: boolean
+  showDate?: boolean
 }
 
 export default function BookmarkEntry(props: BookmarkEntryProps) {
@@ -51,6 +52,12 @@ export default function BookmarkEntry(props: BookmarkEntryProps) {
           <span className={cn('text-primary-low font-bold')}>
             {' : '}
             {props.bookmark.openCount}
+          </span>
+        )}
+        {props.showDate && (
+          <span className={cn('text-primary-low font-bold')}>
+            {' : '}
+            {props.bookmark.dateFormatted}
           </span>
         )}
       </a>

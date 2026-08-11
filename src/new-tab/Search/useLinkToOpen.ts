@@ -1,15 +1,15 @@
-import { Bookmark, RecentLinks } from '@/background'
+import { Bookmark } from '@/background'
 import { MatchData } from 'fast-fuzzy'
 import { useMemo } from 'react'
 
 export default function useLinkToOpen(
   matches: never[] | MatchData<Bookmark>[],
-  recentLinks: RecentLinks[],
+  recentLinks: Bookmark[],
   focusIndex: number,
 ) {
   return useMemo(() => {
     const link =
-      matches?.[focusIndex]?.item?.href ?? recentLinks?.[focusIndex]?.url
+      matches?.[focusIndex]?.item?.href ?? recentLinks?.[focusIndex]?.href
     const text =
       matches?.[focusIndex]?.item?.text ?? recentLinks?.[focusIndex]?.text
 

@@ -147,6 +147,10 @@ export default function CommandInputs(props: CommandInputsProps) {
           >
             group
           </CommandSelectGroup>
+          <div className={cn('flex gap-2')}>
+            <div>added: </div>
+            <div>{selectedBookmark.dateFormatted}</div>
+          </div>
         </>
       )}
       {command === 'new-group' && <></>}

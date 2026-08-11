@@ -4,7 +4,6 @@ import {
   Bookmark,
   getStoredBookmarks,
   getStoredRecentLinks,
-  RecentLinks,
   removeBookmark,
   removeGroup,
   resetBookmarks,
@@ -27,10 +26,11 @@ export const EMPTY_BOOKMARK: Bookmark = {
   comment: '',
   openCount: 0,
   dateAdded: 0,
+  dateFormatted: '',
 } as const
 
 export const bookmarksAtom = atom<Bookmark[]>([])
-export const recentLinksAtom = atom<RecentLinks[]>([])
+export const recentLinksAtom = atom<Bookmark[]>([])
 export const mostVisitedBookmarksReadOnlyAtom = atom<Bookmark[]>((get) => {
   const bookmarks = get(bookmarksAtom)
   const sorted = [...bookmarks].sort((a, b) => b.openCount - a.openCount)
@@ -40,6 +40,22 @@ export const bookmarksNewestToOldestReadOnlyAtom = atom<Bookmark[]>((get) => {
   const bookmarks = get(bookmarksAtom)
   const sorted = [...bookmarks].sort((a, b) => b.id - a.id)
   return sorted
+})
+
+export const suggestedBookmarksAtoms = atom<Bookmark[]>((get) => {
+  const mostVisited = get(mostVisitedBookmarksReadOnlyAtom)
+  const recentLinks = get(recentLinksAtom)
+  const mixedLinks = Array.from({ length: 20 }).map((_, i) => {
+    const recentLink = recentLinks?.[i]
+    const mostVisitedLink = mostVisited?.[i]
+    const isEven = i % 2 === 0
+    if (isEven) {
+      return recentLink ?? mostVisited
+    } else {
+      return mostVisited
+    }
+  })
+  return [...recentLinks, ...mostVisited]
 })
 
 export const selectedBookmarkAtom = atom<Bookmark>({ ...EMPTY_BOOKMARK })
@@ -95,8 +111,8 @@ export const initializeBookmarkAtomsAtom = atom(null, async (_get, set) => {
 // TODO: update to be full bookmark rather than just href, text, count
 export const updateRecentLinksAtom = atom(
   null,
-  async (_get, set, url: string, text: string, clear: boolean) => {
-    await updateRecentLinks(url, text, clear)
+  async (_get, set, bookmark: Bookmark, clear?: boolean) => {
+    await updateRecentLinks(bookmark, clear)
     await set(refreshRecentLinksFromStorageAtom)
   },
 )

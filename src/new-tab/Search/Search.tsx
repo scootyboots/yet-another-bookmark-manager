@@ -14,6 +14,7 @@ import {
   mostVisitedBookmarksReadOnlyAtom,
   recentLinksAtom,
   selectedBookmarkAtom,
+  suggestedBookmarksAtoms,
 } from '../bookmark-controller/bookmark-atoms'
 import { BookmarkListItem } from './BookmarkListItem'
 import { SearchInput } from './SearchInput'
@@ -37,10 +38,13 @@ export default function Search({
   const bookmarks = useAtomValue(bookmarksAtom)
   const recentLinks = useAtomValue(recentLinksAtom)
   const mostOpenBks = useAtomValue(mostVisitedBookmarksReadOnlyAtom)
+  const suggestedLinks = useAtomValue(suggestedBookmarksAtoms)
   const [inputText, setInputText] = useState('')
   const [focusIndex, setFocusIndex] = useState(0)
   const [lastMatches, setLastMatches] = useState<Array<MatchData<Bookmark>>>([])
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
+
+  const suggestedBookmarks = useMemo(() => {}, [recentLinks, mostOpenBks])
 
   const { matches, hasMatches, groupMatches, matchesToRender } = useMatches(
     inputText,
@@ -87,18 +91,20 @@ export default function Search({
 
       <div className="search-results text-sm pbs-4 relative">
         {!hasMatches &&
-          mostOpenBks.slice(0, MAX_DISPLAYED_RESULTS).map((bookmark, index) => {
-            const isFocused = index === focusIndex
-            return (
-              <SearchResult
-                isFocused={isFocused}
-                resultIndex={index}
-                bookmark={bookmark}
-              >
-                <BookmarkListItem text={bookmark.text} href={bookmark.href} />
-              </SearchResult>
-            )
-          })}
+          suggestedLinks
+            .slice(0, MAX_DISPLAYED_RESULTS)
+            .map((bookmark, index) => {
+              const isFocused = index === focusIndex
+              return (
+                <SearchResult
+                  isFocused={isFocused}
+                  resultIndex={index}
+                  bookmark={bookmark}
+                >
+                  <BookmarkListItem text={bookmark.text} href={bookmark.href} />
+                </SearchResult>
+              )
+            })}
 
         {matchesToRender.map((match, index) => {
           const moreThan18 = index + 1 > MAX_DISPLAYED_RESULTS
@@ -217,7 +223,7 @@ function SearchResult(props: SearchResultProps) {
       key={'matching-bookmark-' + resultIndex}
       onClick={(e) => {
         e.preventDefault()
-        updateRecentLinks(bookmark.href, bookmark.text, false)
+        updateRecentLinks(bookmark)
         increaseOpenCount(bookmark)
         if (IS_SEARCH_TEST) {
           return

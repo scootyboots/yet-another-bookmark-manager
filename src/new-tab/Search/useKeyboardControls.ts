@@ -54,11 +54,8 @@ export default function useKeyboardControls(
           const bookmarkData = focusedMatchEl.dataset.bookmark
           if (bookmarkData) {
             const bookmark = JSON.parse(bookmarkData) as Bookmark
-            updateRecentLinks(bookmark.href, bookmark.text, false)
-            console.log(bookmark)
+            updateRecentLinks(bookmark)
             increaseOpenCount(bookmark)
-            // setInputText('')
-            // setFocusIndex(0)
             if (IS_SEARCH_TEST) {
               return
             }

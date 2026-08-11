@@ -11,6 +11,7 @@ export type Bookmark = {
   comment: string
   openCount: number
   dateAdded: number
+  dateFormatted: string
 }
 export type NewBookmark = Omit<Bookmark, 'id'>
 export type Bookmarks = Array<Bookmark>
@@ -18,6 +19,17 @@ export type Bookmarks = Array<Bookmark>
 chrome.action.onClicked.addListener(() => {
   chrome.tabs.create({ url: 'newTab.html' })
 })
+
+export function formatDate(dateMs: number) {
+  const date = new Date(dateMs)
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDay()
+  const hours = date.getHours()
+  const minutes = date.getMinutes()
+  const seconds = date.getSeconds()
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
 
 function addIdsAndPropsToBookmarks(bookmarks: NewBookmark[]) {
   let initialId = 1000
@@ -31,9 +43,31 @@ function addIdsAndPropsToBookmarks(bookmarks: NewBookmark[]) {
       comment: '',
       openCount: 0,
       dateAdded: date,
+      dateFormatted: formatDate(date),
     }
   })
   return { bookmarksWithId, lastId: initialId }
+}
+
+const BOOKMARKS_BY_ID_KEY = 'bookmarksById'
+
+export function makeBookmarksById(bookmarks: Bookmark[]) {
+  const keyedBookmarks: Record<number, Bookmark> = {}
+  for (const bk of bookmarks) {
+    keyedBookmarks[bk.id] = bk
+  }
+  return keyedBookmarks
+}
+
+export async function storeBookmarksById(bookmarks: Bookmark[]) {
+  const keyedBookmarks = makeBookmarksById(bookmarks)
+  chrome.storage.local.set({ [BOOKMARKS_BY_ID_KEY]: keyedBookmarks })
+}
+
+export async function getBookmarksById() {
+  return await chrome.storage.local.get<{
+    [BOOKMARKS_BY_ID_KEY]: Record<number, Bookmark>
+  }>(BOOKMARKS_BY_ID_KEY)
 }
 
 async function initializeBookmarks() {
@@ -48,16 +82,16 @@ async function initializeBookmarks() {
     const { bookmarksWithId, lastId } = addIdsAndPropsToBookmarks(combined)
     chrome.storage.local.set({
       bookmarks: bookmarksWithId,
+      bookmarksById: makeBookmarksById(bookmarksWithId),
       lastId,
-      // TODO: remove recentLinks
       recentLinks: [],
       mostOpened: [],
     })
   } catch (e) {
     chrome.storage.local.set({
       bookmarks: [],
+      bookmarksById: {},
       lastId: 1000,
-      // TODO: remove recentLinks
       recentLinks: [],
       mostOpened: [],
     })
@@ -91,7 +125,8 @@ export async function resetBookmarks() {
 }
 
 export async function storeBookmarks(bookmarks: Bookmarks) {
-  return await chrome.storage.local.set({ bookmarks })
+  await chrome.storage.local.set({ bookmarks })
+  await storeBookmarksById(bookmarks)
 }
 
 export async function getStoredBookmarks() {
@@ -113,47 +148,28 @@ export async function getStoredLastId() {
   return { data: null, error: 'did not find stored lastId' }
 }
 
-export type RecentLinks = { url: string; text: string; count: number }
-
 export async function getStoredRecentLinks() {
   const stored = await chrome.storage.local.get<{
-    recentLinks: Array<RecentLinks>
+    recentLinks: Array<Bookmark>
   }>('recentLinks')
   const { recentLinks } = stored
-  // console.log('STORED LINKS', recentLinks)
   if (recentLinks) return { data: recentLinks, error: null }
   await chrome.storage.local.set({ recentLinks: [] })
   return { data: null, error: 'did not find stored recent links' }
 }
 
-export async function updateRecentLinks(
-  url: string,
-  text: string,
-  clear = false,
-) {
+export async function updateRecentLinks(bk: Bookmark, clear?: boolean) {
   if (clear) {
     return await chrome.storage.local.set({ recentLinks: [] })
   }
-  function capStoredLinks(links: RecentLinks[]) {
-    return links.slice(0, 25)
-  }
   const { data: recentLinks } = await getStoredRecentLinks()
+  const { bookmarksById } = await getBookmarksById()
   if (!recentLinks) return
-  const existing = recentLinks.find((link) => link.url === url)
-  if (existing) {
-    console.log('found existing', existing)
-    const updatedLink = { ...existing, count: existing.count + 1 }
-    console.log('updated existing', updatedLink)
-    const updatedLinks = recentLinks.map((link) =>
-      link.url === url ? updatedLink : link,
-    )
-    console.log('LINKS', updatedLinks)
-    await chrome.storage.local.set({ recentLinks: updatedLinks })
-    return
-  }
-  const updatedLinks = capStoredLinks([{ url, text, count: 1 }, ...recentLinks])
-  console.log('LINKS', updatedLinks)
-  await chrome.storage.local.set({ recentLinks: updatedLinks })
+  recentLinks.unshift(bk)
+  const uniqueIds = [...new Set(recentLinks.map((bk) => bk.id))]
+  const uniqueBookmarks = uniqueIds.map((id) => bookmarksById[id])
+  const capped = uniqueBookmarks.slice(0, 25)
+  await chrome.storage.local.set({ recentLinks: capped })
 }
 
 export async function addGroup(name: string, groupIndex: number, col: number) {
@@ -249,6 +265,7 @@ export async function addBookmark(newBookmark: NewBookmark) {
       ...newBookmark,
       id: updatedLastId,
       dateAdded: now,
+      dateFormatted: formatDate(now),
     } satisfies Bookmark
     await storeBookmarks([newBookmarkWithId, ...bookmarks])
     await storeLastId(updatedLastId)

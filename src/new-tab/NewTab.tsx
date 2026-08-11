@@ -15,6 +15,7 @@ import {
   showCommandLineAtom,
   bookmarksNewestToOldestReadOnlyAtom,
   mostVisitedBookmarksReadOnlyAtom,
+  recentLinksAtom,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
@@ -26,7 +27,7 @@ import usePromptController from './command-prompts/usePromptController'
 import useInitializeBookmarks from './bookmark-controller/useInitializeBookmarks'
 
 // TODO: control from options
-const GRID_COLS = 4
+const GRID_COLS = 3
 
 export default function NewTab() {
   useInitializeBookmarks()
@@ -34,6 +35,7 @@ export default function NewTab() {
   const [showCommandLine, setShowCommandLine] = useAtom(showCommandLineAtom)
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
   const bookmarks = useAtomValue(bookmarksAtom)
+  const recentLinks = useAtomValue(recentLinksAtom)
   const sorter = useBookmarkSorter(bookmarks)
   const bookmarksAscending = useAtomValue(bookmarksNewestToOldestReadOnlyAtom)
   const bookmarksMostVisited = useAtomValue(mostVisitedBookmarksReadOnlyAtom)
@@ -122,7 +124,7 @@ export default function NewTab() {
         />
       ) : null}
 
-      <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid p-4')}>
+      {/* <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid p-4')}>
         {sorter.sortedColumns.map((col, index) => (
           <div key={'col-' + index}>
             <div>
@@ -168,7 +170,7 @@ export default function NewTab() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
 
       <div
         className={cn(
@@ -177,7 +179,15 @@ export default function NewTab() {
         )}
       >
         <div>
-          <GenericHeader>newest to oldest</GenericHeader>
+          <GroupControls
+            groupName={'newest to oldest'}
+            colIndex={1}
+            groupIndex={1}
+            isEmptyGroup={false}
+            setShowBkPrompt={promptController.setIsPromptShown}
+          >
+            <GenericHeader>newest to oldest</GenericHeader>
+          </GroupControls>
           {bookmarksAscending.map((bk, i) => (
             <BookmarkEntry
               bookmark={bk}
@@ -185,11 +195,20 @@ export default function NewTab() {
               removeBookmark={removeBookmark}
               index={i}
               key={'newest-to-oldest-' + i}
+              showDate
             />
           ))}
         </div>
         <div>
-          <GenericHeader>most visited</GenericHeader>
+          <GroupControls
+            groupName={'most-visited'}
+            colIndex={1}
+            groupIndex={1}
+            isEmptyGroup={false}
+            setShowBkPrompt={promptController.setIsPromptShown}
+          >
+            <GenericHeader>most visited</GenericHeader>
+          </GroupControls>
           {bookmarksMostVisited.map((bk, i) => (
             <BookmarkEntry
               bookmark={bk}
@@ -200,9 +219,35 @@ export default function NewTab() {
               showCount
             />
           ))}
+          <GroupControls
+            groupName={'recent-links'}
+            colIndex={1}
+            groupIndex={1}
+            isEmptyGroup={false}
+            setShowBkPrompt={promptController.setIsPromptShown}
+          >
+            <GenericHeader>recent opened</GenericHeader>
+          </GroupControls>
+          {recentLinks.map((bk, i) => (
+            <BookmarkEntry
+              bookmark={bk}
+              showBookmarkPrompt={promptController.setIsPromptShown}
+              removeBookmark={removeBookmark}
+              index={i}
+              key={'most-visited-' + i}
+            />
+          ))}
         </div>
         <div>
-          <GenericHeader>filters will go here</GenericHeader>
+          <GroupControls
+            groupName={'custom-filters'}
+            colIndex={1}
+            groupIndex={1}
+            isEmptyGroup={false}
+            setShowBkPrompt={promptController.setIsPromptShown}
+          >
+            <GenericHeader>filters will go here</GenericHeader>
+          </GroupControls>
         </div>
       </div>
     </div>

@@ -193,34 +193,41 @@ export default function PopOutMenu({
           </div>
         </button>
         <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div
-              key={POP_OUT_MENU_CLASS_NAME}
-              initial={{
-                opacity: 0,
-                translateY: 2,
-                translateX: 6,
-                scaleY: 0.98,
-              }}
-              animate={{ opacity: 1, translateY: 11, translateX: 6, scaleY: 1 }}
-              transition={{ duration: 0.025, ease: 'backOut' }}
-              exit={{
-                opacity: 0,
-                translateY: -36,
-                transition: { duration: 0.15, ease: 'easeOut' },
-              }}
-              className={cn(
-                POP_OUT_MENU_CLASS_NAME,
-                'absolute z-50 duration-150 p-3 rounded-sm shadow-glow-primary bg-background',
-                '-bottom-30 left-6',
-                menuClasses,
-              )}
-              ref={menuRef}
-              onClick={menuClickHandler}
-            >
-              {children}
-            </motion.div>
-          ) : null}
+          {isOpen && (
+            <>
+              <motion.div
+                key={POP_OUT_MENU_CLASS_NAME}
+                initial={{
+                  opacity: 0,
+                  translateY: 2,
+                  translateX: 6,
+                  scaleY: 0.98,
+                }}
+                animate={{
+                  opacity: 1,
+                  translateY: 11,
+                  translateX: 6,
+                  scaleY: 1,
+                }}
+                transition={{ duration: 0.025, ease: 'backOut' }}
+                exit={{
+                  opacity: 0,
+                  translateY: -36,
+                  transition: { duration: 0.15, ease: 'easeOut' },
+                }}
+                className={cn(
+                  POP_OUT_MENU_CLASS_NAME,
+                  'absolute z-50 duration-150 p-3 rounded-sm shadow-glow-primary bg-background',
+                  '-bottom-30 left-6',
+                  menuClasses,
+                )}
+                ref={menuRef}
+                onClick={menuClickHandler}
+              >
+                {children}
+              </motion.div>
+            </>
+          )}
         </AnimatePresence>
       </div>
       {isOpen && (
