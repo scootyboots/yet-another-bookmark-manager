@@ -5,6 +5,8 @@ import {
   showSearchSetAtom,
 } from '../bookmark-controller/bookmark-atoms'
 
+export type PromptController = ReturnType<typeof usePromptController>
+
 export default function usePromptController() {
   const [isPromptShown, setIsPromptShown] = useAtom(showPromptAtom)
   const setNewBkPrompt = useSetAtom(promptSetAtoms.newBookmark)

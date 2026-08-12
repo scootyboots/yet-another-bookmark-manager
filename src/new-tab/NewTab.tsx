@@ -17,6 +17,7 @@ import {
   mostVisitedBookmarksReadOnlyAtom,
   recentLinksAtom,
   filtersAtom,
+  EMPTY_FILTER,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
@@ -27,6 +28,7 @@ import CommandPrompt from './command-prompts/CommandPrompt'
 import usePromptController from './command-prompts/usePromptController'
 import useInitializeBookmarks from './bookmark-controller/useInitializeBookmarks'
 import FilterControls from './FilterControls'
+import Filter from './Filter'
 
 // TODO: control from options
 const GRID_COLS = 3
@@ -35,15 +37,12 @@ export default function NewTab() {
   useInitializeBookmarks()
   const [showSearch, setShowSearch] = useAtom(showSearchAtom)
   const [showCommandLine, setShowCommandLine] = useAtom(showCommandLineAtom)
-  const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
-  const bookmarks = useAtomValue(bookmarksAtom)
-  const recentLinks = useAtomValue(recentLinksAtom)
+  const selectedBookmark = useAtomValue(selectedBookmarkAtom)
   const filters = useAtomValue(filtersAtom)
-  const bookmarksAscending = useAtomValue(bookmarksNewestToOldestReadOnlyAtom)
-  const bookmarksMostVisited = useAtomValue(mostVisitedBookmarksReadOnlyAtom)
   const reset = useSetAtom(bookmarkMutationAtoms.clearBookmarksAtom)
-  const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
   const promptController = usePromptController()
+  const [newestToOldestFilter, mostVisitedFilter, recentlyOpenedFilter] =
+    filters.preset
 
   const { focusPreviousElement } = useTrackFocus()
 
@@ -67,45 +66,54 @@ export default function NewTab() {
   }, [filters])
 
   return (
-    <div className={cn('NewTab z-10 absolute')}>
-      <div className={cn('selected-bookmark hidden')}>
-        {JSON.stringify(selectedBookmark)}
-      </div>
-      <TopContextRow>
-        <Button
-          onClick={() => {
-            reset()
-          }}
-        >
-          reset
-        </Button>
-        {/* <button onClick={focusPreviousElement}>focus previous</button>
-        <Button onClick={() => promptController.newBookmark()}>
-          add bk atom
-        </Button>
-        <ShadTesting /> */}
-        <div>
-          <button>mod</button> + <button>k</button> to search
+    <>
+      <div className={cn('NewTab z-10 absolute')}>
+        <div className={cn('selected-bookmark hidden')}>
+          {JSON.stringify(selectedBookmark)}
         </div>
-        <div>
-          <button>.</button> for command line
-        </div>
-        {/* <button
-          onClick={() => {
-            promptController.newBookmark()
-          }}
-        >
-          add bookmark
-        </button>
-        <button
-          onClick={() => {
-            promptController.newGroup()
-          }}
-        >
-          add group
-        </button> */}
-      </TopContextRow>
+        <TopContextRow>
+          <Button
+            onClick={() => {
+              reset()
+            }}
+          >
+            reset
+          </Button>
+          <div>
+            <button>mod</button> + <button>k</button> to search
+          </div>
+          <div>
+            <button>.</button> for command line
+          </div>
+        </TopContextRow>
 
+        <div
+          className={cn(
+            'bookmark-display gap-4 grid p-4',
+            `grid-cols-${GRID_COLS}`,
+          )}
+        >
+          <Filter
+            filter={newestToOldestFilter}
+            promptController={promptController}
+            showDate
+          />
+          <Filter
+            filter={mostVisitedFilter}
+            promptController={promptController}
+            showCount
+          >
+            <Filter
+              filter={recentlyOpenedFilter}
+              promptController={promptController}
+            />
+          </Filter>
+          <Filter
+            filter={{ ...EMPTY_FILTER, name: 'custom filters' }}
+            promptController={promptController}
+          />
+        </div>
+      </div>
       {showSearch ? (
         <Search
           showSearch={showSearch}
@@ -121,122 +129,6 @@ export default function NewTab() {
           setShowSearch={setShowSearch}
         />
       ) : null}
-
-      {/* <div className={cn('bookmark-groups', 'grid-cols-4 gap-4 grid p-4')}>
-        {sorter.sortedColumns.map((col, index) => (
-          <div key={'col-' + index}>
-            <div>
-              {col.map((entry, i) => {
-                const isFirst = i === 0
-                const groupName = entry.group
-                const previousGroupName = col.at(i - 1)?.group
-                const sameAsLast = previousGroupName === groupName
-                const checkEmptyGroup = () => {
-                  const entriesInGroup = col.filter(
-                    (bk) => bk.group === groupName,
-                  )
-                  const firstEntry = entriesInGroup[0]
-                  return firstEntry.href === '' && entriesInGroup.length === 1
-                }
-                const isEmptyGroup = checkEmptyGroup()
-                const isEmptyBookmarkEntry = isEmptyBookmark(entry)
-                return (
-                  <div key={`${groupName}-${index}-${i}`}>
-                    {!sameAsLast || isFirst ? (
-                      <GroupControls
-                        groupName={groupName}
-                        colIndex={entry.col}
-                        groupIndex={entry.groupIndex}
-                        isEmptyGroup={isEmptyGroup}
-                        setShowBkPrompt={promptController.setIsPromptShown}
-                      >
-                        <GenericHeader>{groupName}</GenericHeader>
-                      </GroupControls>
-                    ) : null}
-                    {!isEmptyBookmarkEntry && (
-                      <BookmarkEntry
-                        bookmark={entry}
-                        showBookmarkPrompt={promptController.setIsPromptShown}
-                        removeBookmark={removeBookmark}
-                        index={i}
-                        key={'bookmark-entry-' + i}
-                      />
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        ))}
-      </div> */}
-
-      <div
-        className={cn(
-          'bookmark-display gap-4 grid p-4',
-          `grid-cols-${GRID_COLS}`,
-        )}
-      >
-        <div>
-          <FilterControls filterName="newest-to-oldest" isEmptyFilter={false}>
-            <GenericHeader>newest to oldest</GenericHeader>
-          </FilterControls>
-          {(filters.preset?.[0]?.bookmarks ?? []).map((bk, i) => (
-            <BookmarkEntry
-              bookmark={bk}
-              showBookmarkPrompt={promptController.setIsPromptShown}
-              removeBookmark={removeBookmark}
-              index={i}
-              key={'newest-to-oldest-' + i}
-              showDate
-            />
-          ))}
-        </div>
-        <div>
-          <FilterControls filterName="most-visited" isEmptyFilter={false}>
-            <GenericHeader>most visited</GenericHeader>
-          </FilterControls>
-          {bookmarksMostVisited.map((bk, i) => (
-            <BookmarkEntry
-              bookmark={bk}
-              showBookmarkPrompt={promptController.setIsPromptShown}
-              removeBookmark={removeBookmark}
-              index={i}
-              key={'most-visited-' + i}
-              showCount
-            />
-          ))}
-
-          <GroupControls
-            groupName={'recent-links'}
-            colIndex={1}
-            groupIndex={1}
-            isEmptyGroup={false}
-            setShowBkPrompt={promptController.setIsPromptShown}
-          >
-            <GenericHeader>recent opened</GenericHeader>
-          </GroupControls>
-          {recentLinks.map((bk, i) => (
-            <BookmarkEntry
-              bookmark={bk}
-              showBookmarkPrompt={promptController.setIsPromptShown}
-              removeBookmark={removeBookmark}
-              index={i}
-              key={'most-visited-' + i}
-            />
-          ))}
-        </div>
-        <div>
-          <GroupControls
-            groupName={'custom-filters'}
-            colIndex={1}
-            groupIndex={1}
-            isEmptyGroup={false}
-            setShowBkPrompt={promptController.setIsPromptShown}
-          >
-            <GenericHeader>filters will go here</GenericHeader>
-          </GroupControls>
-        </div>
-      </div>
-    </div>
+    </>
   )
 }
