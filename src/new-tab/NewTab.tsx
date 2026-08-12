@@ -16,6 +16,7 @@ import {
   bookmarksNewestToOldestReadOnlyAtom,
   mostVisitedBookmarksReadOnlyAtom,
   recentLinksAtom,
+  filtersAtom,
 } from './bookmark-controller/bookmark-atoms'
 import { cn } from '@/lib/utils'
 import { GenericHeader } from './GenericHeader'
@@ -25,6 +26,7 @@ import { Button } from '@/components/ui/button'
 import CommandPrompt from './command-prompts/CommandPrompt'
 import usePromptController from './command-prompts/usePromptController'
 import useInitializeBookmarks from './bookmark-controller/useInitializeBookmarks'
+import FilterControls from './FilterControls'
 
 // TODO: control from options
 const GRID_COLS = 3
@@ -36,6 +38,7 @@ export default function NewTab() {
   const [selectedBookmark, setSelectedBookmark] = useAtom(selectedBookmarkAtom)
   const bookmarks = useAtomValue(bookmarksAtom)
   const recentLinks = useAtomValue(recentLinksAtom)
+  const filters = useAtomValue(filtersAtom)
   const bookmarksAscending = useAtomValue(bookmarksNewestToOldestReadOnlyAtom)
   const bookmarksMostVisited = useAtomValue(mostVisitedBookmarksReadOnlyAtom)
   const reset = useSetAtom(bookmarkMutationAtoms.clearBookmarksAtom)
@@ -59,9 +62,9 @@ export default function NewTab() {
   }, [])
 
   useEffect(() => {
-    console.log('BOOKMARKS FROM ATOM ----')
-    console.log(bookmarks)
-  }, [bookmarks])
+    console.log('FILTERS FROM ATOM ----')
+    console.log(filters)
+  }, [filters])
 
   return (
     <div className={cn('NewTab z-10 absolute')}>
@@ -174,16 +177,10 @@ export default function NewTab() {
         )}
       >
         <div>
-          <GroupControls
-            groupName={'newest to oldest'}
-            colIndex={1}
-            groupIndex={1}
-            isEmptyGroup={false}
-            setShowBkPrompt={promptController.setIsPromptShown}
-          >
+          <FilterControls filterName="newest-to-oldest" isEmptyFilter={false}>
             <GenericHeader>newest to oldest</GenericHeader>
-          </GroupControls>
-          {bookmarksAscending.map((bk, i) => (
+          </FilterControls>
+          {(filters.preset?.[0]?.bookmarks ?? []).map((bk, i) => (
             <BookmarkEntry
               bookmark={bk}
               showBookmarkPrompt={promptController.setIsPromptShown}
@@ -195,15 +192,9 @@ export default function NewTab() {
           ))}
         </div>
         <div>
-          <GroupControls
-            groupName={'most-visited'}
-            colIndex={1}
-            groupIndex={1}
-            isEmptyGroup={false}
-            setShowBkPrompt={promptController.setIsPromptShown}
-          >
+          <FilterControls filterName="most-visited" isEmptyFilter={false}>
             <GenericHeader>most visited</GenericHeader>
-          </GroupControls>
+          </FilterControls>
           {bookmarksMostVisited.map((bk, i) => (
             <BookmarkEntry
               bookmark={bk}
@@ -214,6 +205,7 @@ export default function NewTab() {
               showCount
             />
           ))}
+
           <GroupControls
             groupName={'recent-links'}
             colIndex={1}

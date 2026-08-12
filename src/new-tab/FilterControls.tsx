@@ -18,23 +18,16 @@ import { BookmarkPromptType } from './BookmarkPrompt'
 import { PropsWithChildren } from 'react'
 import usePromptController from './command-prompts/usePromptController'
 
-export type GroupControlsProps = {
-  groupName: string
-  isEmptyGroup: boolean
-  setShowBkPrompt: (value: React.SetStateAction<boolean>) => void
-  colIndex: number
-  groupIndex: number
+export type FilterControlsProps = {
+  filterName: string
+  isEmptyFilter: boolean
+  // setShowBkPrompt: (value: React.SetStateAction<boolean>) => void
+  // colIndex: number
+  // groupIndex: number
 } & PropsWithChildren
 
-export default function GroupControls(props: GroupControlsProps) {
-  const {
-    groupName,
-    isEmptyGroup,
-    setShowBkPrompt,
-    colIndex,
-    groupIndex,
-    children,
-  } = props
+export default function FilterControls(props: FilterControlsProps) {
+  const { filterName, isEmptyFilter, children } = props
   const setSelectedBookmark = useSetAtom(selectedBookmarkAtom)
   const setPromptCommand = useSetAtom(promptCommandAtom)
   const updateGroupOrder = useSetAtom(
@@ -46,68 +39,38 @@ export default function GroupControls(props: GroupControlsProps) {
     <div>
       <div className={cn('bookmark-group', 'flex gap-1 items-center')}>
         {children}
-        <PopOutMenu
-          focusOnMount={isEmptyGroup}
-          menuClasses={cn('w-38.75', {
-            // '-bottom-18': isFirst,
-            // 'bottom-[-3.15rem]': !isFirst,
-          })}
-        >
+        <PopOutMenu focusOnMount={isEmptyFilter} menuClasses={cn('w-38.75')}>
+          <IconButton
+            icon={<Edit />}
+            clickHandler={() => {
+              console.log('set limit')
+            }}
+          >
+            set limit
+          </IconButton>
           <IconButton
             icon={<Add />}
             clickHandler={() => {
-              // setSelectedBookmark({ ...EMPTY_BOOKMARK, group: groupName })
-              // setPromptCommand('new-bookmark')
-              promptController.newBookmark(groupName)
+              // promptController.newBookmark(groupName)
             }}
           >
             add bookmark
           </IconButton>
           <IconButton
-            icon={<AddCircle />}
-            clickHandler={() => {
-              setPromptCommand('new-group')
-              setShowBkPrompt(true)
-              setSelectedBookmark({
-                ...EMPTY_BOOKMARK,
-                col: colIndex,
-              })
-            }}
-          >
-            add group
-          </IconButton>
-          <IconButton
             icon={<Edit />}
             clickHandler={() => {
-              promptController.updateGroup(groupName)
+              // promptController.updateGroup(groupName)
             }}
           >
-            update group
+            update filter
           </IconButton>
           <IconButton
             icon={<RemoveCircle />}
             clickHandler={() => {
-              promptController.removeGroup(groupName)
+              // promptController.removeGroup(groupName)
             }}
           >
-            remove group
-          </IconButton>
-
-          <IconButton
-            icon={<ArrowDownCircle />}
-            clickHandler={() =>
-              updateGroupOrder(groupName, colIndex + 1, 'lower')
-            }
-          >
-            move group down
-          </IconButton>
-          <IconButton
-            icon={<ArrowUpCircle />}
-            clickHandler={() =>
-              updateGroupOrder(groupName, colIndex + 1, 'raise')
-            }
-          >
-            move group up
+            remove filter
           </IconButton>
         </PopOutMenu>
       </div>

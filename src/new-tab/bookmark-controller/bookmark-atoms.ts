@@ -12,6 +12,12 @@ import {
   updateGroupOrder,
   updateRecentLinks,
   increaseOpenCount,
+  Filter,
+  getStoredFilters,
+  updateFilter,
+  INITIAL_FILTER_ID,
+  updateFilters,
+  Filters,
 } from '@/background'
 import { atom } from 'jotai'
 
@@ -29,8 +35,46 @@ export const EMPTY_BOOKMARK: Bookmark = {
   dateFormatted: '',
 } as const
 
+export const EMPTY_FILTER: Filter = {
+  id: 0,
+  name: '',
+  limit: 0,
+  tags: [],
+  query: '',
+  bookmarks: [],
+} as const
+
 export const bookmarksAtom = atom<Bookmark[]>([])
 export const recentLinksAtom = atom<Bookmark[]>([])
+// TODO: break filters into default and user
+export const filtersAtom = atom<Filters>({
+  preset: [],
+  user: [],
+})
+export const filterDefaultsSetAtom = atom(null, async (get, set) => {
+  const { data: storedFilters } = await getStoredFilters()
+  if (!storedFilters) {
+    return
+  }
+  const mostVisited = get(mostVisitedBookmarksReadOnlyAtom)
+  const newest = get(bookmarksNewestToOldestReadOnlyAtom)
+  const recentLinks = get(recentLinksAtom)
+  const presetFilters = storedFilters?.preset
+  const updated = presetFilters?.map((f) => {
+    if (f.id === INITIAL_FILTER_ID) {
+      return { ...f, bookmarks: newest }
+    }
+    if (f.id === INITIAL_FILTER_ID + 1) {
+      return { ...f, bookmarks: mostVisited }
+    }
+    if (f.id === INITIAL_FILTER_ID + 1 + 1) {
+      return { ...f, bookmarks: recentLinks }
+    }
+    return f
+  })
+  await updateFilters({ preset: updated, user: storedFilters.user })
+  set(refreshFiltersFromStorageAtom)
+})
 export const mostVisitedBookmarksReadOnlyAtom = atom<Bookmark[]>((get) => {
   const bookmarks = get(bookmarksAtom)
   const sorted = [...bookmarks].sort((a, b) => b.openCount - a.openCount)
@@ -84,6 +128,11 @@ export const refreshBookmarksFromStorageAtom = atom(null, async (_get, set) => {
   set(bookmarksAtom, bookmarks ?? [])
 })
 
+export const updateFilterAtom = atom(null, async (get, set, filter: Filter) => {
+  await updateFilter(filter)
+  set(refreshFiltersFromStorageAtom)
+})
+
 export const clearBookmarksAtom = atom(null, async (_get, set) => {
   await resetBookmarks()
   set(bookmarksAtom, [])
@@ -113,14 +162,20 @@ export const refreshRecentLinksFromStorageAtom = atom(
   },
 )
 
+export const refreshFiltersFromStorageAtom = atom(null, async (_get, set) => {
+  const { data: filters } = await getStoredFilters()
+  set(filtersAtom, filters ?? { preset: [], user: [] })
+})
+
 export const initializeBookmarkAtomsAtom = atom(null, async (_get, set) => {
   const { data: bookmarks } = await getStoredBookmarks()
   const { data: recentLinks } = await getStoredRecentLinks()
+  const { data: filters } = await getStoredFilters()
   set(bookmarksAtom, bookmarks ?? [])
   set(recentLinksAtom, recentLinks ?? [])
+  set(filtersAtom, filters ?? { preset: [], user: [] })
 })
 
-// TODO: update to be full bookmark rather than just href, text, count
 export const updateRecentLinksAtom = atom(
   null,
   async (_get, set, bookmark: Bookmark, clear?: boolean) => {
@@ -262,7 +317,6 @@ export const showPromptSetAtom = atom(null, (_get, set, isShown: boolean) => {
 export const newBookmarkPromptSetAtom = atom(
   null,
   (_get, set, groupName?: string) => {
-    console.log('tried running new bookmark prompt set atom')
     set(selectedBookmarkAtom, { ...EMPTY_BOOKMARK, group: groupName ?? '' })
     set(showPromptAtom, true)
     set(promptCommandAtom, 'new-bookmark')

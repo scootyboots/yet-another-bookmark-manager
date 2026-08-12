@@ -15,6 +15,44 @@ export type Bookmark = {
 }
 export type NewBookmark = Omit<Bookmark, 'id'>
 export type Bookmarks = Array<Bookmark>
+export type Filter = {
+  id: number
+  name: string
+  limit: number
+  tags: string[]
+  query: string
+  bookmarks?: Bookmark[]
+}
+
+export type Filters = { preset: Filter[]; user: Filter[] }
+
+export const BOOKMARKS_BY_ID_KEY = 'bookmarksById'
+export const INITIAL_BOOKMARK_ID = 1000
+export const INITIAL_FILTER_ID = 100
+
+export const DEFAULT_FILTERS: Filter[] = [
+  {
+    id: INITIAL_FILTER_ID,
+    name: 'newest to oldest',
+    limit: 0,
+    tags: [],
+    query: '',
+  },
+  {
+    id: INITIAL_FILTER_ID + 1,
+    name: 'most visited',
+    limit: 0,
+    tags: [],
+    query: '',
+  },
+  {
+    id: INITIAL_FILTER_ID + 1 + 1,
+    name: 'recently opened',
+    limit: 0,
+    tags: [],
+    query: '',
+  },
+]
 
 chrome.action.onClicked.addListener(() => {
   chrome.tabs.create({ url: 'newTab.html' })
@@ -32,7 +70,7 @@ export function formatDate(dateMs: number) {
 }
 
 function addIdsAndPropsToBookmarks(bookmarks: NewBookmark[]) {
-  let initialId = 1000
+  let initialId = INITIAL_BOOKMARK_ID
   const date = Date.now()
   const bookmarksWithId = bookmarks.map((bk) => {
     initialId += 1
@@ -48,8 +86,6 @@ function addIdsAndPropsToBookmarks(bookmarks: NewBookmark[]) {
   })
   return { bookmarksWithId, lastId: initialId }
 }
-
-const BOOKMARKS_BY_ID_KEY = 'bookmarksById'
 
 export function makeBookmarksById(bookmarks: Bookmark[]) {
   const keyedBookmarks: Record<number, Bookmark> = {}
@@ -70,6 +106,58 @@ export async function getBookmarksById() {
   }>(BOOKMARKS_BY_ID_KEY)
 }
 
+export async function getStoredFilters() {
+  const filters = await chrome.storage.local.get<{ filters: Filters }>(
+    'filters',
+  )
+  if (filters) {
+    return { data: filters.filters, error: null }
+  }
+  return { data: null, error: 'failed to pull stored filters' }
+}
+
+function combineFilters(filters: Filters) {
+  const entriesPreset = Object.values(filters.preset)
+  const entriesUser = Object.values(filters.user)
+  return [...entriesPreset, ...entriesUser]
+}
+
+export async function getTargetFilter(filterId: number) {
+  const { data: filters } = await getStoredFilters()
+  if (!filters) {
+    return
+  }
+  const allFilters = combineFilters(filters)
+
+  const targetFilter = allFilters.find((f) => f.id === filterId) ?? null
+  return {
+    targetFilter,
+    error: targetFilter ? null : 'failed to find filter id ' + filterId,
+  }
+}
+
+export async function updateFilters(filters: Filters) {
+  await chrome.storage.local.set({ filters: filters })
+}
+
+export async function updateFilter(filter: Filter) {
+  const { data: storedFilters } = await getStoredFilters()
+  if (!storedFilters) {
+    return
+  }
+  const entries = Object.entries(storedFilters)
+  const [updatedPrest, updatedUser] = entries.map(([key, value]) => {
+    const u = value.map((f) => {
+      if (f.id === filter.id) {
+        return filter
+      }
+      return f
+    })
+    return { [key]: u }
+  })
+  await updateFilters({ preset: updatedPrest.filter, user: updatedUser.filter })
+}
+
 async function initializeBookmarks() {
   try {
     const backupUrl = chrome.runtime.getURL('bookmarks-backup.json')
@@ -83,6 +171,7 @@ async function initializeBookmarks() {
     chrome.storage.local.set({
       bookmarks: bookmarksWithId,
       bookmarksById: makeBookmarksById(bookmarksWithId),
+      filters: { preset: DEFAULT_FILTERS, user: [] } satisfies Filters,
       lastId,
       recentLinks: [],
       mostOpened: [],
@@ -91,7 +180,8 @@ async function initializeBookmarks() {
     chrome.storage.local.set({
       bookmarks: [],
       bookmarksById: {},
-      lastId: 1000,
+      lastId: INITIAL_BOOKMARK_ID,
+      filters: { preset: DEFAULT_FILTERS, user: [] } satisfies Filters,
       recentLinks: [],
       mostOpened: [],
     })
