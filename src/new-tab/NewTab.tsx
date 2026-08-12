@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
-import BookmarkEntry from './bookmark-entry/BookmarkEntry'
+import { cn } from '@/lib/utils'
 import Search from './Search/Search'
-import useBookmarkSorter from './useBookmarkSorter'
 import { useTrackFocus } from './useTrackFocus'
 import TopContextRow from './TopContextRow'
 import { checkPromptOpen, isEmptyBookmark } from './util'
@@ -9,25 +8,16 @@ import CommandLine from './command-prompts/CommandLine'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   bookmarkMutationAtoms,
-  bookmarksAtom,
   selectedBookmarkAtom,
   showSearchAtom,
   showCommandLineAtom,
-  bookmarksNewestToOldestReadOnlyAtom,
-  mostVisitedBookmarksReadOnlyAtom,
-  recentLinksAtom,
   filtersAtom,
   EMPTY_FILTER,
 } from './bookmark-controller/bookmark-atoms'
-import { cn } from '@/lib/utils'
-import { GenericHeader } from './GenericHeader'
-import GroupControls from './GroupControls'
-import { ShadTesting } from './ShadTesting'
 import { Button } from '@/components/ui/button'
 import CommandPrompt from './command-prompts/CommandPrompt'
 import usePromptController from './command-prompts/usePromptController'
 import useInitializeBookmarks from './bookmark-controller/useInitializeBookmarks'
-import FilterControls from './FilterControls'
 import Filter from './Filter'
 
 // TODO: control from options
