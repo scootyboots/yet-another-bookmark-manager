@@ -129,7 +129,7 @@ export async function getTargetFilter(filterId: number) {
   }
   const allFilters = combineFilters(filters)
 
-  const targetFilter = allFilters.find((f) => f.id === filterId) ?? null
+  const targetFilter = allFilters.find((f) => f?.id === filterId) ?? null
   return {
     targetFilter,
     error: targetFilter ? null : 'failed to find filter id ' + filterId,
@@ -147,15 +147,21 @@ export async function updateFilter(filter: Filter) {
   }
   const entries = Object.entries(storedFilters)
   const [updatedPrest, updatedUser] = entries.map(([key, value]) => {
+    console.log(key, value)
     const u = value.map((f) => {
-      if (f.id === filter.id) {
+      if (f?.id === filter?.id) {
         return filter
       }
       return f
     })
+    console.log({ [key]: u })
     return { [key]: u }
   })
-  await updateFilters({ preset: updatedPrest.filter, user: updatedUser.filter })
+
+  await updateFilters({
+    preset: updatedPrest.preset,
+    user: updatedUser?.user || [],
+  })
 }
 
 async function initializeBookmarks() {

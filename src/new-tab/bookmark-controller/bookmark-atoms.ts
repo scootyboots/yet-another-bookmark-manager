@@ -61,13 +61,13 @@ export const filterDefaultsSetAtom = atom(null, async (get, set) => {
   const recentLinks = get(recentLinksAtom)
   const presetFilters = storedFilters?.preset
   const updated = presetFilters?.map((f) => {
-    if (f.id === INITIAL_FILTER_ID) {
+    if (f?.id === INITIAL_FILTER_ID) {
       return { ...f, bookmarks: newest }
     }
-    if (f.id === INITIAL_FILTER_ID + 1) {
+    if (f?.id === INITIAL_FILTER_ID + 1) {
       return { ...f, bookmarks: mostVisited }
     }
-    if (f.id === INITIAL_FILTER_ID + 1 + 1) {
+    if (f?.id === INITIAL_FILTER_ID + 1 + 1) {
       return { ...f, bookmarks: recentLinks }
     }
     return f
@@ -128,10 +128,13 @@ export const refreshBookmarksFromStorageAtom = atom(null, async (_get, set) => {
   set(bookmarksAtom, bookmarks ?? [])
 })
 
-export const updateFilterAtom = atom(null, async (get, set, filter: Filter) => {
-  await updateFilter(filter)
-  set(refreshFiltersFromStorageAtom)
-})
+export const updateFilterAtom = atom(
+  null,
+  async (_get, set, filter: Filter) => {
+    await updateFilter(filter)
+    set(refreshFiltersFromStorageAtom)
+  },
+)
 
 export const clearBookmarksAtom = atom(null, async (_get, set) => {
   await resetBookmarks()

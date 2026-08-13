@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import Search from './Search/Search'
 import { useTrackFocus } from './useTrackFocus'
 import TopContextRow from './TopContextRow'
-import { checkPromptOpen, isEmptyBookmark } from './util'
+import { checkPromptOpen } from './util'
 import CommandLine from './command-prompts/CommandLine'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
@@ -21,7 +21,7 @@ import useInitializeBookmarks from './bookmark-controller/useInitializeBookmarks
 import Filter from './Filter'
 
 // TODO: control from options
-const GRID_COLS = 3
+const GRID_COLS = 4
 
 export default function NewTab() {
   useInitializeBookmarks()
@@ -79,28 +79,39 @@ export default function NewTab() {
 
         <div
           className={cn(
-            'bookmark-display gap-4 grid p-4',
+            'bookmark-display gap-4 grid p-4 grid-cols-4',
             `grid-cols-${GRID_COLS}`,
           )}
         >
           <Filter
-            filter={newestToOldestFilter}
+            filter={{ ...EMPTY_FILTER, name: 'custom filters' }}
             promptController={promptController}
-            showDate
+            addBookmark
+            editFilter
+          />
+          <Filter
+            filter={{ ...EMPTY_FILTER, name: 'custom filters' }}
+            promptController={promptController}
+            addBookmark
+            editFilter
           />
           <Filter
             filter={mostVisitedFilter}
             promptController={promptController}
+            editFilter
             showCount
           >
             <Filter
               filter={recentlyOpenedFilter}
               promptController={promptController}
+              editFilter
             />
           </Filter>
           <Filter
-            filter={{ ...EMPTY_FILTER, name: 'custom filters' }}
+            filter={newestToOldestFilter}
             promptController={promptController}
+            editFilter
+            showDate
           />
         </div>
       </div>

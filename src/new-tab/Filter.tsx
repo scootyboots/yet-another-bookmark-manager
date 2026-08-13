@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import { PropsWithChildren, useMemo } from 'react'
 import { useSetAtom } from 'jotai'
 import { type Filter as FilterType } from '@/background'
 import FilterControls from './FilterControls'
@@ -12,6 +12,9 @@ export type FilterProps = {
   promptController: PromptController
   showDate?: boolean
   showCount?: boolean
+  addBookmark?: boolean
+  editFilter?: boolean
+  removeFilter?: boolean
 } & PropsWithChildren
 
 export default function Filter({
@@ -19,15 +22,31 @@ export default function Filter({
   promptController,
   showDate = false,
   showCount = false,
+  addBookmark = false,
+  editFilter = false,
+  removeFilter = true,
   children,
 }: FilterProps) {
   const removeBookmark = useSetAtom(bookmarkMutationAtoms.removeBookmarkAtom)
+  const displayedBookmarks = useMemo(() => {
+    if (filter?.limit) {
+      return filter?.bookmarks?.slice(0, filter?.limit)
+    }
+    return filter?.bookmarks ?? []
+  }, [filter?.bookmarks, filter?.limit])
+
   return (
     <div>
-      <FilterControls filterName={filter?.name} isEmptyFilter={false}>
+      <FilterControls
+        filter={filter}
+        isEmptyFilter={false}
+        addBookmark={addBookmark}
+        editFilter={editFilter}
+        removeFilter={removeFilter}
+      >
         <GenericHeader>{filter?.name}</GenericHeader>
       </FilterControls>
-      {(filter?.bookmarks || []).map((bk, i) => (
+      {(displayedBookmarks || []).map((bk, i) => (
         <BookmarkEntry
           bookmark={bk}
           showBookmarkPrompt={promptController.setIsPromptShown}
